@@ -1,0 +1,1344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HELIX — Entry</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#04070b;
+    --panel:#070d14;
+    --ink:#9fdcf4;
+    --ink-dim:#3f6e86;
+    --ink-faint:#1b3a4a;
+    --cyan:#4fd6ff;
+    --cyan-deep:#1f8fc4;
+    --amber:#ffb24a;
+    --orange:#ff7a30;
+    --line:rgba(79,214,255,0.16);
+    --line-soft:rgba(79,214,255,0.07);
+    --glow-cyan:0 0 12px rgba(79,214,255,0.55);
+    --glow-amber:0 0 14px rgba(255,140,50,0.5);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{width:100%;height:100%;min-height:640px}
+  body{
+    background:
+      radial-gradient(1200px 700px at 30% -10%, rgba(31,143,196,0.10), transparent 60%),
+      radial-gradient(900px 600px at 110% 120%, rgba(255,122,48,0.06), transparent 55%),
+      var(--bg);
+    color:var(--ink);
+    font-family:"Chakra Petch", monospace;
+    overflow:hidden;
+  }
+  .app{
+    display:grid;
+    grid-template-columns:1fr 320px;
+    width:100%;height:100vh;min-height:640px;
+  }
+
+  /* ============ STAGE (left) ============ */
+  .stage{
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:26px;
+    padding:16px 18px;
+    min-width:0;
+    overflow:hidden;
+  }
+  /* faint engineering grid behind everything */
+  .stage::before{
+    content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
+    background-image:
+      linear-gradient(var(--line-soft) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line-soft) 1px, transparent 1px);
+    background-size:46px 46px;
+    mask-image:radial-gradient(circle at 50% 45%, #000 0%, transparent 78%);
+    -webkit-mask-image:radial-gradient(circle at 50% 45%, #000 0%, transparent 78%);
+  }
+  .kicker{
+    position:relative;z-index:2;
+    font-size:10.5px;letter-spacing:0.42em;text-transform:uppercase;
+    color:var(--ink-dim);
+    display:flex;align-items:center;gap:12px;
+  }
+  .kicker .dot{width:5px;height:5px;border-radius:50%;background:var(--amber);box-shadow:var(--glow-amber)}
+
+  /* ---- CRT monitor ---- */
+  .console{
+    position:relative;z-index:2;
+    display:flex;flex-direction:column;align-items:center;gap:12px;
+    width:min(98%, 1180px);
+  }
+  .crt-wrap{position:relative;width:100%;}
+  .crt{
+    position:relative;
+    width:100%;
+    aspect-ratio:1/1;            /* set from JS via TUBE_AR */
+    border-radius:22px/26px;
+    background:#000;
+    overflow:hidden;
+    box-shadow:
+      0 0 0 2px rgba(79,214,255,0.10),
+      0 0 0 9px #0a121a,
+      0 0 0 10px rgba(79,214,255,0.10),
+      0 26px 70px rgba(0,0,0,0.85),
+      inset 0 0 90px rgba(0,0,0,0.9);
+    isolation:isolate;
+  }
+  #screen{
+    position:absolute;inset:0;width:100%;height:100%;display:block;
+    /* subtle barrel pull via scale; the vignette sells the curve */
+    transform:scale(1.012);
+  }
+  .crt .ov{position:absolute;inset:0;pointer-events:none}
+  /* phosphor scanlines */
+  .crt .scan{
+    background:repeating-linear-gradient(
+      to bottom,
+      rgba(0,0,0,0) 0px,
+      rgba(0,0,0,0) 2px,
+      rgba(0,0,0,calc(0.34*var(--scan,0.6))) 3px,
+      rgba(0,0,0,calc(0.34*var(--scan,0.6))) 4px);
+    mix-blend-mode:multiply;
+    z-index:5;
+  }
+  /* RGB shadow-mask (aperture grille) */
+  .crt .mask{
+    background:repeating-linear-gradient(
+      to right,
+      rgba(255,0,0,0.05) 0px, rgba(255,0,0,0.05) 1px,
+      rgba(0,255,0,0.05) 1px, rgba(0,255,0,0.05) 2px,
+      rgba(0,80,255,0.06) 2px, rgba(0,80,255,0.06) 3px);
+    mix-blend-mode:screen;opacity:0.55;z-index:6;
+  }
+  /* curvature vignette */
+  .crt .vig{
+    background:radial-gradient(120% 120% at 50% 50%, transparent 55%, rgba(0,0,0,0.55) 86%, rgba(0,0,0,0.92) 100%);
+    z-index:7;
+  }
+  /* glass reflection sheen */
+  .crt .glass{
+    background:linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0) 32%);
+    z-index:8;
+    border-radius:inherit;
+  }
+  /* laser etch + glass cracks burn onto the front of the tube */
+  #etch{
+    position:absolute;inset:0;width:100%;height:100%;display:block;
+    z-index:9;pointer-events:none;
+  }
+  /* once live, the whole lit screen is the entry button */
+  #enterBtn{
+    position:absolute;inset:0;width:100%;height:100%;
+    background:transparent;border:0;outline:0;border-radius:inherit;
+    z-index:10;cursor:default;opacity:0;pointer-events:none;
+  }
+  #enterBtn.live{cursor:pointer;pointer-events:auto}
+  /* power-on / surge flash */
+  .crt .surge{background:#dff4ff;opacity:0;z-index:12;transition:opacity .08s ease}
+  .crt.surge-on .surge{opacity:0.85}
+  /* power-off collapse line */
+  .crt.off .ov.collapse{
+    z-index:13;background:#cfeeff;
+    top:50%;height:2px;opacity:1;
+    animation:collapse .42s ease forwards;
+  }
+  @keyframes collapse{
+    0%{top:0;height:100%;opacity:0}
+    35%{top:0;height:100%;opacity:.18}
+    75%{top:calc(50% - 1px);height:2px;opacity:1}
+    100%{top:50%;height:1px;opacity:0;transform:scaleX(.0)}
+  }
+
+  /* ---- status line ---- */
+  .status{
+    position:relative;z-index:2;
+    font-family:"Chakra Petch",monospace;
+    font-size:11px;letter-spacing:0.16em;text-transform:uppercase;
+    color:var(--ink-dim);
+    display:flex;align-items:center;gap:10px;min-height:14px;
+  }
+  .status .led{width:7px;height:7px;border-radius:50%;background:var(--ink-dim);transition:.2s}
+  .status .led.go{background:var(--amber);box-shadow:var(--glow-amber)}
+  .status .led.live{background:#52ffa6;box-shadow:0 0 12px rgba(82,255,166,.6)}
+  .status b{color:var(--cyan);font-weight:600}
+
+  /* ============ SPEC PANEL (right) ============ */
+  .panel{
+    position:relative;
+    background:
+      linear-gradient(180deg, rgba(79,214,255,0.04), transparent 18%),
+      var(--panel);
+    border-left:1px solid var(--line);
+    padding:18px 16px 20px;
+    overflow-y:auto;
+    font-size:12px;
+  }
+  .panel::-webkit-scrollbar{width:8px}
+  .panel::-webkit-scrollbar-thumb{background:rgba(79,214,255,0.18);border-radius:4px}
+  .brand{
+    display:flex;align-items:baseline;gap:8px;
+    font-family:"Orbitron",sans-serif;font-weight:900;
+    font-size:19px;letter-spacing:0.10em;color:#eaf8ff;
+    text-shadow:0 0 16px rgba(79,214,255,0.35);
+  }
+  .brand small{
+    font-family:"Chakra Petch";font-weight:600;font-size:9px;letter-spacing:0.30em;
+    color:var(--orange);text-shadow:var(--glow-amber);text-transform:uppercase;
+  }
+  .sub{margin-top:4px;font-size:9.5px;letter-spacing:0.26em;color:var(--ink-dim);text-transform:uppercase}
+  .rule{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin:16px 0 14px}
+
+  .sec-h{
+    display:flex;align-items:center;gap:8px;
+    font-size:9.5px;letter-spacing:0.28em;text-transform:uppercase;
+    color:var(--amber);margin:18px 0 10px;
+  }
+  .sec-h::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,rgba(255,178,74,0.4),transparent)}
+  .sec-h:first-of-type{margin-top:4px}
+
+  .ctl{margin-bottom:13px}
+  .ctl .row{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
+  .ctl label{font-size:9.5px;letter-spacing:0.16em;text-transform:uppercase;color:var(--ink)}
+  .ctl .val{font-size:11px;color:#cdeeff;font-variant-numeric:tabular-nums;
+    background:rgba(79,214,255,0.07);padding:1px 7px;border-radius:3px;min-width:42px;text-align:right}
+
+  input[type=range]{
+    -webkit-appearance:none;appearance:none;width:100%;height:3px;
+    background:linear-gradient(90deg,var(--cyan-deep),rgba(79,214,255,0.12));
+    border-radius:2px;outline:none;cursor:pointer;
+  }
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none;appearance:none;width:13px;height:13px;border-radius:50%;
+    background:var(--cyan);cursor:pointer;box-shadow:var(--glow-cyan);border:2px solid #07151d}
+  input[type=range]::-moz-range-thumb{
+    width:13px;height:13px;border-radius:50%;background:var(--cyan);
+    border:2px solid #07151d;box-shadow:var(--glow-cyan);cursor:pointer}
+
+  select{
+    width:100%;background:#08141c;color:#cdeeff;border:1px solid var(--line);
+    font-family:inherit;font-size:12px;padding:6px 8px;border-radius:4px;outline:none;cursor:pointer}
+  select:focus{border-color:var(--cyan)}
+
+  .btn{
+    width:100%;display:flex;align-items:center;justify-content:center;gap:8px;
+    font-family:inherit;font-size:10.5px;letter-spacing:0.18em;text-transform:uppercase;
+    padding:9px 10px;border-radius:5px;cursor:pointer;transition:.13s;margin-top:4px;
+    background:linear-gradient(180deg,rgba(79,214,255,0.10),rgba(79,214,255,0.02));
+    border:1px solid var(--line);color:var(--cyan);
+  }
+  .btn:hover{border-color:var(--cyan);box-shadow:var(--glow-cyan);color:#dff6ff}
+  .btn:active{transform:translateY(1px)}
+  .btn.amber{
+    background:linear-gradient(180deg,rgba(255,140,50,0.12),rgba(255,140,50,0.02));
+    border-color:rgba(255,140,50,0.4);color:var(--amber)}
+  .btn.amber:hover{border-color:var(--orange);box-shadow:var(--glow-amber);color:#ffd9a8}
+
+  .swatches{display:flex;gap:7px;margin-top:8px}
+  .sw{flex:1;height:22px;border-radius:4px;cursor:pointer;border:1px solid transparent;opacity:.55;transition:.13s}
+  .sw[data-on="1"]{opacity:1;border-color:#cdeeff;box-shadow:0 0 10px currentColor}
+
+  .cfgdump{
+    font-family:"Chakra Petch",monospace;font-size:10px;line-height:1.5;
+    color:#bfe9ff;white-space:pre;overflow-x:auto;
+    background:rgba(79,214,255,0.03);border:1px solid var(--line-soft);
+    border-radius:6px;padding:9px 10px;margin-bottom:6px;
+  }
+  .cfgdump .ckey{color:var(--orange)}
+  .readout{
+    margin-top:16px;font-family:"Chakra Petch",monospace;font-size:10px;line-height:1.65;
+    color:var(--ink-dim);border:1px solid var(--line-soft);border-radius:6px;padding:10px 11px;
+    background:rgba(79,214,255,0.02);
+  }
+  .readout .ln{display:flex;gap:8px}
+  .readout .k{color:var(--orange);min-width:62px;letter-spacing:.1em}
+  .readout .v{color:#bfe9ff}
+
+  @media (max-width:880px){
+    .app{grid-template-columns:1fr;grid-template-rows:1fr auto}
+    .panel{border-left:0;border-top:1px solid var(--line);max-height:42vh}
+    .console{width:min(86vw,52vh)}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <!-- ============ STAGE ============ -->
+  <section class="stage">
+    <div class="kicker"><span class="dot"></span>Hidden-sector signal acquisition<span class="dot"></span></div>
+
+    <div class="console">
+      <div class="crt-wrap">
+        <div class="crt" id="crt">
+          <canvas id="screen"></canvas>
+          <div class="ov scan"></div>
+          <div class="ov mask"></div>
+          <div class="ov vig"></div>
+          <div class="ov glass"></div>
+          <canvas id="etch"></canvas>
+          <button id="enterBtn" aria-label="Press to enter"></button>
+          <div class="ov surge"></div>
+          <div class="ov collapse"></div>
+        </div>
+      </div>
+
+      <div class="status" id="status"><span class="led" id="led"></span><span id="statusText">cold start</span></div>
+    </div>
+  </section>
+
+  <!-- ============ SPEC PANEL ============ -->
+  <aside class="panel">
+    <div class="brand">HELIX<small>// entry</small></div>
+    <div class="sub">cathode boot · laser etch</div>
+    <div class="rule"></div>
+
+    <div class="sec-h">Display · CRT</div>
+
+    <div class="ctl">
+      <div class="row"><label>pixel block</label><span class="val" id="vPixel">3</span></div>
+      <input type="range" id="cPixel" min="1" max="16" step="1" value="5">
+    </div>
+    <div class="ctl">
+      <div class="row"><label>chromatic</label><span class="val" id="vChroma">5</span></div>
+      <input type="range" id="cChroma" min="0" max="30" step="1" value="8">
+    </div>
+    <div class="ctl">
+      <div class="row"><label>h-granulation</label><span class="val" id="vGran">28</span></div>
+      <input type="range" id="cGran" min="0" max="100" step="1" value="28">
+    </div>
+    <div class="ctl">
+      <div class="row"><label>noise</label><span class="val" id="vNoise">18</span></div>
+      <input type="range" id="cNoise" min="0" max="100" step="1" value="34">
+    </div>
+    <div class="ctl">
+      <div class="row"><label>scroll speed</label><span class="val" id="vScroll">30</span></div>
+      <input type="range" id="cScroll" min="0" max="100" step="1" value="30">
+    </div>
+    <div class="ctl">
+      <div class="row"><label>scanlines</label><span class="val" id="vScan">60</span></div>
+      <input type="range" id="cScan" min="0" max="100" step="1" value="60">
+    </div>
+    <div class="ctl">
+      <div class="row"><label>flicker</label><span class="val" id="vFlick">30</span></div>
+      <input type="range" id="cFlick" min="0" max="100" step="1" value="55">
+    </div>
+
+    <div class="sec-h">Timeline</div>
+    <div class="ctl">
+      <div class="row"><label>fade-in · boot</label><span class="val" id="vFade">4.0s</span></div>
+      <input type="range" id="cFade" min="1" max="8" step="0.1" value="5.0">
+    </div>
+    <div class="ctl">
+      <div class="row"><label>hold · pre-etch</label><span class="val" id="vHold">0.8s</span></div>
+      <input type="range" id="cHold" min="0" max="3" step="0.1" value="1.6">
+    </div>
+    <button class="btn" id="btnReplay">⏻ Hard reboot</button>
+
+    <div class="sec-h">Laser etch</div>
+    <div class="ctl">
+      <div class="row"><label>beam color</label><span class="val" id="vColor">red</span></div>
+      <div class="swatches" id="swatches"></div>
+    </div>
+    <div class="ctl">
+      <div class="row"><label>etch speed · time</label><span class="val" id="vEtch">4.8s</span></div>
+      <input type="range" id="cEtch" min="0.3" max="3.0" step="0.1" value="1.0">
+    </div>
+    <div class="ctl">
+      <div class="row"><label>spark density</label><span class="val" id="vSparks">2.5&times;</span></div>
+      <input type="range" id="cSparks" min="0.5" max="6" step="0.5" value="2.5">
+    </div>
+    <button class="btn amber" id="btnReetch">⟲ Re-etch prompt</button>
+
+    <div class="sec-h">State · hardcode</div>
+    <pre id="cfgDump" class="cfgdump">CFG…</pre>
+    <button class="btn" id="btnCopy">⧉ Copy CFG snippet</button>
+
+    <div class="readout" id="readout">
+      <div class="ln"><span class="k">PHASE</span><span class="v" id="rPhase">—</span></div>
+      <div class="ln"><span class="k">SIGNAL</span><span class="v" id="rSignal">0%</span></div>
+      <div class="ln"><span class="k">SOURCE</span><span class="v" id="rSource">helix_logo.png</span></div>
+    </div>
+  </aside>
+</div>
+
+<script>
+/* =====================================================================
+   HELIX — CRT boot + laser-etched entry prompt
+   ---------------------------------------------------------------------
+   Pipeline is taint-free: getImageData is only ever called on our own
+   procedural noise buffer, never on the logo. So channel-split chromatic
+   aberration + horizontal granulation work over file://, Flask, and
+   GitHub Pages alike.
+   ===================================================================== */
+
+/* ---------------------------------------------------------------------
+   LOGO SOURCE
+   ---------------------------------------------------------------------
+   This preview build embeds the logo so it renders anywhere.
+   LOCALLY: just flip the line below to LOCAL_SRC and drop your original
+   PNG beside this file as helix_logo.png (then you can delete EMBEDDED_SRC).
+   --------------------------------------------------------------------- */
+const LOCAL_SRC    = 'helix_logo.png';
+const EMBEDDED_SRC = 'data:image/jpeg;base64,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';
+const LOGO_SRC     = EMBEDDED_SRC;          // <-- set to LOCAL_SRC when local
+const ENTER_TEXT = 'PRESS \u2009 TO \u2009 ENTER';
+
+/* ---- tunables (driven by the spec panel) ---- */
+const CFG = {
+  pixel:   5,     // steady-state block size (px in work space)
+  chroma:  8,     // chromatic aberration amount
+  gran:    28,    // horizontal granulation 0..100
+  noise:   34,    // analog static 0..100
+  scroll:  30,    // noise + roll scroll speed 0..100
+  scan:    60,    // scanline darkness 0..100
+  flicker: 55,    // brightness flicker 0..100
+  fade:    5.0,   // logo fade-in seconds
+  hold:    1.6,   // dwell after fade-in, before the aperture trace + etch
+  etch:    1.0,   // laser etch speed multiplier
+  sparks:  2.5,   // spark-density multiplier while cutting
+  color:   'red'
+};
+
+const LASER_PALETTES = {
+  amber:  { beam:'rgb(255,130,40)',  glow:'rgba(255,140,50,0.85)', hot:'#ffb040', hot2:'#ffd888', flare:[255,150,60],  css:'#ff9a3c' },
+  red:    { beam:'rgb(255,60,60)',   glow:'rgba(255,70,60,0.85)',  hot:'#ff5050', hot2:'#ff9090', flare:[255,80,70],   css:'#ff5a5a' },
+  green:  { beam:'rgb(70,255,130)',  glow:'rgba(80,255,140,0.85)', hot:'#40ff80', hot2:'#b0ffc8', flare:[90,255,150],  css:'#46ff8c' },
+  cyan:   { beam:'rgb(50,200,255)',  glow:'rgba(70,210,255,0.85)', hot:'#40c8ff', hot2:'#a0e0ff', flare:[80,210,255],  css:'#4fd6ff' },
+  violet: { beam:'rgb(200,90,255)',  glow:'rgba(200,100,255,0.85)',hot:'#c870ff', hot2:'#e0b0ff', flare:[210,110,255], css:'#c878ff' },
+};
+
+/* ===================== SCREEN (CRT) ===================== */
+const screenCv = document.getElementById('screen');
+const sctx = screenCv.getContext('2d');
+const crtEl = document.getElementById('crt');
+
+/* Tube aspect ratio (width/height). 1 = square (matches the real square logo).
+   Set to 4/3 for a classic TV. Drives both the CSS box and the work buffer. */
+const TUBE_AR = 1201/630;   // widescreen — matches the HELIX wordmark
+crtEl.style.aspectRatio = String(TUBE_AR);
+const WORKH = 680, WORKW = Math.round(WORKH * TUBE_AR);   // work buffer matches tube
+const work  = makeCv(WORKW, WORKH);
+const work2 = makeCv(WORKW, WORKH);
+const wctx  = work.getContext('2d');
+const w2ctx = work2.getContext('2d');
+
+let logo = null, logoReady = false, logoFailed = false;
+let chR=null, chG=null, chB=null, logoFit=null;
+
+function makeCv(w,h){ const c=document.createElement('canvas'); c.width=w; c.height=h; return c; }
+
+/* cover-fit rect: fill the whole tube, crop the image's black margins */
+function computeFit(){
+  const ar = logo.width / logo.height;
+  const bar = WORKW / WORKH;
+  let w,h;
+  if (ar > bar){ h = WORKH; w = h * ar; }    // wider than tube -> match height
+  else { w = WORKW; h = w / ar; }            // taller than tube -> match width
+  return { x:(WORKW-w)/2, y:(WORKH-h)/2, w, h };
+}
+
+/* build R / G / B channel canvases via multiply isolation (no getImageData).
+   destination-in clips each channel to the image rect so empty areas stay
+   transparent (and render black) instead of bleeding to white. */
+function buildChannels(){
+  logoFit = computeFit();
+  const make = (mulColor) => {
+    const c = makeCv(WORKW, WORKH);
+    const g = c.getContext('2d');
+    g.clearRect(0,0,WORKW,WORKH);
+    g.drawImage(logo, logoFit.x, logoFit.y, logoFit.w, logoFit.h);
+    g.globalCompositeOperation = 'multiply';
+    g.fillStyle = mulColor;
+    g.fillRect(0,0,WORKW,WORKH);
+    g.globalCompositeOperation = 'destination-in';
+    g.drawImage(logo, logoFit.x, logoFit.y, logoFit.w, logoFit.h);
+    g.globalCompositeOperation = 'source-over';
+    return c;
+  };
+  chR = make('#ff0000');
+  chG = make('#00ff00');
+  chB = make('#0000ff');
+}
+
+/* ---- procedural analog noise (own buffer → never taints) ---- */
+const NW = 240, NH = 180;
+const noiseCv = makeCv(NW, NH);
+const nctx = noiseCv.getContext('2d');
+const noiseImg = nctx.createImageData(NW, NH);
+function regenNoise(){
+  const d = noiseImg.data;
+  for (let i=0;i<d.length;i+=4){
+    const v = (Math.random()*255)|0;
+    d[i]=v; d[i+1]=v; d[i+2]=v; d[i+3]=255;
+  }
+  nctx.putImageData(noiseImg,0,0);
+}
+regenNoise();
+
+/* ---- timeline / phase machine ---- */
+let bootStart = performance.now();
+let phase = 'warm';            // warm -> resolve -> etch -> ready -> off
+let resolveDone = false;
+const statusText = document.getElementById('statusText');
+const led = document.getElementById('led');
+const rPhase = document.getElementById('rPhase');
+const rSignal = document.getElementById('rSignal');
+
+function setStatus(txt, mode){
+  statusText.innerHTML = txt;
+  led.className = 'led' + (mode==='live'?' live':(mode==='go'?' go':''));
+}
+
+function ease(t){ return t<0?0 : t>1?1 : t*t*(3-2*t); }     // smoothstep
+
+let scrollPhase = 0, noiseFrame = 0, screenDPR = 1;
+
+function sizeScreen(){
+  const r = crtEl.getBoundingClientRect();
+  screenDPR = Math.min(window.devicePixelRatio||1, 2);
+  screenCv.width  = Math.max(2, Math.round(r.width  * screenDPR));
+  screenCv.height = Math.max(2, Math.round(r.height * screenDPR));
+  sctx.imageSmoothingEnabled = true;
+}
+
+function renderScreen(now, dt){
+  const elapsed = (now - bootStart)/1000;
+
+  /* master reveal progress over the fade window */
+  let p = phase==='warm' ? 0 : ease(Math.min(1, (elapsed - WARM_S) / CFG.fade));
+  if (phase==='warm') p = 0;
+  if (resolveDone) p = 1;
+
+  /* transition warm -> resolve once the tube is "warm" */
+  if (phase==='warm' && elapsed >= WARM_S){ phase='resolve'; }
+  if (phase==='resolve' && p>=1){ resolveDone = true; phase='etch'; onResolved(); }
+
+  rSignal.textContent = Math.round(p*100)+'%';
+
+  /* ---- 1. chromatic composite into work ---- */
+  wctx.globalCompositeOperation='source-over';
+  wctx.clearRect(0,0,WORKW,WORKH);
+  if (logoReady){
+    /* during resolve, extra aberration that settles to CFG.chroma */
+    const settle = 1 - p;
+    const dx = (CFG.chroma + settle*22) * (0.6 + 0.4*Math.sin(now*0.004));
+    const dy = settle * 3 * Math.sin(now*0.003);
+    wctx.globalCompositeOperation = 'lighter';
+    wctx.drawImage(chR, dx, -dy);
+    wctx.drawImage(chG, 0, 0);
+    wctx.drawImage(chB, -dx, dy);
+    wctx.globalCompositeOperation = 'source-over';
+  }
+
+  /* ---- 2. pixelation (resolves large->steady during fade) ---- */
+  const block = Math.max(1, Math.round( (1-p)*46 + p*CFG.pixel ));
+  let srcForBlit = work;
+  if (block > 1){
+    const lw = Math.max(1, Math.round(WORKW/block));
+    const lh = Math.max(1, Math.round(WORKH/block));
+    w2ctx.imageSmoothingEnabled = true;
+    w2ctx.clearRect(0,0,WORKW,WORKH);
+    w2ctx.drawImage(work, 0,0,WORKW,WORKH, 0,0,lw,lh);          // down (avg)
+    w2ctx.imageSmoothingEnabled = false;
+    w2ctx.drawImage(work2, 0,0,lw,lh, 0,0,WORKW,WORKH);          // up (blocky)
+    srcForBlit = work2;
+  }
+
+  /* ---- 3. flicker dim ---- */
+  const fA = CFG.flicker/100;
+  const dim = 1 - fA*( 0.05 + 0.05*Math.random() + 0.03*Math.sin(now*0.05) )
+                - (Math.random()<0.012*fA ? 0.25 : 0);
+
+  /* ---- 4. blit work -> screen with horizontal granulation bands ---- */
+  const SW = screenCv.width, SH = screenCv.height;
+  sctx.globalCompositeOperation='source-over';
+  sctx.clearRect(0,0,SW,SH);
+  sctx.fillStyle='#000'; sctx.fillRect(0,0,SW,SH);
+  sctx.globalAlpha = Math.max(0, Math.min(1, p*1.0 * dim));
+
+  const gA = (CFG.gran/100);
+  const sy = SH/WORKH;
+  const bandPx = 3;                                   // work-space band height
+  const tearChance = 0.06*gA;
+  for (let wy=0; wy<WORKH; wy+=bandPx){
+    const bh = Math.min(bandPx, WORKH-wy);
+    /* baseline jitter + occasional big tear */
+    let off = (Math.sin(wy*0.21 + now*0.006) * 1.4 + (Math.random()-0.5)*1.2) * gA * 6;
+    if (Math.random() < tearChance) off += (Math.random()-0.5) * 60 * gA;
+    /* extra shear while still resolving */
+    off += (1-p) * Math.sin(wy*0.5 + now*0.02) * 14;
+    const dxp = off * (SW/WORKW);
+    sctx.drawImage(srcForBlit, 0, wy, WORKW, bh, dxp, wy*sy, SW, bh*sy);
+  }
+  sctx.globalAlpha = 1;
+
+  /* ---- 5. scrolling static + cathode roll band (screen blend) ---- */
+  scrollPhase += (CFG.scroll/100) * (dt||16) * 0.012;
+  noiseFrame++;
+  if (CFG.noise>0){
+    if (noiseFrame % 2 === 0) regenNoise();
+    const nA = (CFG.noise/100) * 0.18;
+    sctx.globalCompositeOperation='screen';
+    sctx.globalAlpha = nA;
+    const oy = (scrollPhase*16) % SH;
+    sctx.imageSmoothingEnabled = true;
+    sctx.drawImage(noiseCv, 0, oy - SH, SW, SH);
+    sctx.drawImage(noiseCv, 0, oy,       SW, SH);
+    sctx.globalAlpha = 1;
+  }
+  /* rolling brightness band */
+  {
+    const rollY = ((scrollPhase*18) % (SH+SH*0.18)) - SH*0.18;
+    const bandH = SH*0.16;
+    const g = sctx.createLinearGradient(0, rollY, 0, rollY+bandH);
+    g.addColorStop(0,   'rgba(180,225,255,0)');
+    g.addColorStop(0.5, 'rgba(180,225,255,0.10)');
+    g.addColorStop(1,   'rgba(180,225,255,0)');
+    sctx.globalCompositeOperation='screen';
+    sctx.fillStyle=g;
+    sctx.fillRect(0, rollY, SW, bandH);
+    sctx.globalCompositeOperation='source-over';
+  }
+
+  /* NO SIGNAL fallback */
+  if (logoFailed && phase!=='warm'){
+    sctx.globalCompositeOperation='source-over';
+    sctx.fillStyle='rgba(255,178,74,0.9)';
+    sctx.font = `${Math.round(SH*0.05)}px "Chakra Petch", monospace`;
+    sctx.textAlign='center';
+    sctx.fillText('NO SIGNAL', SW/2, SH*0.46);
+    sctx.fillStyle='rgba(120,170,200,0.7)';
+    sctx.font = `${Math.round(SH*0.026)}px "Chakra Petch", monospace`;
+    sctx.fillText('place  helix_logo.png  beside this file', SW/2, SH*0.56);
+  }
+}
+
+/* live scanline CSS var */
+function syncScanCss(){ crtEl.style.setProperty('--scan', (CFG.scan/100*0.6).toFixed(3)); }
+
+/* phase labels */
+const WARM_S = 0.5;
+function tickPhaseLabel(elapsed){
+  let label;
+  if (phase==='warm') label='SIGNAL ACQUIRE';
+  else if (phase==='resolve') label='PHOSPHOR WARM · DECODE';
+  else if (phase==='etch') label='ETCH ENTRY PROMPT';
+  else if (phase==='ready') label='READY';
+  else label='—';
+  rPhase.textContent = label;
+}
+
+/* ===================== LASER ETCH (on the tube glass) =====================
+   A 4-node gantry rides the screen edges and fires converging beams onto
+   the advancing burn front. The prompt is carved straight onto the CRT,
+   and the glass spider-cracks outward from the cut.
+   ========================================================================= */
+const etchCv = document.getElementById('etch');
+const ectx = etchCv.getContext('2d');
+const enterBtn = document.getElementById('enterBtn');
+let EW=0, EH=0, eDPR=1;
+
+let sprHot=null, sprCool=null, sprEdge=null, textBox=null;
+let sprBtnHot=null, sprBtnCool=null, sprBtnEdge=null;
+let etchState = 'idle';        // idle -> tracing -> arming -> sweeping -> live
+let etchStart = 0, etchDoneAt = 0;
+let traceStart = 0, traceDur = 1200;
+let sparks = [], smoke = [], cracks = [], flashes = [];
+let nodes = [];
+let crackMark = 0;
+let lastEtchStatus = '';
+const MAXS = 3600, MAXSM = 260, MAXCRACK = 11;
+
+function sizeEtch(){
+  const r = etchCv.getBoundingClientRect();
+  eDPR = Math.min(window.devicePixelRatio||1, 2);
+  EW = Math.max(2, Math.round(r.width*eDPR));
+  EH = Math.max(2, Math.round(r.height*eDPR));
+  etchCv.width = EW; etchCv.height = EH;
+  buildEtchSprites();
+  buildNodes();
+}
+
+function buildEtchSprites(){
+  if (!EW) return;
+  const pal = LASER_PALETTES[CFG.color];
+  const fontPx = Math.round(EH*0.055);            // small relative to the big image
+  const ls = Math.round(fontPx*0.16);             // tighter tracking -> compact button
+  const font = `700 ${fontPx}px "Chakra Petch", monospace`;
+  const blur = fontPx;
+
+  const m = makeCv(EW,EH).getContext('2d');
+  m.font=font; try{m.letterSpacing=ls+'px';}catch(e){}
+  let tw;
+  try { tw = m.measureText(ENTER_TEXT).width; }
+  catch(e){ tw = m.measureText(ENTER_TEXT).width; }
+  if (!tw || tw < 10) tw = fontPx*ENTER_TEXT.length*0.6;
+  const cx = EW/2, cy = EH*0.5;                    // dead center of the image
+  textBox = { x: cx - tw/2, w: tw, cx, cy, fontPx };
+
+  /* rectangular button carved around the prompt */
+  const padX = fontPx*1.0, padY = fontPx*0.62;
+  const bw = tw + padX*2, bh = fontPx + padY*2;
+  const bx = cx - bw/2, by = cy - bh/2;
+  textBox.btn = { x:bx, y:by, w:bw, h:bh };
+
+  const buildPoly = (pts)=>{ const cum=[0]; let t=0;
+    for(let i=1;i<pts.length;i++){ t+=Math.hypot(pts[i].x-pts[i-1].x, pts[i].y-pts[i-1].y); cum.push(t); }
+    return {pts,cum,total:t||1}; };
+
+  textBox.border = buildPoly([
+    {x:bx,y:by},{x:bx+bw,y:by},{x:bx+bw,y:by+bh},{x:bx,y:by+bh},{x:bx,y:by}
+  ]);
+
+  /* inner fill = randomized slanted scratch strokes (hand-scratched feel) */
+  const inx=bx+fontPx*0.5, iny=by+fontPx*0.34, inw=bw-fontPx*1.0, inh=bh-fontPx*0.68;
+  const slant=-0.5, sp=fontPx*0.42;               // base slant + spacing
+  const scr=[];
+  for (let yy=iny; yy<=iny+inh; yy+=sp){
+    for (let xx=inx; xx<=inx+inw; xx+=sp){
+      const len=fontPx*(0.45+Math.random()*0.7);
+      const a=slant+(Math.random()-0.5)*0.55;
+      const ox=xx+(Math.random()-0.5)*sp*0.7, oy=yy+(Math.random()-0.5)*sp*0.7;
+      let x1=ox-Math.cos(a)*len/2, y1=oy-Math.sin(a)*len/2;
+      let x2=ox+Math.cos(a)*len/2, y2=oy+Math.sin(a)*len/2;
+      x1=Math.max(bx+2,Math.min(bx+bw-2,x1)); x2=Math.max(bx+2,Math.min(bx+bw-2,x2));
+      y1=Math.max(by+2,Math.min(by+bh-2,y1)); y2=Math.max(by+2,Math.min(by+bh-2,y2));
+      scr.push({x1,y1,x2,y2});
+    }
+  }
+  scr.sort((a,b)=>(a.x1+a.y1)-(b.x1+b.y1));        // carve across diagonally
+  textBox.scratch = scr;
+
+  const base = (draw)=>{ const c=makeCv(EW,EH); const g=c.getContext('2d');
+    g.font=font; try{g.letterSpacing=ls+'px';}catch(e){}
+    g.textAlign='center'; g.textBaseline='middle'; g.lineJoin='round'; g.lineCap='round';
+    draw(g); return c; };
+
+  /* readable prompt: white core lifted off the glowing infill by a dark
+     engraved contour, with a thin laser-color rim for theme cohesion.
+     Drawn with source-over (not additive) so the dark contour separates it. */
+  sprCool = base(g=>{
+    // burned-back separation halo
+    g.shadowColor='rgba(2,6,10,0.7)'; g.shadowBlur=blur*0.4;
+    g.lineJoin='round'; g.lineWidth=fontPx*0.30; g.strokeStyle='rgba(3,7,11,0.96)';
+    g.strokeText(ENTER_TEXT,cx,cy);
+    // crisp dark contour
+    g.shadowBlur=0; g.lineWidth=fontPx*0.16; g.strokeStyle='rgba(3,7,11,0.98)';
+    g.strokeText(ENTER_TEXT,cx,cy);
+    // thin laser-color rim
+    g.lineWidth=fontPx*0.06; g.strokeStyle=pal.hot2;
+    g.strokeText(ENTER_TEXT,cx,cy);
+    // white core
+    g.fillStyle='#ffffff'; g.fillText(ENTER_TEXT,cx,cy);
+  });
+  sprHot = base(g=>{
+    g.shadowColor=pal.glow; g.shadowBlur=blur*0.5; g.fillStyle=pal.hot; g.fillText(ENTER_TEXT,cx,cy);
+    g.shadowBlur=0; g.fillStyle=pal.hot2; g.fillText(ENTER_TEXT,cx,cy);
+  });
+  sprEdge = base(g=>{
+    g.shadowColor=pal.hot;  g.shadowBlur=blur*1.4; g.lineWidth=fontPx*0.13; g.strokeStyle=pal.hot;  g.strokeText(ENTER_TEXT,cx,cy);
+    g.shadowColor=pal.glow; g.shadowBlur=blur*0.7; g.lineWidth=fontPx*0.08; g.strokeStyle=pal.hot;  g.strokeText(ENTER_TEXT,cx,cy);
+    g.shadowBlur=blur*0.28; g.lineWidth=fontPx*0.05; g.strokeStyle=pal.hot2; g.strokeText(ENTER_TEXT,cx,cy);
+    g.shadowColor='rgba(255,255,255,0.95)'; g.shadowBlur=4; g.lineWidth=fontPx*0.03; g.strokeStyle='#fff'; g.strokeText(ENTER_TEXT,cx,cy);
+    g.shadowBlur=0; g.lineWidth=1; g.strokeText(ENTER_TEXT,cx,cy);
+  });
+}
+
+/* 4 laser nodes on the screen edges */
+function buildNodes(){
+  if (!textBox) return;
+  nodes = [
+    { edge:'top',    pos:textBox.x,            park:textBox.x,            follow:0.18, lit:false },
+    { edge:'bottom', pos:textBox.x+textBox.w,  park:textBox.x+textBox.w,  follow:0.18, lit:false },
+    { edge:'left',   pos:textBox.cy,           park:textBox.cy,           follow:0.26, lit:false },
+    { edge:'right',  pos:textBox.cy,           park:textBox.cy,           follow:0.26, lit:false },
+  ];
+}
+function nodePoint(n){
+  switch(n.edge){
+    case 'top':    return {x:n.pos, y:6*eDPR};
+    case 'bottom': return {x:n.pos, y:EH-6*eDPR};
+    case 'left':   return {x:6*eDPR, y:n.pos};
+    case 'right':  return {x:EW-6*eDPR, y:n.pos};
+  }
+}
+
+/* ---- pre-etch aperture trace: a light head runs the screen perimeter,
+   then the trail collapses and the 4 edge nodes ignite and start cutting ---- */
+function startTrace(){
+  if (!textBox || !sprCool){ sizeEtch(); }
+  if (!textBox){ setTimeout(startTrace, 120); return; }
+  etchState='tracing';
+  traceStart=performance.now();
+  traceDur = 2200/CFG.etch;
+  buildNodes();
+  sparks.length=0; smoke.length=0; cracks.length=0; flashes.length=0;
+  enterBtn.classList.remove('live'); enterBtn.style.opacity=0;
+  setStatus('Tracing aperture&hellip;', 'go');
+}
+function perimeterLoop(){
+  const i=6*eDPR;
+  return [ {x:i,y:i},{x:EW-i,y:i},{x:EW-i,y:EH-i},{x:i,y:EH-i},{x:i,y:i} ]; // TL TR BR BL TL
+}
+function renderTrace(now){
+  const pal=LASER_PALETTES[CFG.color];
+  const t=Math.min(1,(now-traceStart)/traceDur);
+  const loop=perimeterLoop();
+  const seg=[]; let tot=0;
+  for(let k=0;k<4;k++){ const d=Math.hypot(loop[k+1].x-loop[k].x, loop[k+1].y-loop[k].y); seg.push(d); tot+=d; }
+  const headL=t*tot;
+
+  // arc-length of an edge point measured along the loop (for node-pass timing)
+  const arcLen=(pt)=>{ let acc=0;
+    for(let k=0;k<4;k++){ const a=loop[k],b=loop[k+1];
+      const dx=b.x-a.x, dy=b.y-a.y, L2=(dx*dx+dy*dy)||1;
+      const u=((pt.x-a.x)*dx+(pt.y-a.y)*dy)/L2;
+      const px=a.x+dx*u, py=a.y+dy*u;
+      if(u>=-0.01 && u<=1.01 && Math.hypot(pt.x-px,pt.y-py) < 8*eDPR) return acc+u*Math.sqrt(L2);
+      acc+=seg[k];
+    } return acc; };
+
+  // progressive aperture outline, drawn up to the head (stays lit through the lap)
+  ectx.globalCompositeOperation='lighter'; ectx.lineCap='round'; ectx.lineJoin='round';
+  let acc=0, head=loop[0];
+  ectx.beginPath(); ectx.moveTo(loop[0].x,loop[0].y);
+  for(let k=0;k<4;k++){
+    if(acc+seg[k]<=headL){ ectx.lineTo(loop[k+1].x,loop[k+1].y); head=loop[k+1]; }
+    else { const p=seg[k]?(headL-acc)/seg[k]:0;
+      head={x:loop[k].x+(loop[k+1].x-loop[k].x)*p, y:loop[k].y+(loop[k+1].y-loop[k].y)*p};
+      ectx.lineTo(head.x,head.y); break; }
+    acc+=seg[k];
+  }
+  ectx.strokeStyle=pal.glow;  ectx.globalAlpha=0.45; ectx.lineWidth=6*eDPR; ectx.stroke();
+  ectx.strokeStyle=pal.hot2;  ectx.globalAlpha=0.85; ectx.lineWidth=2*eDPR; ectx.stroke();
+  ectx.strokeStyle='#ffffff'; ectx.globalAlpha=0.9;  ectx.lineWidth=1*eDPR; ectx.stroke();
+
+  // bright traveling head
+  const hg=ectx.createRadialGradient(head.x,head.y,0,head.x,head.y,15*eDPR);
+  hg.addColorStop(0,'rgba(255,255,245,1)'); hg.addColorStop(0.4,pal.glow); hg.addColorStop(1,'rgba(0,0,0,0)');
+  ectx.globalAlpha=1; ectx.fillStyle=hg;
+  ectx.beginPath(); ectx.arc(head.x,head.y,15*eDPR,0,7); ectx.fill();
+
+  // nodes stay dark until the sweep reaches them, then ignite and stay lit
+  for(const n of nodes){
+    const p=nodePoint(n);
+    if(!n.lit && headL >= arcLen(p)){ n.lit=true; spawnFlash(p.x,p.y,EW*0.04); spawnSparks(p.x,p.y,9,1.0); }
+    if(n.lit) drawNode(p, 1, pal);
+  }
+  ectx.globalAlpha=1; ectx.globalCompositeOperation='source-over';
+
+  if (t>=1){ etchState='arming'; armStart=now; setStatus('Nodes armed&hellip;','go'); }   // revolution closed -> flash, then fire
+}
+
+function startEtch(){
+  if (!textBox || !sprCool){ sizeEtch(); }
+  if (!textBox){ setTimeout(startEtch, 120); return; }
+  etchState='sweeping';
+  etchStart=performance.now();
+  sparks.length=0; smoke.length=0; cracks.length=0; flashes.length=0;
+  crackMark=-1; lastEtchStatus='';
+  buildNodes();
+  enterBtn.classList.remove('live'); enterBtn.style.opacity=0;
+  setStatus('Carving entry prompt&hellip;', 'go');
+}
+
+function spawnSparks(x,y,n,power){
+  power = power||1;
+  for(let i=0;i<n;i++){
+    if(sparks.length>=MAXS) sparks.shift();
+    const a=Math.random()*Math.PI*2, s=(0.4+Math.random()*5.0)*power*eDPR;
+    sparks.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-1.0*eDPR,life:1,
+      decay:0.018+Math.random()*0.04,sz:(0.7+Math.random()*2.1)*eDPR,blue:Math.random()<0.4});
+  }
+}
+function spawnSmoke(x,y,n){
+  for(let i=0;i<n;i++){
+    if(smoke.length>=MAXSM) break;
+    smoke.push({x:x+(Math.random()-0.5)*10*eDPR,y,vx:(Math.random()-0.5)*0.35*eDPR,
+      vy:-(0.3+Math.random()*0.7)*eDPR,r:(5+Math.random()*11)*eDPR,life:1,
+      decay:0.005+Math.random()*0.006,warm:Math.random()<0.55});
+  }
+}
+function spawnFlash(x,y,r){ flashes.push({x,y,r:r*eDPR,life:1}); }
+
+/* ---- glass cracks: branching fracture trees that grow over time ---- */
+function makeCrack(ox, oy, scale, dirBias, opts){
+  opts = opts || {};
+  const segs=[]; let total=0;
+  const branches = opts.branches || (2 + (Math.random()*3|0));
+  const subProb  = (opts.subProb!=null) ? opts.subProb : 0.16;
+  for (let b=0;b<branches;b++){
+    let ang = (dirBias!=null) ? dirBias + (Math.random()-0.5)*1.7 : Math.random()*Math.PI*2;
+    let x=ox, y=oy;
+    const steps = (opts.long?15:8) + (Math.random()*9|0);
+    for (let s=0;s<steps;s++){
+      ang += (Math.random()-0.5)*0.9;
+      const len = EW*scale*(0.018+Math.random()*0.05);
+      let nx = x + Math.cos(ang)*len, ny = y + Math.sin(ang)*len;
+      nx=Math.max(2,Math.min(EW-2,nx)); ny=Math.max(2,Math.min(EH-2,ny));
+      const d=Math.hypot(nx-x,ny-y);
+      segs.push({ax:x,ay:y,bx:nx,by:ny,len:d}); total+=d;
+      x=nx; y=ny;
+      if (Math.random()<subProb){            // single short sub-branch
+        let a2=ang+(Math.random()-0.5)*1.6, x2=x, y2=y;
+        const st2=3+(Math.random()*4|0);
+        for (let k=0;k<st2;k++){
+          a2+=(Math.random()-0.5)*0.9;
+          const l2=EW*scale*(0.012+Math.random()*0.03);
+          let mx=Math.max(2,Math.min(EW-2,x2+Math.cos(a2)*l2));
+          let my=Math.max(2,Math.min(EH-2,y2+Math.sin(a2)*l2));
+          const d2=Math.hypot(mx-x2,my-y2);
+          segs.push({ax:x2,ay:y2,bx:mx,by:my,len:d2}); total+=d2;
+          x2=mx; y2=my;
+        }
+      }
+    }
+  }
+  return { segs, total, grow:0, growMs: opts.growMs || (380+Math.random()*260), born:performance.now() };
+}
+function spawnCrack(x,y,scale,dirBias,opts){
+  if (cracks.length>=MAXCRACK) cracks.shift();
+  cracks.push(makeCrack(x,y,scale,dirBias,opts));
+  spawnFlash(x,y, EW*0.05);
+}
+
+function drawCracks(now, dt){
+  if (!cracks.length) return;
+  for (const c of cracks){
+    c.grow = Math.min(1, c.grow + dt/c.growMs);
+    const drawn = c.grow*c.total;
+    const age = (now-c.born);
+    const heat = Math.max(0, 1 - age/900);        // hot tip cools
+    let acc=0;
+    // wide cool glow
+    ectx.globalCompositeOperation='lighter';
+    ectx.lineCap='round'; ectx.lineJoin='round';
+    for (const s of c.segs){
+      if (acc>drawn) break;
+      const p = Math.min(1,(drawn-acc)/s.len);
+      const bx=s.ax+(s.bx-s.ax)*p, by=s.ay+(s.by-s.ay)*p;
+      ectx.strokeStyle='rgba(120,200,255,0.10)';
+      ectx.lineWidth=3.2*eDPR; ectx.globalAlpha=0.9;
+      ectx.beginPath(); ectx.moveTo(s.ax,s.ay); ectx.lineTo(bx,by); ectx.stroke();
+      ectx.strokeStyle='rgba(225,248,255,0.95)';
+      ectx.lineWidth=1.0*eDPR; ectx.globalAlpha=0.95;
+      ectx.beginPath(); ectx.moveTo(s.ax,s.ay); ectx.lineTo(bx,by); ectx.stroke();
+      acc+=s.len;
+    }
+    // hot frontier while young
+    if (heat>0.02 && c.grow<1){
+      const pal=LASER_PALETTES[CFG.color];
+      ectx.globalAlpha=heat;
+      ectx.strokeStyle=`rgba(${pal.flare[0]},${pal.flare[1]},${pal.flare[2]},0.6)`;
+      ectx.lineWidth=2.0*eDPR;
+      acc=0;
+      for (const s of c.segs){
+        if (acc>drawn) break;
+        if (drawn-acc < s.len){
+          const p=Math.min(1,(drawn-acc)/s.len);
+          const bx=s.ax+(s.bx-s.ax)*p, by=s.ay+(s.by-s.ay)*p;
+          ectx.beginPath(); ectx.moveTo(s.ax,s.ay); ectx.lineTo(bx,by); ectx.stroke();
+        }
+        acc+=s.len;
+      }
+    }
+  }
+  ectx.globalAlpha=1; ectx.globalCompositeOperation='source-over';
+}
+
+function drawNode(p, a, pal){
+  ectx.globalCompositeOperation='lighter';
+  ectx.globalAlpha=a;
+  ectx.fillStyle=pal.glow; ectx.beginPath(); ectx.arc(p.x,p.y,8*eDPR,0,7); ectx.fill();
+  ectx.fillStyle='rgba(255,235,200,0.95)'; ectx.beginPath(); ectx.arc(p.x,p.y,3.6*eDPR,0,7); ectx.fill();
+  ectx.fillStyle='rgba(255,255,245,1)'; ectx.beginPath(); ectx.arc(p.x,p.y,1.7*eDPR,0,7); ectx.fill();
+  ectx.globalAlpha=1;
+}
+
+function drawBeam(sx,sy,tx,ty,strobe,pal){
+  ectx.globalCompositeOperation='lighter';
+  ectx.lineCap='round';
+  ectx.strokeStyle=pal.beam; ectx.lineWidth=7*eDPR; ectx.globalAlpha=0.14*strobe;
+  ectx.beginPath(); ectx.moveTo(sx,sy); ectx.lineTo(tx,ty); ectx.stroke();
+  ectx.strokeStyle='rgb(120,200,255)'; ectx.lineWidth=2.4*eDPR; ectx.globalAlpha=0.7*strobe;
+  ectx.beginPath(); ectx.moveTo(sx,sy); ectx.lineTo(tx,ty); ectx.stroke();
+  ectx.strokeStyle='rgb(255,255,245)'; ectx.lineWidth=1.0*eDPR; ectx.globalAlpha=strobe;
+  ectx.beginPath(); ectx.moveTo(sx,sy); ectx.lineTo(tx,ty); ectx.stroke();
+  ectx.globalAlpha=1;
+}
+
+/* ---- tool-path carving helpers ---- */
+function ptAtLen(path, L){
+  let acc=0;
+  for(let i=0;i<path.pts.length-1;i++){
+    const seg=path.cum[i+1]-path.cum[i];
+    if(acc+seg>=L){ const t=seg?(L-acc)/seg:0; const a=path.pts[i],b=path.pts[i+1];
+      return {x:a.x+(b.x-a.x)*t, y:a.y+(b.y-a.y)*t}; }
+    acc+=seg;
+  }
+  const last=path.pts[path.pts.length-1]; return {x:last.x,y:last.y};
+}
+function strokeUpTo(path, L, w, style, alpha){
+  ectx.lineWidth=w; ectx.strokeStyle=style; ectx.globalAlpha=alpha;
+  ectx.beginPath(); ectx.moveTo(path.pts[0].x, path.pts[0].y);
+  let acc=0;
+  for(let i=0;i<path.pts.length-1;i++){
+    const a=path.pts[i], b=path.pts[i+1], seg=path.cum[i+1]-path.cum[i];
+    if(acc+seg<=L){ ectx.lineTo(b.x,b.y); }
+    else { const t=seg?(L-acc)/seg:0; ectx.lineTo(a.x+(b.x-a.x)*t, a.y+(b.y-a.y)*t); ectx.stroke(); return; }
+    acc+=seg;
+  }
+  ectx.stroke();
+}
+function drawCarved(path, frac, amul){
+  amul = amul==null?1:amul;
+  const pal = LASER_PALETTES[CFG.color];
+  const L = Math.max(0,Math.min(1,frac))*path.total;
+  ectx.globalCompositeOperation='lighter'; ectx.lineCap='round'; ectx.lineJoin='round';
+  const w = Math.max(3*eDPR, textBox.fontPx*0.16);
+  strokeUpTo(path, L, w*3.0, pal.glow,  0.55*amul);
+  strokeUpTo(path, L, w*1.7, pal.beam,  0.5*amul);
+  strokeUpTo(path, L, w,     pal.hot2,  0.95*amul);
+  strokeUpTo(path, L, Math.max(1,w*0.36), '#ffffff', 0.95*amul);
+  ectx.globalAlpha=1; ectx.globalCompositeOperation='source-over';
+  return ptAtLen(path, L);
+}
+
+/* randomized slanted scratch strokes, carved up to `frac` */
+function drawScratches(frac, amul){
+  amul = amul==null?1:amul;
+  const pal=LASER_PALETTES[CFG.color];
+  const arr=textBox.scratch||[]; const n=arr.length;
+  const upto=Math.max(0,Math.min(1,frac))*n, full=Math.floor(upto);
+  const w=Math.max(1.3*eDPR, textBox.fontPx*0.05);
+  ectx.globalCompositeOperation='lighter'; ectx.lineCap='round';
+  let head=null;
+  for(let i=0;i<n && i<=full;i++){
+    const s=arr[i]; let ex=s.x2, ey=s.y2;
+    if(i===full && full<n){ const t=upto-full; ex=s.x1+(s.x2-s.x1)*t; ey=s.y1+(s.y2-s.y1)*t; head={x:ex,y:ey}; }
+    ectx.strokeStyle=pal.glow; ectx.globalAlpha=0.28*amul; ectx.lineWidth=w*2.4;
+    ectx.beginPath(); ectx.moveTo(s.x1,s.y1); ectx.lineTo(ex,ey); ectx.stroke();
+    ectx.strokeStyle=pal.hot2; ectx.globalAlpha=0.85*amul; ectx.lineWidth=w;
+    ectx.beginPath(); ectx.moveTo(s.x1,s.y1); ectx.lineTo(ex,ey); ectx.stroke();
+    ectx.strokeStyle='#ffffff'; ectx.globalAlpha=0.5*amul; ectx.lineWidth=Math.max(1,w*0.4);
+    ectx.beginPath(); ectx.moveTo(s.x1,s.y1); ectx.lineTo(ex,ey); ectx.stroke();
+  }
+  ectx.globalAlpha=1; ectx.globalCompositeOperation='source-over';
+  if(head==null && full>=n && n>0){ const s=arr[n-1]; head={x:s.x2,y:s.y2}; }
+  return head;
+}
+
+/* shared particle pass (flashes / sparks / smoke) — runs every phase */
+function renderParticles(){
+  const pal=LASER_PALETTES[CFG.color];
+  for(let i=flashes.length-1;i>=0;i--){ const fl=flashes[i]; fl.life-=0.06;
+    if(fl.life<=0){flashes.splice(i,1);continue;}
+    const rg=ectx.createRadialGradient(fl.x,fl.y,0,fl.x,fl.y,fl.r*(1.2-fl.life));
+    rg.addColorStop(0,`rgba(220,240,255,${0.5*fl.life})`); rg.addColorStop(1,'rgba(0,0,0,0)');
+    ectx.globalCompositeOperation='lighter'; ectx.fillStyle=rg;
+    ectx.beginPath(); ectx.arc(fl.x,fl.y,fl.r*(1.2-fl.life),0,7); ectx.fill();
+  }
+  ectx.globalCompositeOperation='lighter';
+  for(let i=sparks.length-1;i>=0;i--){ const s=sparks[i]; s.x+=s.vx;s.y+=s.vy;s.vx*=0.985;s.vy+=0.18*eDPR;s.life-=s.decay;
+    if(s.life<=0){sparks.splice(i,1);continue;}
+    ectx.globalAlpha=s.life;
+    ectx.fillStyle=s.blue?'rgba(150,210,255,1)':`rgba(${pal.flare[0]},${pal.flare[1]},${pal.flare[2]},1)`;
+    ectx.fillRect(s.x,s.y,s.sz,s.sz);
+  }
+  ectx.globalAlpha=1;
+  for(let i=smoke.length-1;i>=0;i--){ const m=smoke[i]; m.x+=m.vx;m.y+=m.vy;m.vy*=0.992;m.r*=1.012;m.life-=m.decay;
+    if(m.life<=0){smoke.splice(i,1);continue;}
+    const col=m.warm?'255,180,110':'190,200,215';
+    const rg=ectx.createRadialGradient(m.x,m.y,0,m.x,m.y,m.r);
+    rg.addColorStop(0,`rgba(${col},${0.16*m.life})`); rg.addColorStop(1,`rgba(${col},0)`);
+    ectx.globalCompositeOperation='source-over'; ectx.fillStyle=rg;
+    ectx.beginPath(); ectx.arc(m.x,m.y,m.r,0,7); ectx.fill();
+  }
+  ectx.globalAlpha=1; ectx.globalCompositeOperation='source-over';
+}
+
+/* armed beat: the lit nodes flash for ARM_MS before they fire */
+const ARM_MS = 2000;
+let armStart = 0;
+function renderArm(now){
+  const pal=LASER_PALETTES[CFG.color];
+  const t=Math.min(1,(now-armStart)/ARM_MS);
+  // persistent aperture outline (carried over from the trace)
+  const loop=perimeterLoop();
+  ectx.globalCompositeOperation='lighter'; ectx.lineCap='round'; ectx.lineJoin='round';
+  ectx.beginPath(); ectx.moveTo(loop[0].x,loop[0].y);
+  for(let k=1;k<loop.length;k++) ectx.lineTo(loop[k].x,loop[k].y);
+  ectx.strokeStyle=pal.glow; ectx.globalAlpha=0.30; ectx.lineWidth=6*eDPR; ectx.stroke();
+  ectx.strokeStyle=pal.hot2; ectx.globalAlpha=0.55; ectx.lineWidth=2*eDPR; ectx.stroke();
+  // nodes flash ~4 times, building toward the fire
+  const pulse=Math.abs(Math.sin(t*Math.PI*4));
+  const amp=Math.min(1, 0.35 + 0.7*pulse*(0.5+0.5*t));
+  for(const n of nodes){ const p=nodePoint(n);
+    const r=(10+20*pulse)*eDPR;
+    const g=ectx.createRadialGradient(p.x,p.y,0,p.x,p.y,r);
+    g.addColorStop(0,`rgba(255,255,245,${amp})`); g.addColorStop(0.5,pal.glow); g.addColorStop(1,'rgba(0,0,0,0)');
+    ectx.globalCompositeOperation='lighter'; ectx.globalAlpha=amp; ectx.fillStyle=g;
+    ectx.beginPath(); ectx.arc(p.x,p.y,r,0,7); ectx.fill();
+    drawNode(p, amp, pal);
+    if(pulse>0.85 && Math.random()<0.35) spawnSparks(p.x,p.y, Math.round(4*CFG.sparks), 0.8);
+  }
+  ectx.globalAlpha=1; ectx.globalCompositeOperation='source-over';
+  if(t>=1){ startEtch(); }   // armed -> fire
+}
+
+function renderEtch(now, dt){
+  if (!EW) return;
+  dt = dt || 16;
+  ectx.clearRect(0,0,EW,EH);
+  if (!sprCool || !textBox.border) return;
+  const pal = LASER_PALETTES[CFG.color];
+
+  drawCracks(now, dt);
+
+  // idle: nothing carved yet — keep the glass clean until the laser starts
+  if (etchState==='idle'){ return; }
+  // pre-etch: aperture light-trace runs the perimeter, then breaks into the nodes
+  if (etchState==='tracing'){ renderTrace(now); renderParticles(); return; }
+  // armed: nodes flash for 2s before firing
+  if (etchState==='arming'){ renderArm(now); renderParticles(); return; }
+
+  // staged carve: border -> scratch infill -> text
+  const D = (4800/CFG.etch);
+  const f = etchState==='live' ? 1 : Math.min(1,(now-etchStart)/D);
+  const B=0.22, H=0.60;
+  let stage='', sf=0, head=null, label='';
+  const strobe = 0.6+0.4*Math.sin(now*0.05);
+
+  // completed stages persist (glowing)
+  if (f>=B || etchState==='live') drawCarved(textBox.border, 1);
+  if (f>=H || etchState==='live') drawScratches(1, 0.9);
+
+  if (etchState!=='live'){
+    if (f < B){ stage='border'; sf=f/B; label='Carving border&hellip;'; head=drawCarved(textBox.border, sf); }
+    else if (f < H){ stage='scratch'; sf=(f-B)/(H-B); label='Scratching infill&hellip;'; head=drawScratches(sf, 0.9); }
+    else { stage='text'; sf=(f-H)/(1-H); label='Etching prompt&hellip;';
+      const fx = textBox.x + sf*textBox.w;
+      // jitter the cutting head so it reads as actively burning the letters
+      const jx=(Math.random()-0.5)*textBox.fontPx*0.16;
+      const jy=(Math.random()-0.5)*textBox.fontPx*0.30;
+      head={x:fx+jx, y:textBox.cy+jy};
+      ectx.save(); ectx.beginPath(); ectx.rect(0,0,fx+2,EH); ectx.clip();
+      ectx.globalCompositeOperation='source-over'; ectx.drawImage(sprCool,0,0); ectx.restore();
+      const win=textBox.fontPx*1.2;
+      ectx.save(); ectx.beginPath(); ectx.rect(fx-win+jx,0,win+6,EH); ectx.clip();
+      ectx.globalCompositeOperation='lighter'; ectx.globalAlpha=0.95; ectx.drawImage(sprHot,jx,jy*0.5);
+      ectx.globalAlpha=1; ectx.drawImage(sprEdge,jx,jy*0.5); ectx.restore();
+    }
+    if(label && label!==lastEtchStatus){ setStatus(label,'go'); lastEtchStatus=label; }
+  } else {
+    ectx.globalCompositeOperation='source-over'; ectx.drawImage(sprCool,0,0);
+  }
+
+  // working head: bloom + converging nodes + sparks
+  if (head && etchState!=='live'){
+    const R=textBox.fontPx*1.7;
+    const g=ectx.createRadialGradient(head.x,head.y,0,head.x,head.y,R);
+    g.addColorStop(0,'rgba(255,255,250,1)');
+    g.addColorStop(0.14,'rgba(255,255,238,1)');
+    g.addColorStop(0.34,`rgba(${pal.flare[0]},${pal.flare[1]},${pal.flare[2]},0.85)`);
+    g.addColorStop(1,'rgba(0,0,0,0)');
+    ectx.globalCompositeOperation='lighter'; ectx.fillStyle=g;
+    ectx.fillRect(head.x-R, head.y-R, R*2, R*2);
+    // white-hot core at the etch point — stacked (additive) for extra intensity
+    const cr=textBox.fontPx*0.55;
+    const core=ectx.createRadialGradient(head.x,head.y,0,head.x,head.y,cr);
+    core.addColorStop(0,'rgba(255,255,255,1)'); core.addColorStop(0.5,'rgba(255,255,255,0.9)'); core.addColorStop(1,'rgba(255,255,255,0)');
+    ectx.fillStyle=core;
+    ectx.beginPath(); ectx.arc(head.x,head.y,cr,0,7); ectx.fill();
+    ectx.beginPath(); ectx.arc(head.x,head.y,cr*0.5,0,7); ectx.fill();
+    for(const n of nodes){
+      const tgt=(n.edge==='top'||n.edge==='bottom')?head.x:head.y;
+      n.pos += (tgt-n.pos)*n.follow;
+      const p=nodePoint(n); drawBeam(p.x,p.y,head.x,head.y,strobe,pal); drawNode(p,1,pal);
+    }
+    spawnSparks(head.x,head.y, Math.round((stage==='scratch'?22:40)*CFG.sparks), stage==='border'?1.3:1.0);
+    if(Math.random()<0.55) spawnSmoke(head.x,head.y,1);
+    if (f - crackMark > 0.14){
+      crackMark=f;
+      spawnCrack(head.x,head.y,0.5+Math.random()*0.4,(Math.random()-0.5)*6.28);
+      spawnSparks(head.x,head.y,Math.round(54*CFG.sparks),1.4);
+    }
+  }
+
+  // complete -> live
+  if (etchState==='sweeping' && f>=1){
+    etchState='live'; etchDoneAt=now;
+    const b=textBox.btn;
+    // a couple of slow, clean fractures creeping from opposite corners out to the screen edges
+    const slow = { growMs: 2800+Math.random()*1500, long:true, branches:1+(Math.random()*2|0), subProb:0.05 };
+    const corners=[[b.x,b.y],[b.x+b.w,b.y+b.h]];   // two diagonal corners only
+    for (const [cxp,cyp] of corners){
+      const ang = Math.atan2(cyp-EH/2, cxp-EW/2);   // outward, toward the nearest screen corner
+      spawnCrack(cxp,cyp,1.5,ang,slow);
+    }
+    spawnSparks(textBox.cx,textBox.cy,Math.round(70*CFG.sparks),2.0); spawnFlash(textBox.cx,textBox.cy,EW*0.2);
+    onEtchDone();
+  }
+
+  renderParticles();
+
+  // live: retract nodes; border + scratches + text keep glowing; caret blinks
+  if (etchState==='live'){
+    const na=Math.max(0,1-(now-etchDoneAt)/900);
+    if(na>0){ for(const n of nodes){ n.pos+=(n.park-n.pos)*0.12; drawNode(nodePoint(n),na*0.7,pal); } }
+    const pulse=0.82+0.18*Math.sin(now*0.004); const hover=enterBtn.matches(':hover');
+    drawCarved(textBox.border, 1, (hover?1.0:0.85)*pulse);
+    ectx.globalCompositeOperation='lighter';
+    ectx.globalAlpha=(hover?0.5:0.28)*pulse; ectx.drawImage(sprEdge,0,0);
+    if(Math.sin(now*0.006)>-0.2){
+      ectx.globalAlpha=hover?0.95:0.6; ectx.fillStyle=pal.hot2;
+      const cx0=textBox.x+textBox.w+textBox.fontPx*0.3;
+      ectx.fillRect(cx0,textBox.cy-textBox.fontPx*0.46,textBox.fontPx*0.1,textBox.fontPx*0.92);
+    }
+    ectx.globalAlpha=1; ectx.globalCompositeOperation='source-over';
+  }
+}
+
+
+/* ===================== ORCHESTRATION ===================== */
+function onResolved(){ setStatus('Logo resolved', 'go'); setTimeout(startTrace, Math.max(0,CFG.hold)*1000); }
+function onEtchDone(){
+  phase='ready';
+  enterBtn.classList.add('live');
+  enterBtn.style.opacity = 1;            // becomes interactive (still visually transparent)
+  setStatus('Ready &mdash; <b>press to enter</b>', 'live');
+}
+
+let lastT = performance.now();
+let etchErrLogged = false;
+function loop(now){
+  const dt = now - lastT; lastT = now;
+  try { renderScreen(now, dt); } catch(e){ /* keep looping */ }
+  try { renderEtch(now, dt); }
+  catch(e){ if(!etchErrLogged){ console.error('etch render error:', e); etchErrLogged=true; } }
+  try { tickPhaseLabel((now-bootStart)/1000); } catch(e){}
+  requestAnimationFrame(loop);
+}
+
+/* enter / boot transition */
+enterBtn.addEventListener('click', ()=>{
+  if (etchState!=='live') return;
+  crtEl.classList.add('surge-on');
+  setStatus('Entering&hellip;', 'live');
+  setTimeout(()=>{
+    crtEl.classList.remove('surge-on');
+    crtEl.classList.add('off');
+    setStatus('Connected', 'live');
+    // (wire your route here) e.g. window.location.href = 'app.html';
+  }, 120);
+  setTimeout(()=>{ /* hook for navigation */ }, 600);
+});
+
+function replayBoot(){
+  crtEl.classList.remove('off','surge-on');
+  bootStart = performance.now();
+  phase='warm'; resolveDone=false;
+  etchState='idle'; lastEtchStatus=''; etchDoneAt=0; crackMark=0;
+  enterBtn.classList.remove('live'); enterBtn.style.opacity=0;
+  sparks.length=0; smoke.length=0; cracks.length=0; flashes.length=0;
+  buildNodes();
+  // wipe both canvases so nothing from the previous run lingers
+  ectx.clearRect(0,0,EW,EH);
+  sctx.clearRect(0,0,screenCv.width,screenCv.height);
+  sctx.fillStyle='#000'; sctx.fillRect(0,0,screenCv.width,screenCv.height);
+  setStatus('Cold start', '');
+}
+
+/* ===================== CONTROLS ===================== */
+function configSnippet(){
+  return 'const CFG = {\n'+
+  '  pixel:   '+CFG.pixel+',\n'+
+  '  chroma:  '+CFG.chroma+',\n'+
+  '  gran:    '+CFG.gran+',\n'+
+  '  noise:   '+CFG.noise+',\n'+
+  '  scroll:  '+CFG.scroll+',\n'+
+  '  scan:    '+CFG.scan+',\n'+
+  '  flicker: '+CFG.flicker+',\n'+
+  '  fade:    '+CFG.fade.toFixed(1)+',\n'+
+  '  hold:    '+CFG.hold.toFixed(1)+',\n'+
+  '  etch:    '+CFG.etch.toFixed(1)+',\n'+
+  '  sparks:  '+CFG.sparks.toFixed(1)+',\n'+
+  "  color:   '"+CFG.color+"'\n};";
+}
+const cfgDump = document.getElementById('cfgDump');
+function refreshDump(){
+  if (cfgDump) cfgDump.textContent = configSnippet();
+}
+
+function bindRange(id, key, fmt, after){
+  const el=document.getElementById(id), out=document.getElementById('v'+id.slice(1));
+  const upd=()=>{ CFG[key]=parseFloat(el.value); if(out) out.textContent=fmt?fmt(CFG[key]):el.value; if(after) after(); refreshDump(); };
+  el.addEventListener('input', upd); upd();
+}
+bindRange('cPixel','pixel');
+bindRange('cChroma','chroma');
+bindRange('cGran','gran');
+bindRange('cNoise','noise');
+bindRange('cScroll','scroll');
+bindRange('cScan','scan', null, syncScanCss);
+bindRange('cFlick','flicker');
+bindRange('cFade','fade', v=>v.toFixed(1)+'s');
+bindRange('cHold','hold', v=>v.toFixed(1)+'s');
+bindRange('cEtch','etch', v=>(4.8/v).toFixed(1)+'s');
+bindRange('cSparks','sparks', v=>v.toFixed(1)+'×');
+
+/* laser color swatches */
+const swWrap = document.getElementById('swatches');
+const vColor = document.getElementById('vColor');
+Object.keys(LASER_PALETTES).forEach(name=>{
+  const d=document.createElement('div');
+  d.className='sw'; d.style.color=LASER_PALETTES[name].css;
+  d.style.background=LASER_PALETTES[name].css;
+  d.dataset.on = name===CFG.color ? '1':'0';
+  d.title=name;
+  d.onclick=()=>{
+    CFG.color=name; vColor.textContent=name;
+    [...swWrap.children].forEach(c=>c.dataset.on='0'); d.dataset.on='1';
+    buildEtchSprites(); refreshDump();
+  };
+  swWrap.appendChild(d);
+});
+
+document.getElementById('btnReplay').onclick = replayBoot;
+document.getElementById('btnReetch').onclick = ()=>{ if(resolveDone) startTrace(); };
+document.getElementById('btnCopy').onclick = (e)=>{
+  const s = configSnippet();
+  try { navigator.clipboard && navigator.clipboard.writeText(s); } catch(err){}
+  const b=e.currentTarget, t=b.textContent; b.textContent='✓ Copied'; setTimeout(()=>b.textContent=t, 1100);
+};
+refreshDump();
+
+/* ===================== RESIZE + BOOT ===================== */
+function sizeAll(){ sizeScreen(); sizeEtch(); }
+window.addEventListener('resize', ()=>{ clearTimeout(window.__rz); window.__rz=setTimeout(sizeAll,120); });
+
+/* load logo */
+const limg = new Image();
+limg.onload = ()=>{ logo=limg; buildChannels(); logoReady=true; };
+limg.onerror = ()=>{ logoFailed=true; logoReady=false; document.getElementById('rSource').textContent='helix_logo.png — MISSING'; };
+limg.src = LOGO_SRC;
+
+syncScanCss();
+sizeAll();
+setStatus('Cold start','');
+requestAnimationFrame(loop);
+
+/* if Chakra Petch arrives after first paint, rebuild the etched glyphs */
+if (document.fonts && document.fonts.ready){
+  document.fonts.ready.then(()=>{ buildEtchSprites(); });
+}
+</script>
+</body>
+</html>
