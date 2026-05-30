@@ -1,0 +1,86 @@
+/* ═══════════════════════════════════════════════════════════
+   HELIX — SHARED VIEW SKELETON   css/views/view-shell.css
+   The "same basic iframe shape" inherited by ALL three views
+   (Research·Traditional, Research·HELIX NOVA, Documentation).
+
+   Provides: constant top-left logo box · left control rail ·
+             content panel · embed-mode chrome suppression.
+   Tokens come from ../core.css (:root). This file is layout only.
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── frame root ── every view's <body> gets class="view-root" ── */
+.view-root{
+  height:100vh; width:100%; overflow:hidden;
+  display:grid;
+  grid-template-columns: var(--rail-w, 200px) 1fr;
+  grid-template-rows: 1fr;
+  background:var(--bg);
+}
+
+/* ── LEFT RAIL (constant skeleton) ── */
+.view-rail{
+  display:flex; flex-direction:column;
+  border-right:1px solid var(--border);
+  background:linear-gradient(180deg, rgba(0,229,255,.04), transparent 16%), var(--bg-panel);
+  min-height:0;
+}
+
+/* CONSTANT top-left logo box — identical position across all views.
+   Holds the glitch-canvas logo (Traditional) or a static logo (others). */
+.view-logo-box{
+  flex-shrink:0;
+  width:100%; aspect-ratio:1/1;
+  background:#07090f;
+  border-bottom:1px solid var(--border-dim);
+  position:relative; overflow:hidden;
+}
+.view-logo-box canvas,
+.view-logo-box img{ display:block; width:100%; height:100%; object-fit:contain; cursor:pointer; }
+
+/* rail body — view-specific controls slot here (sectors, mode list, contents) */
+.view-rail-body{ flex:1; min-height:0; overflow-y:auto; padding:16px 0; }
+.view-rail-body::-webkit-scrollbar{ width:7px; }
+.view-rail-body::-webkit-scrollbar-thumb{ background:rgba(0,229,255,.18); border-radius:4px; }
+
+.view-rail-footer{
+  flex-shrink:0; padding:12px 16px; border-top:1px solid var(--border-dim);
+  font-family:'Share Tech Mono',monospace; font-size:9.5px; letter-spacing:.2em;
+  color:var(--text-faint); text-transform:uppercase;
+  display:flex; align-items:center; gap:8px;
+}
+.view-rail-footer .dot{
+  width:7px;height:7px;border-radius:50%;background:var(--green);
+  box-shadow:0 0 8px var(--glow-g); animation:vs-pulse 2.4s ease-in-out infinite;
+}
+@keyframes vs-pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* ── CONTENT PANEL (constant skeleton) ── */
+.view-content{
+  position:relative; min-width:0; min-height:0;
+  display:flex; flex-direction:column; overflow:hidden;
+}
+
+/* ambient grid behind content, matches shell */
+.view-content::before{
+  content:''; position:absolute; inset:0; z-index:0; pointer-events:none;
+  background-image:
+    linear-gradient(rgba(0,229,255,.03) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,229,255,.03) 1px,transparent 1px);
+  background-size:48px 48px;
+  mask-image:radial-gradient(circle at 50% 40%, #000 0%, transparent 82%);
+  -webkit-mask-image:radial-gradient(circle at 50% 40%, #000 0%, transparent 82%);
+}
+.view-content > *{ position:relative; z-index:1; }
+
+/* ── EMBED MODE ──────────────────────────────────────────────
+   When loaded inside app.html the view gets ?embed=1 and the
+   shell-port script adds .is-embedded to <html>. Any chrome the
+   page owns standalone (its own topbar / splash-return) hides. */
+html.is-embedded .own-topbar,
+html.is-embedded .splash-return{ display:none !important; }
+
+/* ── shell owns the logo (Option B) ── hide each view's own logo box
+   in embed mode but KEEP its footprint so the rail layout doesn't shift;
+   the shell's #shell-logo (position:fixed) sits exactly over this cell. */
+html.is-embedded .view-logo-box{ visibility:hidden; }      /* keeps 1:1 spacer */
+html.is-embedded .rail-img-box{ visibility:hidden; }       /* main.html port */

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>H.E.L.I.X — Documentation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Exo+2:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/views/documentation.css">
+</head>
+<body>
+<div class="view-root">
+
+  <!-- ════ DARK NAV RAIL (mini-shell controller) ════ -->
+  <aside class="view-rail">
+    <div class="view-logo-box" title="HELIX">
+      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="hx" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#00e5ff"/><stop offset="1" stop-color="#ff6a00"/></linearGradient></defs>
+        <g fill="none" stroke="url(#hx)" stroke-width="2.4" stroke-linecap="round">
+          <path d="M30 12 C70 30,70 70,30 88"/><path d="M70 12 C30 30,30 70,70 88"/>
+          <line x1="35" y1="22" x2="65" y2="22"/><line x1="58" y1="36" x2="42" y2="36"/>
+          <line x1="38" y1="50" x2="62" y2="50"/><line x1="58" y1="64" x2="42" y2="64"/><line x1="35" y1="78" x2="65" y2="78"/>
+        </g>
+      </svg>
+    </div>
+    <nav class="nav-scroll" id="nav">
+      <a class="nav-item" data-sec="home" href="#home">Home</a>
+      <a class="nav-item" data-sec="overview" href="#overview">Project Overview</a>
+      <a class="nav-item" data-sec="timeline" href="#timeline">Project Timeline</a>
+      <a class="nav-item" data-sec="gantt" href="#gantt">Gantt Chart</a>
+      <a class="nav-item" data-sec="proposal" href="#proposal">Project Proposal</a>
+      <a class="nav-item" data-sec="mvp" href="#mvp">MVP Plan</a>
+      <a class="nav-item" data-sec="video" href="#video">Project Video</a>
+      <a class="nav-item" data-sec="branding" href="#branding">Logo &amp; Branding</a>
+      <div class="nav-sep"></div>
+      <a class="nav-item future">Poster <span class="pill">Future</span></a>
+      <a class="nav-item future">Final Write-up <span class="pill">Future</span></a>
+      <div class="nav-sep"></div>
+      <a class="nav-item" data-sec="contacts" href="#contacts">Contacts</a>
+      <div class="nav-head">Related Repositories</div>
+      <a class="nav-item" href="https://github.com/N-Herling-Mk1/" target="_blank" rel="noopener">Experiments <span class="ext">↗</span></a>
+      <a class="nav-item" href="https://github.com/N-Herling-Mk1/" target="_blank" rel="noopener">Software <span class="ext">↗</span></a>
+    </nav>
+  </aside>
+
+  <!-- ════ LIGHT CONTENT SURFACE — panels fetched in here ════ -->
+  <main class="view-content">
+    <div class="doc-scroll">
+      <div class="doc-panel" id="panel-host"></div>
+    </div>
+  </main>
+</div>
+
+<!-- embed helper · gantt engine · panel router -->
+<script src="../js/views/embed.js"></script>
+<script src="../js/views/gantt.js"></script>
+<script src="../js/views/documentation.js"></script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+{
+  "_comment": "Per-week task lists for the Gantt detail panel. Hand-edit this file. Keys are week numbers (strings) matching the Gantt's W0..W12. Each task: { name, status } where status is 'todo' or 'done'.",
+  "last_updated": "2026-05-29",
+  "weeks": {
+    "1": {
+      "label": "Planning",
+      "tasks": [
+        { "name": "Get front-end doc site up", "status": "todo" },
+        { "name": "Create hybrid project proposal", "status": "todo" },
+        { "name": "Get Project Video section done", "status": "todo" }
+      ]
+    }
+  }
+}

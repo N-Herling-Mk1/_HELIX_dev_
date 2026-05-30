@@ -1,0 +1,1273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>H.E.L.I.X — Hub</title>
+<link rel="icon" type="image/x-icon" href="../assets/img/helix_64.ico">
+<meta property="og:title"       content="H.E.L.I.X — Navigation Hub">
+<meta property="og:description" content="HEP · Epistemic · Learning · Intelligent AI · Exploration">
+<meta property="og:image"       content="https://n-herling-mk1.github.io/_HELIX_/assets/img/Soc_media_tag.png">
+<meta property="og:url"         content="https://n-herling-mk1.github.io/_HELIX_/main.html">
+<meta property="og:type"        content="website">
+<meta name="twitter:card"       content="summary_large_image">
+<meta name="twitter:title"      content="H.E.L.I.X — Navigation Hub">
+<meta name="twitter:image"      content="https://n-herling-mk1.github.io/_HELIX_/assets/img/Soc_media_tag.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Exo+2:wght@200;300;400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/helix.css">
+<link rel="stylesheet" href="../css/main.css">
+<link rel="stylesheet" href="../css/views/view-shell.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/dseg@0.46.0/css/dseg.css">
+<script data-goatcounter="https://helix-nherling.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+</head>
+<body>
+
+<canvas id="bg-canvas" style="position:fixed;top:0;left:0;z-index:1;pointer-events:none;"></canvas>
+<div class="grid-bg"></div>
+<div class="vignette"></div>
+<div class="scanlines"></div>
+<div class="corner tl"></div>
+<div class="corner tr"></div>
+<div class="corner bl"></div>
+<div class="corner br"></div>
+
+<!-- TOPBAR -->
+<header class="topbar own-topbar">
+
+  <!-- LEFT: NAV HUB label only -->
+  <div class="topbar-left">
+    <span class="topbar-label">NAVIGATION HUB</span>
+  </div>
+
+  <!-- CENTER: Energy Level + Return to Splash side by side -->
+  <div class="topbar-center-wrap">
+    <button class="energy-btn topbar-center-btn" id="energy-btn" data-level="0">
+      <span class="energy-icon">⚡</span>
+      <span class="energy-text">ENERGY LEVEL <span id="energy-level-num">0</span></span>
+    </button>
+    <a href="../index.html" class="topbar-back topbar-center-btn" id="topbar-back-link">
+      ← RETURN TO SPLASH
+    </a>
+  </div>
+
+  <!-- RIGHT: sector letter -->
+  <div class="topbar-right">
+    <span class="topbar-sector-letter" id="content-sector-letter"></span>
+    <span class="topbar-sector-name" id="content-sector-name"></span>
+  </div>
+
+</header>
+
+<!-- HUB BODY -->
+<div class="hub-body">
+
+  <!-- LEFT NAV RAIL -->
+  <nav class="nav-rail">
+    <div class="rail-img-box" id="rail-img-box" style="background:#07090f;">
+      <canvas id="glitch-canvas" width="180" height="180" style="display:block;width:100%;height:100%;cursor:pointer;" title="Click to trigger glitch"></canvas>
+    </div>
+
+    <button class="sector-btn" data-sector="H">
+      <span class="btn-letter">H</span>
+      <span class="btn-word">HEP</span>
+      <span class="btn-count"></span>
+    </button>
+    <button class="sector-btn" data-sector="E">
+      <span class="btn-letter">E</span>
+      <span class="btn-word">EPISTEMIC</span>
+      <span class="btn-count"></span>
+    </button>
+    <button class="sector-btn" data-sector="L">
+      <span class="btn-letter">L</span>
+      <span class="btn-word">LEARNING</span>
+      <span class="btn-count"></span>
+    </button>
+    <button class="sector-btn" data-sector="I">
+      <span class="btn-letter">I</span>
+      <span class="btn-word">INTELLIGENT AI</span>
+      <span class="btn-count"></span>
+    </button>
+    <button class="sector-btn" data-sector="X">
+      <span class="btn-letter">X</span>
+      <span class="btn-word">EXPLORATION</span>
+      <span class="btn-count"></span>
+    </button>
+
+    <div class="rail-footer">
+      <div class="rail-status">
+        <div class="status-dot"></div>
+        HELIX ONLINE
+      </div>
+    </div>
+  </nav>
+
+  <!-- CONTENT PANEL -->
+  <section class="content-panel">
+
+    <div class="content-header">
+      <div class="content-header-left">
+        <div class="content-logo">
+          H<span class="dot">·</span>E<span class="dot">·</span>L<span class="dot">·</span>I<span class="dot">·</span>X
+        </div>
+        <div class="content-status">
+          <span class="content-dot"></span>
+          <span class="content-online">SYSTEM ONLINE</span>
+        </div>
+      </div>
+      <div class="subtab-bar" id="subtab-bar">
+        <button class="subtab" data-tab="articles">ARTICLES</button>
+        <button class="subtab" data-tab="notes">NOTES</button>
+        <button class="subtab" data-tab="goals">GOALS</button>
+        <div class="subtab-divider"></div>
+        <button class="navbtn navbtn-about" id="navbtn-about">ABOUT</button>
+        <button class="navbtn navbtn-blog"  id="navbtn-blog">BLOG</button>
+      </div>
+      <div class="content-sector-info" id="content-sector-info">
+        <!-- Topbar extras removed — Energy Panel 1 & 2 are now the sole homes
+             for BE/FE/Analytics and Logo/FX controls respectively. -->
+      </div>
+    </div>
+
+    <div class="panel-empty" id="panel-empty">
+      <div class="empty-glyph">H·E·L·I·X</div>
+      <div class="empty-msg" id="empty-msg-1">
+        SELECT&nbsp;<span class="empty-tab-hint">[ARTICLES]</span>&nbsp;
+        <span class="empty-tab-hint">[NOTES]</span>&nbsp;
+        <span class="empty-tab-hint">[GOALS]</span>&nbsp;TO GET STARTED
+      </div>
+      <div class="empty-msg hidden" id="empty-msg-2">
+        <div class="empty-sector-prompt">SELECT A SECTOR FROM THE LEFT PANEL</div>
+        <div class="empty-sector-list">
+          <div class="empty-sector-item" data-sector="H"><span class="esl esl-H">H</span> — HEP</div>
+          <div class="empty-sector-item" data-sector="E"><span class="esl esl-E">E</span> — EPISTEMIC</div>
+          <div class="empty-sector-item" data-sector="L"><span class="esl esl-L">L</span> — LEARNING</div>
+          <div class="empty-sector-item" data-sector="I"><span class="esl esl-I">I</span> — INTELLIGENT AI</div>
+          <div class="empty-sector-item" data-sector="X"><span class="esl esl-X">X</span> — EXPLORATION</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="article-list" id="article-list" style="display:none;"></div>
+
+    <div class="viewer-panel" id="viewer-panel">
+      <div class="viewer-topbar">
+        <button class="viewer-back" id="viewer-back">← BACK TO LIST</button>
+        <span class="viewer-doc-title" id="viewer-doc-title"></span>
+        <a class="viewer-dl-btn" id="viewer-dl" href="#" download>↓ DOWNLOAD</a>
+      </div>
+      <div class="viewer-wrap">
+        <iframe class="viewer-frame" id="viewer-frame" src="" title="Document Viewer"></iframe>
+        <div class="viewer-grain" id="viewer-grain">
+          <div class="viewer-error-msg">
+            <div class="viewer-error-code">404</div>
+            <div class="viewer-error-label">FILE NOT FOUND</div>
+            <div class="viewer-error-sub">PDF has not been uploaded yet</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ENERGY PANEL 1 — System Status -->
+    <div class="energy-panel" id="energy-panel-1" style="display:none;">
+      <div class="ep-header">
+        <span class="ep-title">⚡ ENERGY LEVEL 1 — SYSTEM STATUS</span>
+      </div>
+
+      <!-- TOP-CENTER RETURN BUTTON -->
+      <div class="ep-return-bar">
+        <button class="ep-close ep-close-bottom" onclick="closeEnergyPanel()">
+          <span class="ep-close-x">✕</span> CLOSE — RETURN TO MAIN
+        </button>
+      </div>
+
+      <div class="ep-body-wrap">
+
+        <!-- SCROLLABLE CONTENT — explain + data in one column -->
+        <div class="ep-body" id="ep1-scroll">
+
+          <!-- WHAT IS THIS — now inside the scroll column -->
+          <div class="ep-explain" id="ep1-sec-explain">
+            <div class="ep-explain-title">WHAT IS THIS?</div>
+            <div class="ep-explain-split">
+              <div class="ep-explain-col">
+                <div class="ep-explain-col-label">STATIC VIEWING ELEMENTS</div>
+                <div class="ep-explain-body">
+                  <strong>BE / FE LED indicators</strong> show the live binary state of the Flask
+                  backend server on <span class="ep-hl-r">localhost:5000</span> and the
+                  <span class="ep-hl-g">static frontend</span> on GitHub Pages.
+                  The <strong>poll timers</strong> display how long ago each was last checked —
+                  reset to <code>00:00</code> on every successful ping.
+                  The <strong>system clock</strong> gives a UTC-anchored local timestamp,
+                  updated every second.
+                  All three are passive readouts — they update automatically and require no interaction.
+                </div>
+              </div>
+              <div class="ep-explain-divider-v"></div>
+              <div class="ep-explain-col">
+                <div class="ep-explain-col-label">UI CHECKOUT</div>
+                <div class="ep-explain-body">
+                  The <span class="ep-hl-r">BACK END</span> indicator shows whether the
+                  Flask server is live on localhost:5000 — view only.
+                  The <span class="ep-hl-p">GoatCounter</span> analytics button opens
+                  the external dashboard for live visitor stats, page views, referrers,
+                  and browser data — no cookies, GDPR compliant.
+                  This panel is otherwise <strong>read-only</strong> — no settings are changed here.
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="ep-divider"></div>
+
+          <div class="ep-section-label" id="ep1-sec-be">BACKEND / FRONTEND</div>
+          <div class="ep-status-row">
+
+            <!-- Stacked LED buttons + timers -->
+            <div class="ep-led-stack">
+              <div class="ep-led-item be" id="ep-be-badge">
+                <div class="ep-led-btn be" id="ep-be-led-wrap">
+                  <span class="ep-led-digit" id="ep-be-led">0</span>
+                  <span class="ep-led-label" id="ep-be-btn">BACK END</span>
+                </div>
+                <div class="ep-seg-wrap">
+                  <span class="ep-seg-label">Time since last poll:</span>
+                  <div class="ep-seg-display" id="ep-be-timer">00:00</div>
+                </div>
+              </div>
+              <div class="ep-led-item fe" id="ep-fe-badge">
+                <div class="ep-led-btn fe" id="ep-fe-led-wrap">
+                  <span class="ep-led-digit" id="ep-fe-led">1</span>
+                  <span class="ep-led-label">FRONT END</span>
+                </div>
+                <div class="ep-seg-wrap">
+                  <span class="ep-seg-label">Time since last poll:</span>
+                  <div class="ep-seg-display" id="ep-fe-timer">00:00</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Always-visible description -->
+            <div class="ep-status-desc">
+              <div class="ep-desc-row">
+                <span class="ep-desc-chip be">BE</span>
+                <span class="ep-desc-text">Flask dev server · localhost:5000<br>
+                LED&nbsp;<b>1</b> = server live · LED&nbsp;<b>0</b> = offline</span>
+              </div>
+              <div class="ep-desc-divider"></div>
+              <div class="ep-desc-row">
+                <span class="ep-desc-chip fe">FE</span>
+                <span class="ep-desc-text">Static frontend · always online<br>
+                Inverse of BE state · GitHub Pages</span>
+              </div>
+              <div class="ep-desc-divider"></div>
+              <div class="ep-desc-note">⟳ Polling localhost:5000/health every 3s (local only)</div>
+            </div>
+
+          </div>
+          <div class="ep-divider"></div>
+
+          <!-- SYSTEM CLOCK -->
+          <div class="ep-clock-section" id="ep1-sec-clock">
+            <div class="ep-section-label">SYSTEM TIME</div>
+            <div class="ep-clock-wrap">
+              <div class="ep-clock-display">
+                <span class="ep-clock-seg" id="ep-clock-time">00:00:00</span>
+              </div>
+              <div class="ep-clock-meta">
+                <div class="ep-clock-date" id="ep-clock-date">--- -- ----</div>
+                <div class="ep-clock-tz" id="ep-clock-tz">UTC+00:00</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="ep-divider"></div>
+          <div class="ep-section-label" id="ep1-sec-analytics">ANALYTICS DASHBOARD</div>
+          <div class="ep-analytics-row">
+            <a class="ep-analytics-btn" href="https://helix-nherling.goatcounter.com/"
+               target="_blank" rel="noopener">
+              <div class="ep-analytics-icon">📡</div>
+              <div class="ep-analytics-label">HELIX ANALYTICS</div>
+              <div class="ep-analytics-url">helix-nherling.goatcounter.com ↗</div>
+              <div class="ep-analytics-desc">
+                Privacy-first visitor analytics · Page views,<br>
+                referrers, locations, browsers · No cookies · GDPR compliant
+              </div>
+            </a>
+            <div class="ep-goat-wrap">
+              <a class="ep-goat-btn" href="https://www.goatcounter.com/"
+                 target="_blank" rel="noopener">
+                <div class="ep-goat-ico-wrap">
+                  <img src="https://favicon.im/goatcounter.com?larger=true"
+                       onerror="this.style.display='none'"
+                       alt="GoatCounter" class="ep-goat-ico">
+                </div>
+                <span class="ep-goat-name">GoatCounter</span>
+              </a>
+              <div class="ep-goat-info">
+                <div class="ep-goat-info-title">GoatCounter</div>
+                <div class="ep-goat-info-url">goatcounter.com ↗</div>
+                <div class="ep-goat-info-body">
+                  Open source, privacy-first web analytics.<br>
+                  Free for low-volume sites · Self-hostable.<br>
+                  No tracking cookies · Lightweight 1kb script.<br>
+                  GDPR · CCPA · PECR compliant.
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="ep-divider"></div>
+          <div class="ep-note">
+            BE LED: GREEN = SERVER LIVE · RED = OFFLINE<br>
+            FE LED: INVERSE · POLLING localhost:5000 (local only)
+          </div>
+          <div class="ep-divider"></div>
+          <div class="ep-footer" id="ep1-sec-close">
+            <button class="ep-close ep-close-bottom" onclick="closeEnergyPanel()"><span class="ep-close-x">✕</span> CLOSE — RETURN TO MAIN</button>
+          </div>
+
+        </div><!-- /ep-body -->
+
+        <!-- STICKY GUIDE RAIL -->
+        <div class="ep-guide-rail" id="ep1-guide">
+          <div class="ep-guide-line"></div>
+          <div class="ep-guide-node" data-section="ep1-sec-explain">
+            <div class="ep-guide-labels">
+              <span class="ep-guide-name">WHAT IS THIS?</span>
+              <span class="ep-guide-badge view">👁 VIEW</span>
+            </div>
+            <div class="ep-guide-dot"></div>
+          </div>
+          <div class="ep-guide-node" data-section="ep1-sec-be">
+            <div class="ep-guide-labels">
+              <span class="ep-guide-name">BE / FE STATUS</span>
+              <span class="ep-guide-badge view">👁 VIEW</span>
+            </div>
+            <div class="ep-guide-dot"></div>
+          </div>
+          <div class="ep-guide-node" data-section="ep1-sec-clock">
+            <div class="ep-guide-labels">
+              <span class="ep-guide-name">SYSTEM CLOCK</span>
+              <span class="ep-guide-badge view">👁 VIEW</span>
+            </div>
+            <div class="ep-guide-dot"></div>
+          </div>
+          <div class="ep-guide-node" data-section="ep1-sec-analytics">
+            <div class="ep-guide-labels">
+              <span class="ep-guide-name">ANALYTICS</span>
+              <span class="ep-guide-badge click">↗ CLICK</span>
+            </div>
+            <div class="ep-guide-dot"></div>
+          </div>
+          <div class="ep-guide-node" data-section="ep1-sec-close">
+            <div class="ep-guide-labels">
+              <span class="ep-guide-name">CLOSE</span>
+              <span class="ep-guide-badge action">↩ ACTION</span>
+            </div>
+            <div class="ep-guide-dot"></div>
+          </div>
+        </div><!-- /ep-guide-rail -->
+
+      </div><!-- /ep-body-wrap -->
+
+    </div><!-- /energy-panel-1 -->
+
+    <!-- ENERGY PANEL 2 — Logo Animation Controls (compact single-panel) -->
+    <div class="energy-panel" id="energy-panel-2" style="display:none;">
+      <div class="ep-header">
+        <span class="ep-title">⚡ ENERGY LEVEL 2 — LOGO ANIMATION CONTROLS</span>
+        <div class="ep-timer-wrap">
+          <span class="ep-timer-label">NEXT</span>
+          <div class="ep-timer-track">
+            <div class="ep-timer-fill" id="gc-timer-fill"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TOP-CENTER RETURN BUTTON (matches Panel 1) -->
+      <div class="ep-return-bar">
+        <button class="ep-close ep-close-bottom" onclick="closeEnergyPanel()">
+          <span class="ep-close-x">✕</span> CLOSE — RETURN TO MAIN
+        </button>
+      </div>
+
+      <div class="ep-body ep-cols ep2-compact">
+
+        <!-- LEFT COLUMN: controls -->
+        <div class="ep-col">
+
+          <div class="ep-section-label">LOGO IMAGE</div>
+          <div class="ep-logo-row">
+            <div class="ep-preview" id="ep-preview">
+              <img id="ep-preview-img" src="../assets/img/spiral_flavor.png" alt="">
+              <span class="ep-preview-label" id="ep-preview-label">SPIRAL</span>
+            </div>
+            <div class="ep-logo-btns">
+              <button class="ep-btn active" id="gc-logo-0" onclick="gcSetLogo(0)">SPIRAL</button>
+              <button class="ep-btn"        id="gc-logo-1" onclick="gcSetLogo(1)">SLEEK</button>
+              <button class="ep-btn"        id="gc-logo-2" onclick="gcSetLogo(2)">ABSTRACT</button>
+            </div>
+          </div>
+
+          <div class="ep-divider"></div>
+
+          <div class="ep-section-label">ANIMATION EFFECT</div>
+          <div class="ep-btn-row">
+            <button class="ep-btn active" id="gc-fx-rgb"   onclick="gcSetFx('rgb')">RGB + CRT</button>
+            <button class="ep-btn"        id="gc-fx-laser" onclick="gcSetFx('laser')">LASER ETCH</button>
+          </div>
+
+          <div class="ep-divider"></div>
+
+          <div class="ep-section-label">CONTROLS</div>
+          <div class="ep-btn-row">
+            <button class="ep-btn"             onclick="HELIX_GLITCH.triggerCurrent()">▶ TRIGGER</button>
+            <button class="ep-btn active"     id="gc-auto-btn" onclick="gcToggleAuto()">AUTO</button>
+            <button class="ep-btn ep-reset"  onclick="HELIX_GLITCH.reset()">↺ RESET</button>
+          </div>
+
+        </div>
+
+        <!-- RIGHT COLUMN: instructions -->
+        <div class="ep-col ep2-instructions">
+
+          <div class="ep-section-label">USAGE</div>
+          <ul class="ep2-inst-list">
+            <li>
+              <span class="ep2-inst-k">LOGO IMAGE</span>
+              Click <strong>SPIRAL</strong>, <strong>SLEEK</strong>, or
+              <strong>ABSTRACT</strong> to swap the masthead logo. Preview
+              tile updates instantly to confirm.
+            </li>
+            <li>
+              <span class="ep2-inst-k">EFFECT</span>
+              <span class="ep-hl-p">RGB + CRT</span> — chromatic
+              aberration + rolling scanline.
+              <span class="ep-hl-g">LASER ETCH</span> — laser trace
+              + edge sparks.
+            </li>
+            <li>
+              <span class="ep2-inst-k">▶ TRIGGER</span>
+              <strong>Force-starts</strong> the current animation
+              immediately, regardless of AUTO state or timer position.
+            </li>
+            <li>
+              <span class="ep2-inst-k">AUTO</span>
+              Cycles the animation on a timer. The <strong>NEXT</strong>
+              bar shows countdown. Toggle off to halt.
+            </li>
+            <li>
+              <span class="ep2-inst-k ep-hl-r">↺ RESET</span>
+              Clears all glitch state — stops effects in-flight and
+              reapplies the current image cleanly.
+            </li>
+          </ul>
+
+          <div class="ep-note ep2-note">
+            SELECTIONS ARE LIVE · CHANGES APPLY INSTANTLY
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- BOTTOM RETURN BUTTON (matches Panel 1) -->
+      <div class="ep-footer">
+        <button class="ep-close ep-close-bottom" onclick="closeEnergyPanel()">
+          <span class="ep-close-x">✕</span> CLOSE — RETURN TO MAIN
+        </button>
+      </div>
+
+    </div><!-- /energy-panel-2 -->
+
+  </section>
+</div>
+
+<script src="../js/views/embed.js"></script>
+<script src="../js/articles.js"></script>
+<script src="../js/glitch.js"></script>
+<script src="../js/main.js"></script>
+<script src="../js/topbar.js"></script>
+
+<style>
+/* ── ENERGY PANELS ── */
+.energy-panel {
+  flex:1; display:flex; flex-direction:column;
+  padding:32px 40px 32px; gap:16px;
+  overflow:hidden;
+  min-height:0;
+}
+/* Panel 2 has no wrap — its ep-body scrolls directly */
+.energy-panel > .ep-body {
+  flex:1; min-height:0; overflow-y:auto;
+}
+.ep-header {
+  display:flex; align-items:center; justify-content:space-between;
+  border-bottom:1px solid rgba(0,229,255,0.2);
+  padding-bottom:16px; flex-shrink:0;
+}
+.ep-title {
+  font-family:'Orbitron',monospace; font-weight:900;
+  font-size:1.1rem; letter-spacing:0.35em;
+  color:var(--cyan); text-shadow:0 0 14px var(--glow-c);
+}
+.ep-timer-wrap { display:flex; align-items:center; gap:10px; }
+.ep-timer-label {
+  font-family:'Share Tech Mono',monospace;
+  font-size:11px; letter-spacing:0.25em; color:rgba(0,229,255,0.4);
+}
+.ep-timer-track {
+  width:80px; height:4px;
+  background:rgba(0,229,255,0.1);
+  border:1px solid rgba(0,229,255,0.2); overflow:hidden;
+}
+.ep-timer-fill {
+  height:100%; width:0%;
+  background:var(--cyan); box-shadow:0 0 8px var(--cyan);
+  transition:width 0.1s linear;
+}
+.ep-timer-fill.flash { background:#fff; box-shadow:0 0 14px #fff; transition:none; }
+.ep-body { display:flex; flex-direction:column; gap:20px; }
+.ep-cols { flex-direction:row !important; gap:40px; }
+.ep-col  { display:flex; flex-direction:column; gap:16px; flex:1; }
+
+/* ── ENERGY PANEL 2 — COMPACT LAYOUT ── */
+.ep-header-right {
+  display:flex; align-items:center; gap:16px;
+}
+.ep2-compact {
+  flex:1; min-height:0; overflow:hidden;
+  align-items:stretch;
+  gap:32px !important;
+}
+/* min-width:0 forces flex children to honor container width instead of
+   expanding to their intrinsic content size — fixes text clipping off edge */
+.ep2-compact > .ep-col {
+  min-width:0;
+  gap:14px;
+}
+
+/* LEFT COL: preview is the hero — stack it above the buttons */
+.ep2-compact .ep-logo-row {
+  flex-direction:column;
+  align-items:center;
+  gap:10px;
+}
+.ep2-compact .ep-preview {
+  width:220px; height:220px;
+  flex-shrink:0;
+}
+.ep2-compact .ep-preview img {
+  opacity:0.95;
+}
+.ep2-compact .ep-preview-label {
+  font-size:11px;
+  bottom:6px;
+  letter-spacing:0.25em;
+  color:rgba(0,229,255,0.55);
+}
+/* Logo buttons: row of three compact pills under the preview */
+.ep2-compact .ep-logo-btns {
+  flex-direction:row;
+  width:100%;
+  gap:6px;
+}
+
+/* Shrink all buttons inside compact panel */
+.ep2-compact .ep-btn {
+  padding:7px 10px;
+  font-size:11.5px;
+  letter-spacing:0.14em;
+}
+.ep2-compact .ep-btn-row { gap:6px; }
+.ep2-compact .ep-section-label { margin-top:2px; }
+
+/* RIGHT COL: instructions */
+.ep2-instructions {
+  gap:10px;
+  padding-left:24px;
+  border-left:1px solid rgba(0,229,255,0.08);
+}
+.ep2-inst-list {
+  list-style:none;
+  margin:0; padding:0;
+  display:flex; flex-direction:column;
+  gap:10px;
+}
+.ep2-inst-list li {
+  font-family:'Share Tech Mono',monospace;
+  font-size:11.5px; letter-spacing:0.03em; line-height:1.55;
+  color:rgba(255,255,255,0.6);
+  padding-left:10px;
+  border-left:1px solid rgba(0,229,255,0.15);
+  word-wrap:break-word;
+  overflow-wrap:break-word;
+}
+.ep2-inst-list li strong {
+  color:rgba(255,255,255,0.9);
+}
+.ep2-inst-k {
+  display:inline-block;
+  font-family:'Orbitron',monospace; font-weight:700;
+  font-size:9.5px; letter-spacing:0.26em;
+  color:var(--cyan);
+  margin-right:6px;
+  text-shadow:0 0 6px rgba(0,229,255,0.35);
+}
+.ep2-note {
+  margin-top:auto;  /* push to bottom of right column */
+}
+/* Scroll only for panel-1's ep-body inside the wrap — panel 2 unaffected */
+.ep-body-wrap > .ep-body {
+  overflow-y:auto;
+  min-height:0;
+  padding-right:20px;
+}
+.ep-section-label {
+  font-family:'Share Tech Mono',monospace;
+  font-size:11px; letter-spacing:0.3em;
+  color:rgba(255,255,255,0.75);
+}
+.ep-divider { border:none; border-top:1px solid rgba(0,229,255,0.1); }
+
+/* EP buttons */
+.ep-btn {
+  font-family:'Share Tech Mono',monospace;
+  font-size:14px; letter-spacing:0.2em;
+  color:var(--cyan); background:rgba(0,229,255,0.05);
+  border:1px solid rgba(0,229,255,0.3);
+  padding:14px 20px; cursor:pointer;
+  transition:all 0.18s; flex:1; white-space:nowrap;
+}
+.ep-btn:hover { background:rgba(0,229,255,0.1); border-color:var(--cyan); box-shadow:0 0 14px rgba(0,229,255,0.25); }
+.ep-btn.active { background:var(--cyan); color:#020c14; border-color:var(--cyan); box-shadow:0 0 18px var(--glow-c); font-weight:700; }
+.ep-btn.ep-reset {
+  color:rgba(160,60,60,0.8); border-color:rgba(160,60,60,0.3); background:rgba(80,20,20,0.2);
+}
+.ep-btn.ep-reset:hover { color:#ff5050; border-color:#ff3030; background:rgba(255,30,30,0.08); box-shadow:0 0 12px rgba(255,40,40,0.35); }
+.ep-btn-row { display:flex; gap:10px; }
+
+/* Logo preview */
+.ep-logo-row { display:flex; gap:16px; align-items:flex-start; }
+.ep-preview {
+  width:140px; height:140px; flex-shrink:0;
+  border:1px solid rgba(0,229,255,0.2); background:#07090f;
+  position:relative; display:flex; align-items:center; justify-content:center;
+}
+.ep-preview img { width:100%; height:100%; object-fit:contain; opacity:0.85; }
+.ep-preview-label {
+  position:absolute; bottom:4px; left:0; right:0; text-align:center;
+  font-family:'Share Tech Mono',monospace; font-size:9px;
+  letter-spacing:0.2em; color:rgba(0,229,255,0.4);
+}
+.ep-logo-btns { display:flex; flex-direction:column; gap:8px; flex:1; }
+
+/* BE/FE large square buttons */
+/* ── BE/FE compact layout ── */
+.ep-status-row {
+  display:flex; gap:20px; align-items:stretch;
+}
+
+/* Left: stacked LED items */
+.ep-led-stack {
+  display:flex; flex-direction:column; gap:10px;
+  flex-shrink:0;
+}
+.ep-led-item {
+  display:flex; align-items:stretch; gap:10px;
+}
+
+/* LED button */
+.ep-led-btn {
+  display:flex; align-items:center; gap:10px;
+  padding:10px 16px;
+  border:1px solid transparent;
+  cursor:default; position:relative; overflow:hidden;
+  transition:all 0.2s; flex-shrink:0;
+  min-width:160px;
+}
+.ep-led-btn.be { border-color:rgba(255,34,85,0.4); background:rgba(255,34,85,0.07); }
+.ep-led-btn.fe { border-color:rgba(0,255,65,0.4);  background:rgba(0,255,65,0.07);  }
+.ep-led-btn.be:hover { border-color:#ff2255; background:rgba(255,34,85,0.15); box-shadow:0 0 16px rgba(255,34,85,0.35); }
+.ep-led-btn.fe:hover { border-color:#00ff41; background:rgba(0,255,65,0.15);  box-shadow:0 0 16px rgba(0,255,65,0.35);  }
+/* sheen */
+.ep-led-btn::after {
+  content:''; position:absolute; top:-10%; left:-60%; width:40%; height:120%;
+  transform:skewX(-15deg); pointer-events:none;
+  animation:ep-sheen 3.5s ease-in-out infinite;
+}
+.ep-led-btn.be::after { background:linear-gradient(105deg,transparent 20%,rgba(255,34,85,0.45) 50%,transparent 80%); }
+.ep-led-btn.fe::after { background:linear-gradient(105deg,transparent 20%,rgba(0,255,65,0.45) 50%,transparent 80%); animation-delay:1.75s; }
+
+/* LED digit */
+.ep-led-digit {
+  font-family:'Orbitron',monospace; font-weight:900;
+  font-size:1.6rem; line-height:1;
+  position:relative; z-index:1; flex-shrink:0;
+}
+.ep-led-btn.be .ep-led-digit { color:#ff2255; text-shadow:0 0 12px #ff2255, 0 0 24px rgba(255,34,85,0.5); animation:ep-blink-r 1.1s step-start infinite; }
+.ep-led-btn.fe .ep-led-digit { color:#00ff41; text-shadow:0 0 12px #00ff41, 0 0 24px rgba(0,255,65,0.5);  animation:ep-blink-g 1.6s step-start infinite; }
+/* live flip */
+.ep-led-btn.be.live { border-color:rgba(0,255,65,0.4);  background:rgba(0,255,65,0.07); }
+.ep-led-btn.be.live .ep-led-digit { color:#00ff41; text-shadow:0 0 12px #00ff41; animation:ep-blink-g 1.6s step-start infinite; }
+.ep-led-btn.fe.live { border-color:rgba(255,34,85,0.4); background:rgba(255,34,85,0.07); }
+.ep-led-btn.fe.live .ep-led-digit { color:#ff2255; text-shadow:0 0 12px #ff2255; animation:ep-blink-r 1.1s step-start infinite; }
+
+.ep-led-label {
+  font-family:'Share Tech Mono',monospace;
+  font-size:13px; letter-spacing:0.2em;
+  position:relative; z-index:1; text-decoration:none;
+  pointer-events:none; cursor:default;
+}
+/* BE label — never interactive */
+#ep-be-btn {
+  pointer-events:none !important;
+  cursor:default !important;
+}
+/* BE wrapper div — never interactive */
+#ep-be-led-wrap, .ep-led-btn.be {
+  pointer-events:none !important;
+  cursor:default !important;
+}
+.ep-led-btn.be .ep-led-label { color:#ff2255; }
+.ep-led-btn.fe .ep-led-label { color:#00ff41; }
+.ep-led-btn.be.live .ep-led-label { color:#00ff41; }
+.ep-led-btn.fe.live .ep-led-label { color:#ff2255; }
+
+/* 7-segment timer wrapper */
+.ep-seg-wrap {
+  display:flex; flex-direction:column;
+  align-items:flex-start; justify-content:center; gap:4px;
+  flex-shrink:0;
+}
+.ep-seg-label {
+  font-family:'Share Tech Mono',monospace;
+  font-size:9px; letter-spacing:0.15em;
+  color:rgba(0,229,255,0.35);
+  white-space:nowrap;
+}
+/* 7-segment display using DSEG7 */
+.ep-seg-display {
+  font-family:'DSEG7 Classic','Share Tech Mono',monospace;
+  font-size:1.2rem; letter-spacing:0.05em;
+  color:#00e5ff;
+  text-shadow:0 0 8px rgba(0,229,255,0.8), 0 0 20px rgba(0,229,255,0.4);
+  background:#000d14;
+  border:1px solid rgba(0,229,255,0.2);
+  padding:5px 10px;
+  min-width:72px; text-align:center;
+  flex-shrink:0;
+}
+
+/* Right: always-visible description — tight to text width */
+.ep-status-desc {
+  display:inline-flex; flex-direction:column;
+  justify-content:center; gap:8px;
+  padding:14px 18px;
+  border:1px solid rgba(0,229,255,0.12);
+  background:rgba(0,229,255,0.03);
+  width:fit-content; align-self:flex-start;
+}
+.ep-desc-row { display:flex; align-items:flex-start; gap:12px; }
+.ep-desc-chip {
+  font-family:'Orbitron',monospace; font-weight:900;
+  font-size:11px; letter-spacing:0.15em;
+  padding:3px 8px; flex-shrink:0;
+  border:1px solid;
+}
+.ep-desc-chip.be { color:#ff2255; border-color:rgba(255,34,85,0.4); background:rgba(255,34,85,0.08); }
+.ep-desc-chip.fe { color:#00ff41; border-color:rgba(0,255,65,0.4);  background:rgba(0,255,65,0.08);  }
+.ep-desc-text {
+  font-family:'Share Tech Mono',monospace;
+  font-size:12px; letter-spacing:0.08em; line-height:1.7;
+  color:rgba(255,255,255,0.7);
+}
+.ep-desc-text b { color:rgba(255,255,255,0.95); }
+.ep-desc-divider { border:none; border-top:1px solid rgba(0,229,255,0.08); }
+.ep-desc-note {
+  font-family:'Share Tech Mono',monospace;
+  font-size:11px; letter-spacing:0.08em;
+  color:rgba(255,255,255,0.5);
+}
+@keyframes ep-blink-r { 0%,100%{opacity:1} 50%{opacity:.1}  }
+@keyframes ep-blink-g { 0%,100%{opacity:1} 50%{opacity:.22} }
+@keyframes ep-sheen   { 0%{left:-60%;opacity:0} 8%{opacity:1} 30%{left:130%;opacity:0} 100%{left:130%;opacity:0} }
+
+
+
+/* Analytics two-button row */
+.ep-analytics-row { display:flex; gap:0; align-items:stretch; }
+.ep-analytics-btn { margin-right:12px; }
+
+.ep-analytics-btn {
+  display:inline-flex; flex-direction:column;
+  justify-content:center; gap:8px; padding:24px 28px;
+  text-decoration:none;
+  border:1px solid rgba(176,68,255,0.4);
+  background:rgba(176,68,255,0.06);
+  transition:all 0.2s; position:relative; overflow:hidden;
+  height:140px; width:fit-content;
+}
+.ep-analytics-btn:hover {
+  border-color:#b044ff; background:rgba(176,68,255,0.12);
+  box-shadow:0 0 24px rgba(176,68,255,0.3);
+}
+.ep-analytics-btn::after {
+  content:''; position:absolute; top:-10%; left:-60%; width:40%; height:120%;
+  background:linear-gradient(105deg,transparent 20%,rgba(176,68,255,0.4) 50%,transparent 80%);
+  transform:skewX(-15deg); animation:ep-sheen 4s ease-in-out infinite;
+  pointer-events:none;
+}
+
+/* GoatCounter wrapper — button + hover info side by side */
+/* Goat wrap clips the pre-rendered info panel */
+.ep-goat-wrap {
+  display:flex; align-items:flex-start; gap:0;
+  height:140px; flex-shrink:0;
+  overflow:hidden;
+  max-width:140px;
+  transition:max-width 0.32s cubic-bezier(0.4,0,0.2,1);
+}
+.ep-goat-wrap:hover {
+  max-width:490px;
+}
+
+/* GoatCounter icon button — full white background */
+.ep-goat-btn {
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center; gap:12px;
+  padding:20px 28px;
+  text-decoration:none;
+  background:#ffffff;
+  border:2px solid rgba(176,68,255,0.4);
+  transition:border-color 0.2s, box-shadow 0.2s;
+  width:140px; height:140px;
+  cursor:pointer; flex-shrink:0;
+}
+.ep-goat-btn:hover {
+  border-color:#b044ff;
+  box-shadow:0 0 20px rgba(176,68,255,0.4);
+}
+
+/* info panel — pre-rendered full width, revealed by wrapper clip */
+.ep-goat-info {
+  display:flex; flex-direction:column; justify-content:center; gap:8px;
+  padding:20px 22px;
+  background:rgba(10,4,20,0.95);
+  border:2px solid rgba(176,68,255,0.4);
+  border-left:none;
+  width:340px; min-width:340px; height:140px;
+  white-space:normal;
+}
+
+.ep-goat-info-title {
+  font-family:'Orbitron',monospace; font-weight:700;
+  font-size:13px; letter-spacing:0.2em;
+  color:#b044ff; text-shadow:0 0 10px rgba(176,68,255,0.5);
+  white-space:normal;
+}
+.ep-goat-info-url {
+  font-family:'Share Tech Mono',monospace;
+  font-size:11px; letter-spacing:0.1em;
+  color:rgba(176,68,255,0.6); white-space:normal;
+}
+.ep-goat-info-body {
+  font-family:'Share Tech Mono',monospace;
+  font-size:11px; letter-spacing:0.05em; line-height:1.8;
+  color:rgba(255,255,255,0.75);
+  margin-top:4px; white-space:normal;
+}
+
+/* GoatCounter ico on white backing */
+.ep-goat-ico-wrap {
+  width:56px; height:56px;
+  display:flex; align-items:center; justify-content:center;
+}
+.ep-close {
+  font-family:'Share Tech Mono',monospace;
+  font-size:13px; letter-spacing:0.2em;
+  color:var(--text-dim);
+  background:transparent;
+  border:1px solid rgba(0,229,255,0.25);
+  padding:8px 18px; cursor:pointer;
+  transition:all 0.2s; flex-shrink:0;
+}
+.ep-close:hover {
+  color:var(--cyan); border-color:var(--cyan);
+  box-shadow:0 0 12px rgba(0,229,255,0.25);
+}
+
+/* ── TOP-CENTER RETURN BAR ── */
+.ep-return-bar {
+  display:flex; justify-content:center;
+  padding:0 0 4px;
+  flex-shrink:0;
+}
+
+/* ── EXPLANATION DIV ── */
+.ep-explain {
+  border:1px solid rgba(0,229,255,0.1);
+  background:rgba(0,229,255,0.02);
+  padding:16px 20px;
+  display:flex; flex-direction:column; gap:12px;
+  flex-shrink:0;
+}
+.ep-explain-title {
+  font-family:'Orbitron',monospace; font-weight:700;
+  font-size:10px; letter-spacing:0.45em;
+  color:rgba(0,229,255,0.45);
+}
+.ep-explain-split {
+  display:flex; gap:0; align-items:stretch;
+}
+.ep-explain-col {
+  flex:1; display:flex; flex-direction:column; gap:8px; padding:0 20px 0 0;
+}
+.ep-explain-col + .ep-explain-col { padding:0 0 0 20px; }
+.ep-explain-col-label {
+  font-family:'Orbitron',monospace; font-weight:700;
+  font-size:9px; letter-spacing:0.35em;
+  color:rgba(0,229,255,0.55);
+  padding-bottom:6px;
+  border-bottom:1px solid rgba(0,229,255,0.1);
+}
+.ep-explain-divider-v {
+  width:1px; flex-shrink:0;
+  background:linear-gradient(to bottom, transparent, rgba(0,229,255,0.15) 20%, rgba(0,229,255,0.15) 80%, transparent);
+  margin:0 4px;
+}
+.ep-explain-body {
+  font-family:'Share Tech Mono',monospace;
+  font-size:13px; letter-spacing:0.07em; line-height:1.8;
+  color:rgba(255,255,255,0.6);
+}
+.ep-explain-body strong { color:rgba(255,255,255,0.9); }
+.ep-explain-body code {
+  font-family:'Share Tech Mono',monospace; font-size:12px;
+  color:var(--cyan); background:rgba(0,229,255,0.08);
+  border:1px solid rgba(0,229,255,0.2); padding:0 5px;
+}
+.ep-hl-r { color:#ff2255; }
+.ep-hl-g { color:#00ff41; }
+.ep-hl-p { color:#b044ff; }
+.ep-footer {
+  display:flex; justify-content:center; padding-top:4px;
+}
+.ep-close-bottom {
+  font-size:15px; letter-spacing:0.3em;
+  padding:14px 48px;
+  color:rgba(255,255,255,0.85);
+  border-color:rgba(255,255,255,0.2);
+}
+.ep-close-bottom:hover {
+  color:#fff; border-color:var(--cyan);
+  box-shadow:0 0 16px rgba(0,229,255,0.3);
+}
+.ep-close-x { color:#ff2255; margin-right:8px; }
+.ep-goat-btn:hover .ep-badge-tip { transform:translateY(0); }
+
+/* ── GUIDE RAIL ── */
+.ep-body-wrap {
+  display:grid;
+  grid-template-columns:1fr 160px;
+  grid-template-rows:1fr;
+  flex:1;
+  min-height:220px;
+  overflow:hidden;
+}
+.ep-guide-rail {
+  position:relative;
+  display:flex; flex-direction:column;
+  align-items:flex-end;
+  padding:8px 0 8px 16px;
+  gap:0;
+  border-left:1px solid rgba(0,229,255,0.08);
+  overflow:hidden;
+}
+.ep-guide-line {
+  position:absolute;
+  right:7px; top:24px; bottom:24px;
+  width:1px;
+  background:linear-gradient(to bottom,
+    transparent,
+    rgba(0,229,255,0.15) 10%,
+    rgba(0,229,255,0.15) 90%,
+    transparent);
+}
+.ep-guide-node {
+  display:flex; align-items:center; justify-content:flex-end;
+  gap:10px; width:100%;
+  padding:18px 0;
+  position:relative;
+  cursor:default;
+  transition:opacity 0.3s;
+  opacity:0.35;
+}
+.ep-guide-node.active { opacity:1; }
+.ep-guide-node.active .ep-guide-dot {
+  background:var(--gd-c, var(--cyan));
+  box-shadow:0 0 8px var(--gd-c, var(--cyan)), 0 0 18px rgba(0,229,255,0.3);
+  transform:scale(1.4);
+}
+.ep-guide-node.active .ep-guide-name {
+  color:var(--gd-c, var(--cyan));
+}
+.ep-guide-labels {
+  display:flex; flex-direction:column; align-items:flex-end; gap:4px;
+}
+.ep-guide-name {
+  font-family:'Share Tech Mono',monospace;
+  font-size:9px; letter-spacing:0.22em;
+  color:rgba(255,255,255,0.4);
+  white-space:nowrap;
+  transition:color 0.3s;
+}
+.ep-guide-badge {
+  font-family:'Orbitron',monospace; font-weight:700;
+  font-size:8px; letter-spacing:0.25em;
+  padding:2px 7px; border:1px solid;
+  white-space:nowrap;
+}
+.ep-guide-badge.view   { color:rgba(0,229,255,0.6);  border-color:rgba(0,229,255,0.2);  --gd-c:var(--cyan);   }
+.ep-guide-badge.click  { color:rgba(255,106,0,0.8);  border-color:rgba(255,106,0,0.3);  --gd-c:var(--orange); }
+.ep-guide-badge.action { color:rgba(255,255,255,0.6);border-color:rgba(255,255,255,0.2);--gd-c:#fff;          }
+/* inherit the badge color up to the node */
+.ep-guide-node:has(.ep-guide-badge.view)   { --gd-c:var(--cyan);   }
+.ep-guide-node:has(.ep-guide-badge.click)  { --gd-c:var(--orange); }
+.ep-guide-node:has(.ep-guide-badge.action) { --gd-c:#fff;          }
+.ep-guide-dot {
+  width:10px; height:10px; border-radius:50%;
+  background:rgba(255,255,255,0.15);
+  border:1px solid rgba(255,255,255,0.2);
+  flex-shrink:0;
+  transition:background 0.3s, box-shadow 0.3s, transform 0.3s;
+  position:relative; z-index:1;
+}
+.ep-analytics-icon { font-size:2rem; line-height:1; }
+.ep-analytics-label {
+  font-family:'Orbitron',monospace; font-weight:700;
+  font-size:1rem; letter-spacing:0.3em;
+  color:#b044ff; text-shadow:0 0 10px rgba(176,68,255,0.5);
+}
+.ep-analytics-url {
+  font-family:'Share Tech Mono',monospace;
+  font-size:12px; letter-spacing:0.15em;
+  color:rgba(176,68,255,0.6);
+}
+.ep-analytics-desc {
+  font-family:'Share Tech Mono',monospace;
+  font-size:11px; letter-spacing:0.08em; line-height:1.7;
+  color:rgba(255,255,255,0.5); margin-top:4px;
+}
+.ep-goat-ico {
+  width:44px; height:44px; object-fit:contain;
+}
+.ep-goat-name {
+  font-family:'Share Tech Mono',monospace;
+  font-size:11px; letter-spacing:0.2em;
+  color:#444; text-align:center;
+}
+  font-family:'Share Tech Mono',monospace; font-size:12px; letter-spacing:0.1em;
+  color:rgba(255,255,255,0.75); line-height:1.8;
+}
+/* section labels — white */
+.ep-section-label {
+  font-family:'Share Tech Mono',monospace;
+  font-size:11px; letter-spacing:0.3em;
+  color:rgba(255,255,255,0.75);
+  text-transform:uppercase;
+  margin-bottom:10px;
+}
+.ep-seg-label {
+  font-family:'Share Tech Mono',monospace;
+  font-size:9px; letter-spacing:0.15em;
+  color:rgba(255,255,255,0.7);
+  white-space:nowrap;
+}
+
+/* System clock */
+.ep-clock-section { display:flex; flex-direction:column; gap:10px; }
+.ep-clock-wrap {
+  display:flex; align-items:center; gap:24px;
+}
+.ep-clock-display {
+  background:#000d14;
+  border:1px solid rgba(0,229,255,0.25);
+  padding:12px 24px;
+  position:relative;
+  box-shadow:0 0 24px rgba(0,229,255,0.1), inset 0 0 20px rgba(0,0,0,0.8);
+}
+.ep-clock-display::before {
+  content:'';
+  position:absolute; inset:0;
+  background:repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,229,255,0.015) 2px,
+    rgba(0,229,255,0.015) 4px
+  );
+  pointer-events:none;
+}
+.ep-clock-seg {
+  font-family:'DSEG7 Classic','Share Tech Mono',monospace;
+  font-size:3.2rem; line-height:1;
+  color:#00e5ff;
+  text-shadow:
+    0 0 10px rgba(0,229,255,1),
+    0 0 30px rgba(0,229,255,0.7),
+    0 0 60px rgba(0,229,255,0.3);
+  letter-spacing:0.08em;
+  position:relative; z-index:1;
+}
+.ep-clock-meta {
+  display:flex; flex-direction:column; gap:8px;
+}
+.ep-clock-date {
+  font-family:'DSEG7 Classic','Share Tech Mono',monospace;
+  font-size:1.1rem; letter-spacing:0.08em;
+  color:rgba(0,229,255,0.7);
+  text-shadow:0 0 8px rgba(0,229,255,0.5);
+  background:#000d14;
+  border:1px solid rgba(0,229,255,0.15);
+  padding:5px 12px;
+}
+.ep-clock-tz {
+  font-family:'Share Tech Mono',monospace;
+  font-size:11px; letter-spacing:0.2em;
+  color:rgba(255,255,255,0.5);
+  padding-left:4px;
+}
+.topbar {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  position: fixed; top: 0; left: 0; right: 0; z-index: 25;
+  height: 52px;
+  padding: 0 28px;
+  border-bottom: 1px solid var(--border-dim);
+  background: rgba(2,8,14,0.95);
+  backdrop-filter: blur(6px);
+}
+.topbar-left {
+  display: flex; align-items: center; gap: 16px;
+}
+.topbar-center-wrap {
+  display: flex; align-items: center; gap: 12px; justify-content: center;
+}
+.topbar-right {
+  display: flex; align-items: center; justify-content: flex-end; gap: 8px;
+}
+
+/* ── CENTER BUTTONS — same size, topbar.js owns shimmer/laser ── */
+.topbar-center-btn {
+  font-family: 'Orbitron', monospace; font-weight: 700;
+  font-size: 15px; letter-spacing: 0.3em;
+  padding: 12px 28px;
+  border: 1px solid rgba(0,229,255,0.25);
+  background: rgba(0,229,255,0.04);
+  color: var(--cyan);
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+  display: inline-flex; align-items: center; gap: 6px;
+  transition: color 0.2s, background 0.2s, border-color 0.2s;
+  position: relative; overflow: visible;
+}
+.topbar-center-btn:hover {
+  color: #fff;
+  background: rgba(0,229,255,0.09);
+  border-color: rgba(0,229,255,0.6);
+}
+/* fixed width — prevents resize when 0/1/3 changes */
+#energy-btn { min-width:240px; justify-content:center; box-sizing:border-box; }
+#energy-level-num { display:inline-block; width:18px; text-align:center; }
+
+/* ── GLITCH CONTROLS PANEL CSS — REMOVED (legacy topbar-inline controls).
+   Panel 2 now uses .ep-btn / .ep-btn-row / .ep-timer-* styles. ── */
+
+.energy-icon { font-size: 14px; }
+
+/* ── TOPBAR SECTOR LETTER ── */
+.topbar-sector-letter {
+  font-family: 'Orbitron', monospace; font-weight: 900;
+  font-size: 1.6rem; line-height: 1;
+  color: var(--sector-color, transparent);
+  text-shadow: 0 0 16px var(--sector-glow, transparent);
+  min-width: 1.2em; text-align: right;
+  transition: color 0.3s, text-shadow 0.3s;
+}
+.topbar-sector-name {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px; letter-spacing: 0.2em;
+  color: var(--sector-color, transparent);
+  text-transform: uppercase; opacity: 0.8;
+  transition: color 0.3s;
+}
+
+/* ── ENERGY 1 EXTRAS CSS — REMOVED (legacy topbar-inline BE/FE + Analytics).
+   Panel 1 now owns these via .ep-led-*, .ep-analytics-*, .ep-goat-* styles. ── */
+</style>
+
+<script>
+// ── GUIDE RAIL — INTERSECTION OBSERVER (panel 1 only — panel 2 is compact) ──
+(function() {
+  const PANELS = [
+    {
+      panelId:  'energy-panel-1',
+      scrollId: 'ep1-scroll',
+      sectionIds: ['ep1-sec-explain','ep1-sec-be','ep1-sec-clock','ep1-sec-analytics','ep1-sec-close'],
+      inited: false
+    }
+  ];
+
+  function initGuide(cfg) {
+    if (cfg.inited) return;
+    const panel    = document.getElementById(cfg.panelId);
+    const scrollEl = document.getElementById(cfg.scrollId);
+    if (!panel || !scrollEl) return;
+
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        const node = panel.querySelector(
+          `.ep-guide-node[data-section="${entry.target.id}"]`);
+        if (node) node.classList.toggle('active', entry.isIntersecting);
+      });
+    }, { root: scrollEl, threshold: 0.1 });
+
+    cfg.sectionIds.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) obs.observe(el);
+    });
+
+    // Activate first node immediately
+    const first = panel.querySelector('.ep-guide-node');
+    if (first) first.classList.add('active');
+
+    cfg.inited = true;
+  }
+
+  // Re-init each time an energy panel opens — only for the visible one
+  const energyBtn = document.getElementById('energy-btn');
+  if (energyBtn) {
+    energyBtn.addEventListener('click', () => {
+      setTimeout(() => {
+        PANELS.forEach(cfg => {
+          const panel = document.getElementById(cfg.panelId);
+          if (panel && panel.style.display !== 'none') initGuide(cfg);
+        });
+      }, 60);
+    });
+  }
+
+  // Reset inited flags when panels close, so re-opens re-wire observers
+  const origClose = window.closeEnergyPanel;
+  window.closeEnergyPanel = function() {
+    PANELS.forEach(cfg => { cfg.inited = false; });
+    if (origClose) origClose();
+  };
+})();
+</script>
+
+</body>
+</html>

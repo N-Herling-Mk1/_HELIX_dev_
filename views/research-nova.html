@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>H.E.L.I.X — Research · NOVA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Exo+2:wght@200;300;400;600&display=swap" rel="stylesheet">
+<!-- repo: <link rel="stylesheet" href="../css/core.css">
+            <link rel="stylesheet" href="../css/views/view-shell.css"> -->
+<style>
+:root{--cyan:#00e5ff;--orange:#ff6a00;--green:#00ff41;--bg:#020c14;--bg-panel:rgba(2,10,16,0.92);
+  --text:#c8eef5;--text-dim:#6aabbc;--text-faint:#2e6878;--glow-c:rgba(0,229,255,.55);--glow-o:rgba(255,106,0,.5);
+  --glow-g:rgba(0,255,65,.65);--border:rgba(0,229,255,.18);--border-dim:rgba(0,229,255,.08);}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+body{width:100%;background:var(--bg);font-family:'Exo 2',sans-serif;color:var(--text);}
+/* shared skeleton (mirror of view-shell.css) */
+.view-root{height:100vh;width:100%;overflow:hidden;display:grid;grid-template-columns:220px 1fr;background:var(--bg);}
+.view-rail{display:flex;flex-direction:column;border-right:1px solid var(--border);
+  background:linear-gradient(180deg,rgba(0,229,255,.04),transparent 16%),var(--bg-panel);min-height:0;}
+.view-logo-box{flex-shrink:0;width:100%;aspect-ratio:1/1;background:#07090f;border-bottom:1px solid var(--border-dim);
+  position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+.view-logo-box svg{width:74%;height:74%;}
+.view-rail-body{flex:1;min-height:0;overflow-y:auto;padding:18px 16px;}
+.view-rail-footer{flex-shrink:0;padding:12px 16px;border-top:1px solid var(--border-dim);
+  font-family:'Share Tech Mono',monospace;font-size:9.5px;letter-spacing:.2em;color:var(--text-faint);
+  text-transform:uppercase;display:flex;align-items:center;gap:8px;}
+.view-rail-footer .dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--glow-g);
+  animation:vs-pulse 2.4s ease-in-out infinite;}
+@keyframes vs-pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.view-content{position:relative;min-width:0;min-height:0;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.view-content::before{content:'';position:absolute;inset:0;z-index:0;pointer-events:none;
+  background-image:linear-gradient(rgba(0,229,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,.03) 1px,transparent 1px);
+  background-size:48px 48px;mask-image:radial-gradient(circle at 50% 50%,#000 0%,transparent 80%);
+  -webkit-mask-image:radial-gradient(circle at 50% 50%,#000 0%,transparent 80%);}
+/* rail labels */
+.r-h{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:.3em;color:var(--orange);text-transform:uppercase;margin-bottom:12px;}
+.r-node{display:block;padding:9px 12px;margin-bottom:4px;font-family:'Share Tech Mono',monospace;font-size:11px;
+  letter-spacing:.1em;color:var(--text-dim);border:1px solid var(--border-dim);cursor:pointer;transition:all .18s;}
+.r-node:hover{color:var(--cyan);border-color:var(--border);background:rgba(0,229,255,.05);}
+/* placeholder radial stage */
+.nova-stage{position:relative;z-index:1;width:min(78vmin,640px);height:min(78vmin,640px);}
+.nova-note{position:absolute;left:20px;bottom:18px;z-index:2;font-family:'Share Tech Mono',monospace;
+  font-size:10px;letter-spacing:.18em;color:var(--text-faint);text-transform:uppercase;max-width:46ch;line-height:1.7;}
+.nova-note b{color:var(--orange);}
+
+/* shell owns the logo in embed mode — hide this view's logo box, keep footprint */
+html.is-embedded .view-logo-box{visibility:hidden;}
+</style>
+</head>
+<body>
+<div class="view-root">
+
+  <!-- ════ LEFT RAIL — constant skeleton, identical to other views ════ -->
+  <aside class="view-rail">
+    <div class="view-logo-box" id="logo-box" title="HELIX">
+      <!-- repo: replace with the glitch-canvas / helix asset used in Traditional -->
+      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="hx" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#00e5ff"/><stop offset="1" stop-color="#ff6a00"/></linearGradient></defs>
+        <g fill="none" stroke="url(#hx)" stroke-width="2.4" stroke-linecap="round">
+          <path d="M30 12 C70 30,70 70,30 88"/><path d="M70 12 C30 30,30 70,70 88"/>
+          <line x1="35" y1="22" x2="65" y2="22"/><line x1="58" y1="36" x2="42" y2="36"/>
+          <line x1="38" y1="50" x2="62" y2="50"/><line x1="58" y1="64" x2="42" y2="64"/><line x1="35" y1="78" x2="65" y2="78"/>
+        </g>
+      </svg>
+    </div>
+    <div class="view-rail-body">
+      <div class="r-h">Nodes</div>
+      <!-- repo: these come from the same data source the Traditional view reads
+           (sectors / articles). NOVA is an alternate navigator over the SAME docs. -->
+      <div class="r-node">H · HEP</div>
+      <div class="r-node">E · EPISTEMIC</div>
+      <div class="r-node">L · LEARNING</div>
+      <div class="r-node">I · INTELLIGENT AI</div>
+      <div class="r-node">X · EXPLORATION</div>
+    </div>
+    <div class="view-rail-footer"><span class="dot"></span>NOVA · ONLINE</div>
+  </aside>
+
+  <!-- ════ CONTENT — radial array stage ════ -->
+  <main class="view-content">
+    <!-- ╔══════════════════════════════════════════════════════════════╗
+         ║  IMPORT ZONE — _INFO_698_A_/nav.html RADIAL ARRAY             ║
+         ║  Drop the ported radial-array markup + its data structure     ║
+         ║  here. Keep it inside .nova-stage so it sits in the shared    ║
+         ║  iframe shape. Wire its node data to the SAME source the      ║
+         ║  Traditional view uses (articles/sectors) — NOVA is a second  ║
+         ║  navigator over identical documents, not separate content.    ║
+         ╚══════════════════════════════════════════════════════════════╝ -->
+    <svg class="nova-stage" id="nova-stage" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+      <defs><filter id="g"><feGaussianBlur stdDeviation="2.4"/></filter></defs>
+      <circle cx="200" cy="200" r="155" fill="none" stroke="rgba(0,229,255,.1)"/>
+      <circle cx="200" cy="200" r="155" fill="none" stroke="#00e5ff" stroke-dasharray="3 13" opacity=".5">
+        <animateTransform attributeName="transform" type="rotate" from="0 200 200" to="360 200 200" dur="40s" repeatCount="indefinite"/>
+      </circle>
+      <g id="nodes"></g>
+      <circle cx="200" cy="200" r="32" fill="#020c14" stroke="#ff6a00" stroke-width="1.5"/>
+      <text x="200" y="205" text-anchor="middle" font-family="Orbitron" font-weight="900" font-size="13" letter-spacing="2" fill="#eaf8ff">NODE</text>
+    </svg>
+    <div class="nova-note">PLACEHOLDER RADIAL ARRAY — <b>awaiting nav.html import</b>.
+      Same iframe shape as Traditional &amp; Docs · constant logo top-left preserved.</div>
+  </main>
+</div>
+
+<script>
+/* embed helper (repo: ../js/views/embed.js) */
+(function(){var e=new URLSearchParams(location.search).get('embed')==='1';
+  if(e)document.documentElement.classList.add('is-embedded');
+  window.HELIX_VIEW={embedded:e,toShell:function(m){if(e)try{parent.postMessage(Object.assign({helix:true},m),'*')}catch(_){}}};
+  document.addEventListener('DOMContentLoaded',function(){window.HELIX_VIEW.toShell({type:'ready'});
+    window.HELIX_VIEW.toShell({type:'title',text:'NOVA'});});})();
+
+/* placeholder node ring — replace with imported radial logic */
+(function(){var g=document.getElementById('nodes');var N=6;
+  for(var i=0;i<N;i++){var a=i/N*6.2832-1.5708;var x=200+Math.cos(a)*155,y=200+Math.sin(a)*155;
+    var ln='<line x1="200" y1="200" x2="'+x.toFixed(1)+'" y2="'+y.toFixed(1)+'" stroke="rgba(0,229,255,.14)"/>';
+    var c1='<circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="12" fill="#020c14" stroke="#00e5ff" filter="url(#g)"/>';
+    var c2='<circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="12" fill="#020c14" stroke="#00e5ff" style="cursor:pointer"/>';
+    g.insertAdjacentHTML('beforeend',ln+c1+c2);}})();
+</script>
+</body>
+</html>

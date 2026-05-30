@@ -1,0 +1,126 @@
+/* ════════════════════════════════════════════
+   HELIX — SHARED STYLESHEET
+   helix.css · TRON Ares design system
+════════════════════════════════════════════ */
+
+/* ── TOKENS ── */
+:root {
+  --cyan:       #00e5ff;
+  --cyan-mid:   #00b3cc;
+  --cyan-dim:   #007a8c;
+  --cyan-ghost: rgba(0,229,255,0.06);
+  --orange:     #ff6a00;
+  --orange-dim: #7a3300;
+  --orange-ghost:rgba(255,106,0,0.06);
+  --green:      #00ff41;
+  --green-dim:  #009929;
+  --bg:         #020c14;
+  --bg-panel:   rgba(2,10,16,0.92);
+  --text:       #c8eef5;
+  --text-dim:   #6aabbc;
+  --text-faint: #2e6878;
+  --glow-c:     rgba(0,229,255,0.55);
+  --glow-o:     rgba(255,106,0,0.5);
+  --glow-g:     rgba(0,255,65,0.65);
+  --border:     rgba(0,229,255,0.18);
+  --border-dim: rgba(0,229,255,0.08);
+
+  /* per-sector accent — overridden by JS via data-sector */
+  --sector-color:  var(--cyan);
+  --sector-glow:   var(--glow-c);
+  --sector-ghost:  var(--cyan-ghost);
+}
+
+/* ── RESET ── */
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body { width:100%; background:var(--bg); font-family:'Exo 2',sans-serif; color:var(--text); overflow-x:hidden; }
+
+/* ── GRID BACKGROUND ── */
+.grid-bg {
+  position:fixed; inset:0; z-index:0; pointer-events:none;
+  background-image:
+    linear-gradient(rgba(0,229,255,0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,229,255,0.035) 1px, transparent 1px);
+  background-size:48px 48px;
+}
+.grid-bg::before {
+  content:''; position:absolute; inset:0;
+  background-image:
+    linear-gradient(135deg, rgba(0,229,255,0.018) 25%, transparent 25%),
+    linear-gradient(45deg,  rgba(0,229,255,0.018) 25%, transparent 25%);
+  background-size:96px 96px;
+}
+
+/* ── SCANLINES ── */
+.scanlines {
+  position:fixed; inset:0; z-index:5; pointer-events:none;
+  background:repeating-linear-gradient(0deg,
+    transparent, transparent 3px,
+    rgba(0,0,0,0.08) 3px, rgba(0,0,0,0.08) 4px);
+}
+
+/* ── VIGNETTE ── */
+.vignette {
+  position:fixed; inset:0; z-index:1; pointer-events:none;
+  background:radial-gradient(ellipse at center,
+    transparent 20%, rgba(2,12,20,0.6) 70%, rgba(2,12,20,0.96) 100%);
+}
+
+/* ── CORNER BRACKETS ── */
+.corner { position:fixed; width:50px; height:50px; z-index:20; pointer-events:none; }
+.corner::before,
+.corner::after { content:''; position:absolute; background:var(--cyan); box-shadow:0 0 7px var(--glow-c); }
+.corner::before { width:2px; height:100%; top:0; left:0; }
+.corner::after  { width:100%; height:2px; top:0; left:0; }
+.corner.tl { top:18px; left:36px; }
+.corner.tr { top:18px; right:36px; transform:scaleX(-1); }
+.corner.bl { bottom:18px; left:252px; transform:scaleY(-1); }  /* 36px margin + 180px rail + 36px gap */
+.corner.br { bottom:18px; right:36px; transform:scale(-1,-1); }
+
+/* ── HORIZONTAL RULES ── */
+.hline {
+  position:fixed; left:0; right:0; height:1px; z-index:3; pointer-events:none;
+  background:linear-gradient(90deg,
+    transparent 0%, rgba(0,229,255,0.1) 15%,
+    rgba(0,229,255,0.1) 85%, transparent 100%);
+}
+.hline.top    { top:80px; }
+.hline.bottom { bottom:64px; }
+
+/* ── SHARE TECH MONO UTILITY ── */
+.mono { font-family:'Share Tech Mono',monospace; }
+.orbitron { font-family:'Orbitron',monospace; }
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width:4px; }
+::-webkit-scrollbar-track { background:transparent; }
+::-webkit-scrollbar-thumb { background:var(--cyan-dim); border-radius:2px; }
+::-webkit-scrollbar-thumb:hover { background:var(--cyan-mid); }
+
+/* ── KEYFRAMES ── */
+@keyframes rise {
+  from { opacity:0; transform:translateY(16px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+@keyframes rise-fast {
+  from { opacity:0; transform:translateY(8px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+@keyframes fade-in {
+  from { opacity:0; } to { opacity:1; }
+}
+@keyframes blink { 50% { opacity:0; } }
+@keyframes pulse-glow {
+  0%,100% { box-shadow:0 0 6px var(--glow-c); }
+  50%     { box-shadow:0 0 18px var(--glow-c), 0 0 36px rgba(0,229,255,0.2); }
+}
+@keyframes scan-down {
+  0%   { top:0; opacity:0.6; }
+  90%  { opacity:0.6; }
+  100% { top:100%; opacity:0; }
+}
+@keyframes type-out {
+  from { max-width:0; }
+  to   { max-width:100%; }
+}

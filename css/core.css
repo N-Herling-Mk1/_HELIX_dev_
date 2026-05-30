@@ -1,0 +1,20 @@
+/* ═══════════════════════════════════════════════════════════
+   HELIX — CORE TOKENS + RESET   css/core.css
+   Single shared design-token layer. Imported by the shell and
+   by every view. Extracted verbatim from the original helix.css
+   so the redesign is pixel-consistent with existing pages.
+   ═══════════════════════════════════════════════════════════ */
+:root{
+  --cyan:#00e5ff; --cyan-mid:#00b3cc; --cyan-dim:#007a8c;
+  --cyan-ghost:rgba(0,229,255,0.06);
+  --orange:#ff6a00; --orange-dim:#7a3300; --orange-ghost:rgba(255,106,0,0.06);
+  --green:#00ff41; --green-dim:#009929;
+  --bg:#020c14; --bg-panel:rgba(2,10,16,0.92);
+  --text:#c8eef5; --text-dim:#6aabbc; --text-faint:#2e6878;
+  --glow-c:rgba(0,229,255,0.55); --glow-o:rgba(255,106,0,0.5); --glow-g:rgba(0,255,65,0.65);
+  --border:rgba(0,229,255,0.18); --border-dim:rgba(0,229,255,0.08);
+  --sector-color:var(--cyan); --sector-glow:var(--glow-c); --sector-ghost:var(--cyan-ghost);
+}
+*,*::before,*::after{ margin:0; padding:0; box-sizing:border-box; }
+html{ scroll-behavior:smooth; }
+body{ width:100%; background:var(--bg); font-family:'Exo 2',sans-serif; color:var(--text); }

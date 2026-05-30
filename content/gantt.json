@@ -1,0 +1,34 @@
+{
+  "week0_start": "2026-05-18",
+  "num_weeks": 13,
+  "last_updated": "2026-05-28",
+  "tasks": [
+    { "name": "Course orientation & mentor sync",        "phase": "Intro",         "start": 0,  "end": 0,  "status": "done" },
+    { "name": "Bootstrap three repositories",             "phase": "Intro",         "start": 0,  "end": 0,  "status": "done" },
+    { "name": "Scope lock & proposal v1",                 "phase": "Planning",      "start": 1,  "end": 1,  "status": "in_progress" },
+    { "name": "Scaffold phase-1 architecture",            "phase": "Planning",      "start": 1,  "end": 1,  "status": "in_progress" },
+    { "name": "Genre-recognition reproduction",           "phase": "Design / Impl", "start": 2,  "end": 2,  "status": "planned" },
+    { "name": "Phonon DOS reproduction",                  "phase": "Design / Impl", "start": 3,  "end": 3,  "status": "planned" },
+    { "name": "ATLAS reproduction",                       "phase": "Design / Impl", "start": 4,  "end": 4,  "status": "planned" },
+    { "name": "Integrate three into phase-1 stack",       "phase": "Design / Impl", "start": 5,  "end": 5,  "status": "planned" },
+    { "name": "Deploy stack (MVP)",                       "phase": "Design / Impl", "start": 6,  "end": 6,  "status": "planned" },
+    { "name": "Bayesian + visualization layer",           "phase": "Design / Impl", "start": 6,  "end": 7,  "status": "planned" },
+    { "name": "MCP server (stretch)",                     "phase": "Design / Impl", "start": 8,  "end": 8,  "status": "planned" },
+    { "name": "Integration smoke test",                   "phase": "Design / Impl", "start": 8,  "end": 8,  "status": "planned" },
+    { "name": "Unit / integration / ground-truth tests",  "phase": "Testing",       "start": 9,  "end": 9,  "status": "planned" },
+    { "name": "UX pass, bug triage (buffer)",             "phase": "Testing",       "start": 10, "end": 10, "status": "planned" },
+    { "name": "Final paper",                              "phase": "Write-up",      "start": 11, "end": 11, "status": "planned" },
+    { "name": "iShowcase poster + demo prep",             "phase": "Write-up",      "start": 11, "end": 11, "status": "planned" },
+    { "name": "Final submission + iShowcase",             "phase": "Deliverables",  "start": 12, "end": 12, "status": "planned" },
+    { "name": "Repo freeze + v1.0 tag",                   "phase": "Deliverables",  "start": 12, "end": 12, "status": "planned" }
+  ],
+  "milestones": [
+    { "week": 1,  "label": "Proposal v1 submitted" },
+    { "week": 4,  "label": "All three reproductions at ground-truth" },
+    { "week": 5,  "label": "Phase-1 stack integrated (local)" },
+    { "week": 6,  "label": "MVP deployed" },
+    { "week": 8,  "label": "Feature-complete (stretch + smoke test)" },
+    { "week": 10, "label": "Testing complete" },
+    { "week": 12, "label": "Final hand-in" }
+  ]
+}

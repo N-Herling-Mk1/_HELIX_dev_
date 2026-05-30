@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>H.E.L.I.X — Shell</title>
+<link rel="icon" type="image/x-icon" href="assets/img/helix_64.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Exo+2:wght@200;300;400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/core.css">
+<link rel="stylesheet" href="css/shell.css">
+</head>
+<body>
+<div class="grid-bg"></div>
+<div class="scanlines"></div>
+<div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+
+<!-- ════ TOPBAR ════ -->
+<header class="topbar">
+  <div class="brand">
+    <span class="wm">H<span class="dot">·</span>E<span class="dot">·</span>L<span class="dot">·</span>I<span class="dot">·</span>X</span>
+    <span class="tag">VIEW SHELL</span>
+  </div>
+  <div class="center">
+    <nav class="switcher" id="switcher" role="tablist" aria-label="Views">
+      <button class="vbtn" data-view="research" role="tab"><span class="k">01</span>RESEARCH</button>
+      <button class="vbtn" data-view="docs" role="tab"><span class="k">02</span>DOCUMENTATION</button>
+    </nav>
+    <div class="modes" id="modes" aria-label="Research view type">
+      <button class="mbtn" data-mode="traditional">Traditional</button>
+      <span class="swap">⇄</span>
+      <button class="mbtn" data-mode="nova">HELIX&nbsp;NOVA</button>
+    </div>
+  </div>
+  <div class="status">
+    <button class="fx-toggle" id="fx-toggle" title="Logo animation controls">⚡ FX</button>
+    <span><b id="status-view">—</b></span>
+    <span class="led" title="shell online"></span>
+  </div>
+</header>
+
+<!-- ════ PERSISTENT ANIMATED LOGO (constant across all view swaps) ════ -->
+<div id="shell-logo" title="HELIX — click to glitch">
+  <canvas id="shell-logo-canvas" width="200" height="200"></canvas>
+</div>
+
+<!-- ════ FX CONTROL PANEL (shell-level analogue of Energy Panel 2) ════ -->
+<aside id="fx-panel" aria-label="Logo FX controls">
+  <div class="fxh">⚡ Logo Animation</div>
+  <div class="fxlabel">Logo image</div>
+  <div class="fxrow">
+    <button class="fxbtn active" data-logo="0">Spiral</button>
+    <button class="fxbtn" data-logo="1">Sleek</button>
+    <button class="fxbtn" data-logo="2">Abstract</button>
+  </div>
+  <div class="fxlabel">Effect</div>
+  <div class="fxrow">
+    <button class="fxbtn active" data-fx="rgb">RGB + CRT</button>
+    <button class="fxbtn" data-fx="laser">Laser Etch</button>
+  </div>
+  <div class="fxdiv"></div>
+  <div class="fxrow">
+    <button class="fxbtn" data-act="trigger">▶ Trigger</button>
+    <button class="fxbtn active" data-act="auto">Auto</button>
+    <button class="fxbtn warn" data-act="reset">↺ Reset</button>
+  </div>
+</aside>
+
+<!-- ════ STAGE ════ -->
+<main class="stage">
+  <iframe id="view-frame" title="HELIX active view"
+          sandbox="allow-scripts allow-same-origin allow-popups allow-forms"></iframe>
+  <div class="veil" id="veil"><div class="vtxt">DEPLOYING VIEW</div></div>
+</main>
+
+<!-- glitch engine first (defines window.HELIX_GLITCH), then the shell router boots it -->
+<script src="js/glitch.js"></script>
+<script src="js/shell.js"></script>
+</body>
+</html>

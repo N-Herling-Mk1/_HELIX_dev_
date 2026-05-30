@@ -1,0 +1,12 @@
+<div class="kicker"><span class="bar"></span>01 · Overview</div>
+<h2 class="doc-h2">Project Overview</h2>
+<p class="doc-p">The central claim is an identity: the <b>InfoNCE contrastive loss is a Boltzmann
+  distribution</b> — the softmax denominator <i>is</i> the partition function <code>Z</code>, and the
+  temperature <code>&tau;</code> is the inverse of an entropy scale. That single bridge lets Jaynes'
+  maximum-entropy program govern both the embedding objective and the inference downstream.</p>
+<p class="doc-p">The cutflow is read as a <b>thermodynamic process</b>: each selection cut is a prior
+  update, and the entropy drop across a cut is the per-cut information gain. The architecture is two-phase —
+  <b>Evt2Vec</b> (a Word2Vec analogue producing self-supervised event embeddings) feeding <b>CutFormer</b>
+  (a transformer over the cutflow sequence) — positioned against ATLAS GN2 and distinguished by its
+  information-theoretic grounding and novel epistemic metrics (overall &amp; boundary epistemic error,
+  the <code>RRM-4</code> penalty vector).</p>
