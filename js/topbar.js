@@ -133,7 +133,7 @@
   ══════════════════════════════════════════ */
 
   /* Buttons that get the laser treatment */
-  const LASER_TARGETS = ['topbar-back-link'];
+  const LASER_TARGETS = [];
 
   /* Inject shimmer canvas behind topbar content (only if a horizontal topbar exists) */
   const topbar   = document.querySelector('.topbar');

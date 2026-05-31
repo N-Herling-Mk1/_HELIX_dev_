@@ -28,10 +28,6 @@
 <div class="grid-bg"></div>
 <div class="vignette"></div>
 <div class="scanlines"></div>
-<div class="corner tl"></div>
-<div class="corner tr"></div>
-<div class="corner bl"></div>
-<div class="corner br"></div>
 
 <!-- TOPBAR -->
 <!-- HUB BODY -->
@@ -47,13 +43,9 @@
       <canvas id="glitch-canvas" width="180" height="180" style="display:block;width:100%;height:100%;cursor:pointer;" title="Click to trigger glitch"></canvas>
     </div>
 
-    <!-- rail header: view label + active sector readout, stacked vertically -->
+    <!-- rail header: view label -->
     <div class="rail-head">
       <span class="rail-title">Navigation Hub</span>
-      <div class="rail-sector" id="rail-sector">
-        <span class="topbar-sector-letter" id="content-sector-letter"></span>
-        <span class="topbar-sector-name" id="content-sector-name"></span>
-      </div>
     </div>
 
     <button class="sector-btn" data-sector="H">
@@ -85,13 +77,6 @@
     <!-- reserved nav region — HELIX NOVA reuses this same column for file navigation -->
     <div class="rail-navspace" id="rail-navspace" aria-hidden="true"></div>
 
-    <div class="rail-footer">
-      <a href="../index.html" class="topbar-back rail-back" id="topbar-back-link">← Return to Splash</a>
-      <div class="rail-status">
-        <div class="status-dot"></div>
-        HELIX ONLINE
-      </div>
-    </div>
   </nav>
 
   <!-- CONTENT PANEL -->
@@ -120,6 +105,18 @@
 
     <!-- MAIN AREA — fills the rest beside the vertical header strip -->
     <div class="content-main">
+
+    <!-- sector alert: thin row on top of the viewing area (moved out of the rail) -->
+    <div class="view-alert" id="rail-sector">
+      <span class="topbar-sector-letter" id="content-sector-letter"></span>
+      <span class="topbar-sector-name" id="content-sector-name"></span>
+    </div>
+
+    <!-- corner braces framing the document viewing area -->
+    <div class="corner tl"></div>
+    <div class="corner tr"></div>
+    <div class="corner bl"></div>
+    <div class="corner br"></div>
 
     <div class="panel-empty" id="panel-empty">
       <div class="empty-glyph">H·E·L·I·X</div>
@@ -174,19 +171,21 @@
 <style>
 /* energy feature + legacy topbar CSS removed */
 
-/* ── TOPBAR SECTOR LETTER ── */
+/* ── SECTOR ALERT LETTER (thin row atop the viewer) ── */
 .topbar-sector-letter {
   font-family: 'Orbitron', monospace; font-weight: 900;
-  font-size: 1.6rem; line-height: 1;
-  color: var(--sector-color, transparent);
+  font-size: 18px; line-height: 34px;
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 20px; text-align: center;
+  color: var(--sector-color, var(--text-dim));
   text-shadow: 0 0 16px var(--sector-glow, transparent);
-  min-width: 1.2em; text-align: right;
   transition: color 0.3s, text-shadow 0.3s;
 }
 .topbar-sector-name {
   font-family: 'Share Tech Mono', monospace;
-  font-size: 11px; letter-spacing: 0.2em;
-  color: var(--sector-color, transparent);
+  font-size: 11px; line-height: 34px; letter-spacing: 0.2em;
+  display: inline-flex; align-items: center;
+  color: var(--sector-color, var(--text-dim));
   text-transform: uppercase; opacity: 0.8;
   transition: color 0.3s;
 }

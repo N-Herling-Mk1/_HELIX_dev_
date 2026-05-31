@@ -38,6 +38,7 @@
   flex-shrink:0;
   display:flex;
   flex-direction:column;
+  overflow-y:auto;
   border-right:1px solid var(--border-dim);
   background:rgba(2,8,14,0.7);
   position:relative;
@@ -80,20 +81,8 @@
   font-size:11px; letter-spacing:0.3em; text-transform:uppercase;
   color:var(--text-dim);
 }
-.rail-sector {
-  display:flex; align-items:center; gap:8px; min-height:20px;
-  font-family:'Share Tech Mono',monospace; letter-spacing:0.12em;
-}
-.rail-sector .topbar-sector-letter { font-size:15px; font-weight:700; }
-.rail-sector .topbar-sector-name   { font-size:10px; color:var(--text-dim); text-transform:uppercase; }
-
 /* ── RESERVED NAV REGION — HELIX NOVA reuses this column for file navigation ── */
-.rail-navspace { flex:0 0 auto; }
-
-/* ── RAIL BACK LINK ── */
-.rail-back {
-  font-size:11px; letter-spacing:0.18em; padding:4px 0; margin-bottom:8px;
-}
+.rail-navspace { flex:1 1 auto; }
 
 /* ── EMBEDDED IN SHELL — the shell owns the HELIX logo, so hide the view's own
    logo box and reserve the top of the rail to clear the shell's fixed logo cell ── */
@@ -103,13 +92,14 @@
 /* ── SECTOR BUTTONS — fill remaining height ── */
 .sector-btn {
   position:relative;
-  flex:1;
+  flex:1 1 0;
+  min-height:84px;
   display:flex;
   flex-direction:column;
   align-items:center;
   justify-content:center;
-  gap:5px;
-  padding:8px 6px;
+  gap:4px;
+  padding:10px 6px;
   border:none;
   border-bottom:1px solid var(--border-dim);
   background:transparent;
@@ -147,36 +137,36 @@
 
 .btn-letter {
   font-family:'Orbitron',monospace; font-weight:900;
-  font-size:2.8rem; line-height:1;
+  font-size:2.2rem; line-height:1;
   color:var(--btn-color, var(--cyan));
-  text-shadow:0 0 14px var(--btn-glow, var(--glow-c));
+  text-shadow:0 0 12px var(--btn-glow, var(--glow-c));
   position:relative; z-index:1;
   transition:font-size 0.3s ease, text-shadow 0.3s ease;
 }
 .sector-btn:hover .btn-letter {
-  text-shadow:0 0 22px var(--btn-glow), 0 0 50px var(--btn-glow);
+  text-shadow:0 0 18px var(--btn-glow), 0 0 40px var(--btn-glow);
 }
 .sector-btn.active .btn-letter {
-  font-size:4rem;
-  text-shadow:0 0 28px var(--btn-glow), 0 0 64px var(--btn-glow), 0 0 110px var(--btn-glow);
+  font-size:2.7rem;
+  text-shadow:0 0 18px var(--btn-glow), 0 0 38px var(--btn-glow);
 }
 
 .btn-word {
   font-family:'Orbitron',monospace; font-weight:700;
-  font-size:13px; letter-spacing:0.18em;
+  font-size:11px; letter-spacing:0.16em;
   color:var(--btn-color, var(--cyan));
   text-transform:uppercase; opacity:0.7;
   position:relative; z-index:1;
   transition:opacity 0.22s, font-size 0.3s ease;
-  text-align:center;
+  text-align:center; line-height:1.1;
 }
 .sector-btn:hover .btn-word { opacity:0.9; }
-.sector-btn.active .btn-word { opacity:1; font-size:14px; }
+.sector-btn.active .btn-word { opacity:1; font-size:12px; }
 
 .btn-count {
   font-family:'Share Tech Mono',monospace;
-  font-size:13px; letter-spacing:0.1em; color:var(--text-dim);
-  position:relative; z-index:1;
+  font-size:10px; letter-spacing:0.1em; color:var(--text-dim);
+  position:relative; z-index:1; line-height:1;
 }
 .sector-btn.active .btn-count { color:var(--btn-color); opacity:0.8; }
 .sector-btn.active .btn-count::before { content:'► '; }
@@ -694,8 +684,19 @@
   .subtab-bar { padding:0 18px; }
 }
 
-/* ── CORNER OVERRIDES for main.html — frame the content panel ── */
-.corner.tl { top:212px; left:178px; }
-.corner.tr { top:212px; right:18px; transform:scaleX(-1); }
-.corner.bl { bottom:18px; left:178px; transform:scaleY(-1); }
-.corner.br { bottom:18px; right:18px; transform:scale(-1,-1); }
+/* ── CORNER BRACES — framed inside the document viewing area (content-main) ── */
+.content-main > .corner { position:absolute; }
+.content-main > .corner.tl { top:12px; left:12px; }
+.content-main > .corner.tr { top:12px; right:12px; transform:scaleX(-1); }
+.content-main > .corner.bl { bottom:12px; left:12px; transform:scaleY(-1); }
+.content-main > .corner.br { bottom:12px; right:12px; transform:scale(-1,-1); }
+
+/* sector alert — thin row on top of the viewing area */
+.view-alert {
+  flex-shrink:0;
+  display:flex; align-items:center; justify-content:center; gap:10px;
+  height:34px; padding:0 16px;
+  border-bottom:1px solid var(--border-dim);
+  background:rgba(2,8,14,0.6);
+  font-family:'Share Tech Mono',monospace; letter-spacing:0.12em;
+}
