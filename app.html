@@ -22,19 +22,33 @@
     <span class="tag">VIEW SHELL</span>
   </div>
   <div class="center">
-    <nav class="switcher" id="switcher" role="tablist" aria-label="Views">
-      <button class="vbtn" data-view="research" role="tab"><span class="k">01</span>RESEARCH</button>
-      <button class="vbtn" data-view="docs" role="tab"><span class="k">02</span>DOCUMENTATION</button>
-    </nav>
-    <div class="modes" id="modes" aria-label="Research view type">
-      <button class="mbtn" data-mode="traditional">Traditional</button>
-      <span class="swap">⇄</span>
-      <button class="mbtn" data-mode="nova">HELIX&nbsp;NOVA</button>
+    <div class="vt-wrap">
+      <span class="vt-legend">View Toggle</span>
+      <div class="viewtoggle" id="modes" role="tablist" aria-label="Research view">
+        <button class="vt-cell" data-mode="traditional" role="tab" aria-selected="true">
+          <span class="vt-hex vt-trad" aria-hidden="true"></span>
+          <span class="vt-label">Traditional</span>
+        </button>
+        <button class="vt-cell" data-mode="nova" role="tab" aria-selected="false">
+          <span class="vt-hex vt-nova" aria-hidden="true"></span>
+          <span class="vt-label">Helix&nbsp;Nova</span>
+        </button>
+        <span class="vt-sep" aria-hidden="true"></span>
+        <button class="vt-switch" id="vt-switch" role="switch" aria-checked="false"
+                aria-label="Toggle Traditional / Helix Nova" title="Toggle view">
+          <span class="vt-knob" aria-hidden="true"></span>
+        </button>
+      </div>
     </div>
+    <span class="ctl-div" aria-hidden="true"></span>
+    <button class="docbtn" id="docbtn" data-view="docs" aria-label="Documentation view" aria-selected="false">
+      <span class="docbtn-glyph" aria-hidden="true">▤</span>
+      <span class="docbtn-txt">Documentation</span>
+    </button>
   </div>
   <div class="status">
-    <button class="fx-toggle" id="fx-toggle" title="Logo animation controls">⚡ FX</button>
-    <span><b id="status-view">—</b></span>
+    <button class="fx-toggle" id="fx-toggle" title="Logo animation controls">Brand Toggle</button>
+    <span class="sv-box"><b id="status-view">—</b></span>
     <span class="led" title="shell online"></span>
   </div>
 </header>

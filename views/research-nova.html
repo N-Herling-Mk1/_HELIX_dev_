@@ -108,8 +108,7 @@ html.is-embedded .view-logo-box{visibility:hidden;}
 (function(){var e=new URLSearchParams(location.search).get('embed')==='1';
   if(e)document.documentElement.classList.add('is-embedded');
   window.HELIX_VIEW={embedded:e,toShell:function(m){if(e)try{parent.postMessage(Object.assign({helix:true},m),'*')}catch(_){}}};
-  document.addEventListener('DOMContentLoaded',function(){window.HELIX_VIEW.toShell({type:'ready'});
-    window.HELIX_VIEW.toShell({type:'title',text:'NOVA'});});})();
+  document.addEventListener('DOMContentLoaded',function(){window.HELIX_VIEW.toShell({type:'ready'});});})();
 
 /* placeholder node ring — replace with imported radial logic */
 (function(){var g=document.getElementById('nodes');var N=6;

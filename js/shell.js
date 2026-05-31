@@ -28,8 +28,9 @@
 
   const frame    = document.getElementById('view-frame');
   const veil     = document.getElementById('veil');
-  const switcher = document.getElementById('switcher');
+  const docbtn   = document.getElementById('docbtn');
   const modesEl  = document.getElementById('modes');
+  const vtSwitch = document.getElementById('vt-switch');
   const statusEl = document.getElementById('status-view');
 
   let state = { view:null, mode:null };
@@ -58,11 +59,15 @@
 
   /* ── chrome sync ── */
   function syncChrome(s){
-    [...switcher.children].forEach(b => b.classList.toggle('active', b.dataset.view === s.view));
     const isResearch = s.view === 'research';
-    modesEl.classList.toggle('disabled', !isResearch);
-    [...modesEl.querySelectorAll('.mbtn')].forEach(b =>
-      b.classList.toggle('active', isResearch && b.dataset.mode === s.mode));
+    [...modesEl.querySelectorAll('.vt-cell')].forEach(b =>{
+      const on = isResearch && b.dataset.mode === s.mode;
+      b.classList.toggle('active', on);
+      b.setAttribute('aria-selected', on ? 'true' : 'false');
+    });
+    docbtn.classList.toggle('active', s.view === 'docs');
+    docbtn.setAttribute('aria-selected', s.view === 'docs' ? 'true' : 'false');
+    if (isResearch) vtSwitch.setAttribute('aria-checked', s.mode === 'nova' ? 'true' : 'false');
     statusEl.textContent = labelFor(s);
   }
 
@@ -82,15 +87,14 @@
   frame.addEventListener('load', function(){ veil.classList.remove('on'); });
 
   /* ── interactions ── */
-  switcher.addEventListener('click', function(e){
-    const b = e.target.closest('.vbtn'); if(!b) return;
-    apply(b.dataset.view==='research'
-      ? {view:'research', mode:state.mode||VIEWS.research.defaultMode}
-      : {view:'docs', mode:null});
-  });
+  docbtn.addEventListener('click', function(){ apply({view:'docs', mode:null}); });
   modesEl.addEventListener('click', function(e){
-    const b = e.target.closest('.mbtn'); if(!b || state.view!=='research') return;
+    const b = e.target.closest('.vt-cell'); if(!b) return;     // a hex always enters research
     apply({view:'research', mode:b.dataset.mode});
+  });
+  vtSwitch.addEventListener('click', function(){               // pill flips between the two views
+    const cur = state.mode || VIEWS.research.defaultMode;
+    apply({view:'research', mode: cur === 'nova' ? 'traditional' : 'nova'});
   });
   document.addEventListener('keydown', function(e){
     if(!e.altKey) return;
@@ -106,7 +110,9 @@
     const m = ev.data; if(!m || m.helix!==true) return;
     if(m.type==='navigate' && VIEWS[m.view])
       apply(m.view==='research' ? {view:'research', mode:m.mode||VIEWS.research.defaultMode} : {view:'docs', mode:null});
-    if(m.type==='title' && m.text) statusEl.textContent = String(m.text).toUpperCase();
+    // research labels are owned by the router; only the docs view may post a
+    // sub-section title (so a view can never clobber "RESEARCH · HELIX NOVA")
+    if(m.type==='title' && m.text && state.view==='docs') statusEl.textContent = String(m.text).toUpperCase();
   });
   window.HELIX_SHELL = {
     send:function(msg){ try{ frame.contentWindow.postMessage(Object.assign({helix:true},msg),'*'); }catch(_){} },
