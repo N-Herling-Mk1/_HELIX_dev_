@@ -316,17 +316,18 @@ const ENTER_TEXT = 'PRESS \u2009 TO \u2009 ENTER';
 
 /* ---- tunables (driven by the spec panel) ---- */
 const CFG = {
-  pixel:   5,
-  chroma:  8,
-  gran:    28,
+  pixel:   3,
+  chroma:  11,
+  gran:    7,
   noise:   34,
   scroll:  30,
   scan:    60,
-  flicker: 55,
+  flicker: 56,
   fade:    5.0,
   hold:    1.6,
   etch:    1.0,
-  sparks:  2.5,
+  sparks:  6.0,
+  flare:   1.5,
   color:   'red'
 };
 
@@ -777,9 +778,13 @@ function spawnSparks(x,y,n,power){
   power = power||1;
   for(let i=0;i<n;i++){
     if(sparks.length>=MAXS) sparks.shift();
-    const a=Math.random()*Math.PI*2, s=(0.4+Math.random()*5.0)*power*eDPR;
-    sparks.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-1.0*eDPR,life:1,
-      decay:0.018+Math.random()*0.04,sz:(0.7+Math.random()*2.1)*eDPR,blue:Math.random()<0.4});
+    // launch in an upward fan: sparks shoot up/out, gravity arcs them back down
+    const a = -Math.PI/2 + (Math.random()-0.5)*2.0;     // cone centered straight up
+    const s = (1.2+Math.random()*5.5)*power*eDPR;
+    sparks.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,  // vy<0 = upward
+      g:(0.30+Math.random()*0.16)*eDPR,                  // per-spark gravity
+      life:1,decay:0.010+Math.random()*0.022,
+      sz:(0.7+Math.random()*1.8)*eDPR,blue:Math.random()<0.4});
   }
 }
 function spawnSmoke(x,y,n){
@@ -969,12 +974,19 @@ function renderParticles(){
     ectx.globalCompositeOperation='lighter'; ectx.fillStyle=rg;
     ectx.beginPath(); ectx.arc(fl.x,fl.y,fl.r*(1.2-fl.life),0,7); ectx.fill();
   }
-  ectx.globalCompositeOperation='lighter';
-  for(let i=sparks.length-1;i>=0;i--){ const s=sparks[i]; s.x+=s.vx;s.y+=s.vy;s.vx*=0.985;s.vy+=0.18*eDPR;s.life-=s.decay;
+  ectx.globalCompositeOperation='lighter'; ectx.lineCap='round';
+  for(let i=sparks.length-1;i>=0;i--){ const s=sparks[i];
+    s.vx*=0.99; s.vy+=(s.g||0.3*eDPR);          // air drag + gravity (arc down)
+    const px=s.x, py=s.y;                         // prev pos -> motion streak
+    s.x+=s.vx; s.y+=s.vy; s.life-=s.decay;
     if(s.life<=0){sparks.splice(i,1);continue;}
-    ectx.globalAlpha=s.life;
-    ectx.fillStyle=s.blue?'rgba(150,210,255,1)':`rgba(${pal.flare[0]},${pal.flare[1]},${pal.flare[2]},1)`;
-    ectx.fillRect(s.x,s.y,s.sz,s.sz);
+    const col=s.blue?'150,210,255':`${pal.flare[0]},${pal.flare[1]},${pal.flare[2]}`;
+    ectx.globalAlpha=s.life*0.8;                  // streak: length scales with speed
+    ectx.strokeStyle=`rgba(${col},1)`; ectx.lineWidth=s.sz;
+    ectx.beginPath(); ectx.moveTo(px,py); ectx.lineTo(s.x,s.y); ectx.stroke();
+    ectx.globalAlpha=s.life;                      // bright head
+    ectx.fillStyle=`rgba(${col},1)`;
+    ectx.fillRect(s.x-s.sz*0.5,s.y-s.sz*0.5,s.sz,s.sz);
   }
   ectx.globalAlpha=1;
   for(let i=smoke.length-1;i>=0;i--){ const m=smoke[i]; m.x+=m.vx;m.y+=m.vy;m.vy*=0.992;m.r*=1.012;m.life-=m.decay;
@@ -1067,32 +1079,48 @@ function renderEtch(now, dt){
 
   // working head: bloom + converging nodes + sparks
   if (head && etchState!=='live'){
-    const R=textBox.fontPx*1.7;
+    const fl = CFG.flare;                       // flare-intensity multiplier
+    const R  = textBox.fontPx*1.7*(0.85+0.5*fl);
+    ectx.globalCompositeOperation='lighter';
+    // (1) wide outer halo — the part that makes the point read brighter/hotter
+    const halo=ectx.createRadialGradient(head.x,head.y,0,head.x,head.y,R*1.85);
+    halo.addColorStop(0,`rgba(${pal.flare[0]},${pal.flare[1]},${pal.flare[2]},${Math.min(1,0.30*fl)})`);
+    halo.addColorStop(1,'rgba(0,0,0,0)');
+    ectx.fillStyle=halo; ectx.fillRect(head.x-R*1.85, head.y-R*1.85, R*3.7, R*3.7);
+    // (2) primary bloom
     const g=ectx.createRadialGradient(head.x,head.y,0,head.x,head.y,R);
     g.addColorStop(0,'rgba(255,255,250,1)');
     g.addColorStop(0.14,'rgba(255,255,238,1)');
-    g.addColorStop(0.34,`rgba(${pal.flare[0]},${pal.flare[1]},${pal.flare[2]},0.85)`);
+    g.addColorStop(0.34,`rgba(${pal.flare[0]},${pal.flare[1]},${pal.flare[2]},${Math.min(1,0.85*fl)})`);
     g.addColorStop(1,'rgba(0,0,0,0)');
-    ectx.globalCompositeOperation='lighter'; ectx.fillStyle=g;
-    ectx.fillRect(head.x-R, head.y-R, R*2, R*2);
-    // white-hot core at the etch point — stacked (additive) for extra intensity
-    const cr=textBox.fontPx*0.55;
+    ectx.fillStyle=g; ectx.fillRect(head.x-R, head.y-R, R*2, R*2);
+    // (3) white-hot core — additive stacks; brighter flare => more stacks
+    const cr=textBox.fontPx*0.55*(0.9+0.35*fl);
     const core=ectx.createRadialGradient(head.x,head.y,0,head.x,head.y,cr);
     core.addColorStop(0,'rgba(255,255,255,1)'); core.addColorStop(0.5,'rgba(255,255,255,0.9)'); core.addColorStop(1,'rgba(255,255,255,0)');
     ectx.fillStyle=core;
-    ectx.beginPath(); ectx.arc(head.x,head.y,cr,0,7); ectx.fill();
-    ectx.beginPath(); ectx.arc(head.x,head.y,cr*0.5,0,7); ectx.fill();
+    const cores = 2 + Math.round(fl);
+    for(let s=0;s<cores;s++){ const k=1-s*0.30; ectx.beginPath(); ectx.arc(head.x,head.y,cr*Math.max(0.18,k),0,7); ectx.fill(); }
+    // (4) anamorphic streak — horizontal lens-flare line, the classic "intense" tell
+    const sl=R*2.4;
+    const streak=ectx.createLinearGradient(head.x-sl,head.y,head.x+sl,head.y);
+    streak.addColorStop(0,'rgba(0,0,0,0)');
+    streak.addColorStop(0.5,`rgba(255,255,250,${Math.min(1,0.5*fl)})`);
+    streak.addColorStop(1,'rgba(0,0,0,0)');
+    ectx.fillStyle=streak;
+    const sh=Math.max(1.2*eDPR, textBox.fontPx*0.06*fl);
+    ectx.fillRect(head.x-sl, head.y-sh/2, sl*2, sh);
     for(const n of nodes){
       const tgt=(n.edge==='top'||n.edge==='bottom')?head.x:head.y;
       n.pos += (tgt-n.pos)*n.follow;
       const p=nodePoint(n); drawBeam(p.x,p.y,head.x,head.y,strobe,pal); drawNode(p,1,pal);
     }
-    spawnSparks(head.x,head.y, Math.round((stage==='scratch'?22:40)*CFG.sparks), stage==='border'?1.3:1.0);
-    if(Math.random()<0.55) spawnSmoke(head.x,head.y,1);
+    spawnSparks(head.x,head.y, Math.round((stage==='scratch'?34:60)*CFG.sparks), stage==='border'?1.3:1.0);
+    if(Math.random()<0.7) spawnSmoke(head.x,head.y,1);
     if (f - crackMark > 0.14){
       crackMark=f;
       spawnCrack(head.x,head.y,0.5+Math.random()*0.4,(Math.random()-0.5)*6.28);
-      spawnSparks(head.x,head.y,Math.round(54*CFG.sparks),1.4);
+      spawnSparks(head.x,head.y,Math.round(80*CFG.sparks),1.4);
     }
   }
 
