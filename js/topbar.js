@@ -5,7 +5,7 @@
    Owns:
    · Slow shimmer sweep across topbar
    · One-shot laser border when shimmer crosses a button
-   · Energy level toggle (0 → 1 → 3 → 0)
+   · (energy level toggle removed)
    · Glitch AUTO toggle helper
    · BE/FE backend polling (localhost only)
 ════════════════════════════════════════════ */
@@ -13,77 +13,7 @@
 (function () {
   "use strict";
 
-  /* ── ENERGY LEVEL TOGGLE ── */
-  const energyBtn  = document.getElementById('energy-btn');
-  const energyNum  = document.getElementById('energy-level-num');
-  const CYCLE      = [0, 1, 2];
-
-  /* Elements BELOW the header that get hidden when energy panel is active */
-  const contentNormal = [
-    document.getElementById('panel-empty'),
-    document.getElementById('article-list'),
-    document.getElementById('viewer-panel')
-  ];
-  /* Tabs to disable */
-  const subtabs     = document.querySelectorAll('.subtab');
-  /* Sector rail buttons to disable */
-  const sectorBtns  = document.querySelectorAll('.sector-btn');
-  /* Nav buttons (ABOUT / BLOG) to disable */
-  const navBtns     = document.querySelectorAll('.navbtn');
-
-  const ep1 = document.getElementById('energy-panel-1');
-  const ep2 = document.getElementById('energy-panel-2');
-
-  function showEnergyLevel(level) {
-    const energyActive = level !== 0;
-
-    /* hide/show normal below-header content */
-    contentNormal.forEach(el => {
-      if (el) el.style.display = energyActive ? 'none' : '';
-    });
-
-    /* show correct energy panel */
-    if (ep1) ep1.style.display = level === 1 ? 'flex' : 'none';
-    if (ep2) ep2.style.display = level === 2 ? 'flex' : 'none';
-
-    /* disable/enable subtab buttons */
-    subtabs.forEach(btn => {
-      btn.disabled = energyActive;
-      btn.style.opacity = energyActive ? '0.35' : '';
-      btn.style.cursor  = energyActive ? 'not-allowed' : '';
-    });
-
-    /* disable/enable H-E-L-I-X sector rail buttons */
-    sectorBtns.forEach(btn => {
-      btn.disabled = energyActive;
-      btn.style.opacity      = energyActive ? '0.35' : '';
-      btn.style.cursor       = energyActive ? 'not-allowed' : '';
-      btn.style.pointerEvents = energyActive ? 'none' : '';
-    });
-
-    /* disable/enable ABOUT / BLOG nav buttons */
-    navBtns.forEach(btn => {
-      btn.disabled = energyActive;
-      btn.style.opacity      = energyActive ? '0.35' : '';
-      btn.style.cursor       = energyActive ? 'not-allowed' : '';
-      btn.style.pointerEvents = energyActive ? 'none' : '';
-    });
-  }
-
-  energyBtn.addEventListener('click', () => {
-    const cur  = parseInt(energyBtn.dataset.level);
-    const next = CYCLE[(CYCLE.indexOf(cur) + 1) % CYCLE.length];
-    energyBtn.dataset.level = next;
-    energyNum.textContent   = next;
-    showEnergyLevel(next);
-  });
-
-  /* Close button — always returns to level 0, no cycling */
-  window.closeEnergyPanel = function () {
-    energyBtn.dataset.level = 0;
-    energyNum.textContent   = 0;
-    showEnergyLevel(0);
-  };
+  /* energy-level feature removed */
 
   /* ── GLITCH HELPERS ── */
   window.gcToggleAuto = function () {
@@ -203,10 +133,16 @@
   ══════════════════════════════════════════ */
 
   /* Buttons that get the laser treatment */
-  const LASER_TARGETS = ['energy-btn', 'topbar-back-link'];
+  const LASER_TARGETS = ['topbar-back-link'];
 
-  /* Inject shimmer canvas behind topbar content */
+  /* Inject shimmer canvas behind topbar content (only if a horizontal topbar exists) */
   const topbar   = document.querySelector('.topbar');
+  if (!topbar){
+    /* rail layout: no horizontal topbar to sweep — give the buttons their laser
+       border overlay (fired on hover/click) and skip the shimmer machinery */
+    railLaserMode();
+    return;
+  }
   const shimmerC = document.createElement('canvas');
   shimmerC.id    = 'topbar-shimmer-canvas';
   shimmerC.style.cssText = `
@@ -396,5 +332,16 @@
   }
 
   requestAnimationFrame(shimmerLoop);
+
+  /* ── RAIL LAYOUT — laser borders without the horizontal shimmer sweep ── */
+  function railLaserMode(){
+    LASER_TARGETS.forEach(id => {
+      const btn = document.getElementById(id);
+      if (!btn) return;
+      injectLaserOverlay(btn);
+      btn.addEventListener('mouseenter', () => fireLaser(btn));
+      btn.addEventListener('click',      () => fireLaser(btn));
+    });
+  }
 
 })();
