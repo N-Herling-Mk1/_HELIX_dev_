@@ -4,6 +4,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>HELIX — Entry</title>
+<meta name="description" content="HELIX — hidden-sector signal acquisition. HEP · Epistemic · Learning · Intelligent AI · Exploration.">
+<!-- Social / Open Graph — update the og:url + image base to your deploy URL -->
+<meta property="og:title"       content="H·E·L·I·X">
+<meta property="og:description" content="Hidden-sector signal acquisition · HEP · Epistemic · Learning · Intelligent AI · Exploration">
+<meta property="og:image"       content="https://n-herling-mk1.github.io/_HELIX_dev_/assets/img/Soc_media_tag.png">
+<meta property="og:url"         content="https://n-herling-mk1.github.io/_HELIX_dev_/">
+<meta property="og:type"        content="website">
+<meta name="twitter:card"       content="summary_large_image">
+<meta name="twitter:title"      content="H·E·L·I·X">
+<meta name="twitter:description" content="Hidden-sector signal acquisition · HEP · Epistemic · Learning · Intelligent AI · Exploration">
+<meta name="twitter:image"      content="https://n-herling-mk1.github.io/_HELIX_dev_/assets/img/Soc_media_tag.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
@@ -69,6 +80,16 @@
     display:flex;align-items:center;gap:12px;
   }
   .kicker .dot{width:5px;height:5px;border-radius:50%;background:var(--amber);box-shadow:var(--glow-amber)}
+
+  /* header row: kicker on the left, animation controls on the right */
+  .kicker-row{position:relative;z-index:3;display:flex;align-items:center;justify-content:space-between;gap:18px;width:100%;}
+  .anim-ctl{display:flex;align-items:center;gap:10px;}
+  .anim-ctl button{font-family:inherit;font-size:9px;letter-spacing:0.28em;text-transform:uppercase;
+    color:var(--ink-dim);background:rgba(255,170,40,0.04);border:1px solid rgba(255,170,40,0.22);
+    border-radius:5px;padding:6px 11px;cursor:pointer;transition:all .16s;white-space:nowrap;}
+  .anim-ctl button:hover{color:var(--amber);border-color:var(--amber);box-shadow:var(--glow-amber);background:rgba(255,170,40,0.08);}
+  .anim-ctl button:active{transform:translateY(1px);}
+  .anim-ctl .ac-sep{width:1px;height:14px;background:rgba(255,170,40,0.25);}
 
   /* ---- CRT monitor ---- */
   .console{
@@ -272,7 +293,14 @@
 <div class="app">
   <!-- ============ STAGE ============ -->
   <section class="stage">
-    <div class="kicker"><span class="dot"></span>Hidden-sector signal acquisition<span class="dot"></span></div>
+    <div class="kicker-row">
+      <div class="kicker"><span class="dot"></span>Hidden-sector signal acquisition<span class="dot"></span></div>
+      <div class="anim-ctl">
+        <button id="skipBtn" type="button">Skip Animation</button>
+        <span class="ac-sep" aria-hidden="true"></span>
+        <button id="replayBtn" type="button">Replay Animation</button>
+      </div>
+    </div>
 
     <div class="console">
       <div class="crt-wrap">
@@ -1207,6 +1235,30 @@ function replayBoot(){
   sctx.fillStyle='#000'; sctx.fillRect(0,0,screenCv.width,screenCv.height);
   setStatus('Cold start', '');
 }
+
+/* jump straight to the finished, interactive "ready" state */
+function skipBoot(){
+  if (!textBox){ sizeEtch(); }
+  if (!textBox){ setTimeout(skipBoot, 80); return; }   // wait for layout, then skip
+  crtEl.classList.remove('off','surge-on');
+  resolveDone = true; phase='etch';
+  etchState='live'; etchDoneAt=performance.now(); crackMark=0;
+  sparks.length=0; smoke.length=0; cracks.length=0; flashes.length=0;
+  buildNodes();
+  // paint the completed frame once: full border + scratches + cooled text sprite
+  ectx.clearRect(0,0,EW,EH);
+  drawCarved(textBox.border, 1);
+  drawScratches(1, 0.9);
+  if (sprCool){ ectx.globalCompositeOperation='source-over'; ectx.drawImage(sprCool,0,0); }
+  onEtchDone();                                          // arms the enter button
+}
+
+/* animation controls */
+(function(){
+  const sb=document.getElementById('skipBtn'), rb=document.getElementById('replayBtn');
+  if(sb) sb.addEventListener('click', skipBoot);
+  if(rb) rb.addEventListener('click', replayBoot);
+})();
 
 /* ===================== RESIZE + BOOT ===================== */
 function sizeAll(){ sizeScreen(); sizeEtch(); }

@@ -96,6 +96,8 @@
     const cur = state.mode || VIEWS.research.defaultMode;
     apply({view:'research', mode: cur === 'nova' ? 'traditional' : 'nova'});
   });
+  const splashBtn = document.getElementById('splash-btn');     // leave the shell, return to the splash screen
+  if (splashBtn) splashBtn.addEventListener('click', function(){ window.location.href = 'index.html'; });
   document.addEventListener('keydown', function(e){
     if(!e.altKey) return;
     if(e.key==='1'){ apply({view:'research', mode:state.mode||VIEWS.research.defaultMode}); e.preventDefault(); }

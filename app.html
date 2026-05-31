@@ -4,6 +4,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>H.E.L.I.X — Shell</title>
+<meta name="description" content="HELIX View Shell — research views and documentation for hidden-sector signal acquisition.">
+<!-- Social / Open Graph — update the og:url + image base to your deploy URL -->
+<meta property="og:title"       content="H·E·L·I·X — View Shell">
+<meta property="og:description" content="Research views and documentation · HEP · Epistemic · Learning · Intelligent AI · Exploration">
+<meta property="og:image"       content="https://n-herling-mk1.github.io/_HELIX_dev_/assets/img/Soc_media_tag.png">
+<meta property="og:url"         content="https://n-herling-mk1.github.io/_HELIX_dev_/app.html">
+<meta property="og:type"        content="website">
+<meta name="twitter:card"       content="summary_large_image">
+<meta name="twitter:title"      content="H·E·L·I·X — View Shell">
+<meta name="twitter:description" content="Research views and documentation · HEP · Epistemic · Learning · Intelligent AI · Exploration">
+<meta name="twitter:image"      content="https://n-herling-mk1.github.io/_HELIX_dev_/assets/img/Soc_media_tag.png">
 <link rel="icon" type="image/x-icon" href="assets/img/helix_64.ico">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Exo+2:wght@200;300;400;600&display=swap" rel="stylesheet">
@@ -21,33 +32,40 @@
     <span class="wm">H<span class="dot">·</span>E<span class="dot">·</span>L<span class="dot">·</span>I<span class="dot">·</span>X</span>
     <span class="tag">VIEW SHELL</span>
   </div>
-  <div class="center">
-    <div class="vt-wrap">
-      <span class="vt-legend">View Toggle</span>
-      <div class="viewtoggle" id="modes" role="tablist" aria-label="Research view">
-        <button class="vt-cell" data-mode="traditional" role="tab" aria-selected="true">
-          <span class="vt-hex vt-trad" aria-hidden="true"></span>
-          <span class="vt-label">Traditional</span>
-        </button>
-        <button class="vt-cell" data-mode="nova" role="tab" aria-selected="false">
-          <span class="vt-hex vt-nova" aria-hidden="true"></span>
-          <span class="vt-label">Helix&nbsp;Nova</span>
-        </button>
-        <span class="vt-sep" aria-hidden="true"></span>
-        <button class="vt-switch" id="vt-switch" role="switch" aria-checked="false"
-                aria-label="Toggle Traditional / Helix Nova" title="Toggle view">
-          <span class="vt-knob" aria-hidden="true"></span>
-        </button>
-      </div>
-    </div>
-    <span class="ctl-div" aria-hidden="true"></span>
-    <button class="docbtn" id="docbtn" data-view="docs" aria-label="Documentation view" aria-selected="false">
-      <span class="docbtn-glyph" aria-hidden="true">▤</span>
-      <span class="docbtn-txt">Documentation</span>
+  <span class="ctl-div" aria-hidden="true"></span>
+  <div class="nav-group">
+    <button class="navbtn" id="splash-btn" title="Return to the splash screen">
+      <span class="navbtn-glyph" aria-hidden="true">‹</span>
+      <span>Back&nbsp;to&nbsp;Splash</span>
     </button>
+    <button class="navbtn" id="fx-toggle" title="Logo animation controls">Brand&nbsp;Toggle</button>
   </div>
+  <span class="ctl-div" aria-hidden="true"></span>
+  <div class="vt-wrap">
+    <span class="vt-legend">View Toggle</span>
+    <div class="viewtoggle" id="modes" role="tablist" aria-label="Research view">
+      <button class="vt-cell" data-mode="traditional" role="tab" aria-selected="true">
+        <span class="vt-hex vt-trad" aria-hidden="true"></span>
+        <span class="vt-label">Traditional</span>
+      </button>
+      <button class="vt-cell" data-mode="nova" role="tab" aria-selected="false">
+        <span class="vt-hex vt-nova" aria-hidden="true"></span>
+        <span class="vt-label">Helix&nbsp;Nova</span>
+      </button>
+      <span class="vt-sep" aria-hidden="true"></span>
+      <button class="vt-switch" id="vt-switch" role="switch" aria-checked="false"
+              aria-label="Toggle Traditional / Helix Nova" title="Toggle view">
+        <span class="vt-knob" aria-hidden="true"></span>
+      </button>
+    </div>
+  </div>
+  <span class="ctl-div" aria-hidden="true"></span>
+  <button class="docbtn" id="docbtn" data-view="docs" aria-label="Documentation view" aria-selected="false">
+    <span class="docbtn-glyph" aria-hidden="true">▤</span>
+    <span class="docbtn-txt">Documentation</span>
+  </button>
+  <span class="ctl-div" aria-hidden="true"></span>
   <div class="status">
-    <button class="fx-toggle" id="fx-toggle" title="Logo animation controls">Brand Toggle</button>
     <span class="sv-box"><b id="status-view">—</b></span>
     <span class="led" title="shell online"></span>
   </div>
