@@ -47,6 +47,64 @@ body{width:100%;background:var(--bg);font-family:'Exo 2',sans-serif;color:var(--
 
 /* shell owns the logo in embed mode — hide this view's logo box, keep footprint */
 html.is-embedded .view-logo-box{visibility:hidden;}
+
+/* ╔══════════════════════════════════════════════════════════════╗
+   ║  CRT "UNDER CONSTRUCTION" OVERLAY  ·  TRON:ARES               ║
+   ║  Self-contained. Delete this whole block + the matching       ║
+   ║  <div class="crt-uc"> markup in .view-content to remove.      ║
+   ╚══════════════════════════════════════════════════════════════╝ */
+.crt-uc{position:absolute;inset:0;z-index:5;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;pointer-events:none;overflow:hidden;
+  background:radial-gradient(ellipse at 50% 50%,rgba(2,12,20,.35),rgba(2,12,20,.86) 78%);}
+/* curved CRT vignette + screen bulge */
+.crt-uc::before{content:'';position:absolute;inset:-2%;z-index:1;pointer-events:none;
+  background:radial-gradient(ellipse at 50% 50%,transparent 56%,rgba(0,0,0,.55) 100%);
+  border-radius:42% / 36%;box-shadow:inset 0 0 120px 20px rgba(0,0,0,.6);}
+/* scanlines */
+.crt-uc::after{content:'';position:absolute;inset:0;z-index:2;pointer-events:none;
+  background:repeating-linear-gradient(0deg,rgba(0,229,255,.05) 0px,rgba(0,229,255,.05) 1px,transparent 1px,transparent 3px);
+  mix-blend-mode:overlay;animation:uc-roll 7s linear infinite;}
+@keyframes uc-roll{0%{background-position:0 0}100%{background-position:0 -120px}}
+.crt-uc .uc-inner{position:relative;z-index:3;text-align:center;padding:0 24px;
+  animation:uc-flicker 4.8s infinite steps(60);}
+@keyframes uc-flicker{0%,100%{opacity:1}3%{opacity:.78}6%{opacity:1}41%{opacity:1}
+  43%{opacity:.62}44%{opacity:1}77%{opacity:1}78%{opacity:.85}79%{opacity:1}}
+.crt-uc .uc-kicker{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.5em;
+  text-transform:uppercase;color:var(--cyan);margin-bottom:18px;opacity:.85;
+  text-shadow:0 0 10px var(--glow-c);}
+.crt-uc .uc-kicker::before,.crt-uc .uc-kicker::after{content:'· · ·';margin:0 14px;color:var(--text-faint);}
+.crt-uc .uc-title{font-family:'Orbitron',sans-serif;font-weight:900;
+  font-size:clamp(26px,6.4vmin,62px);letter-spacing:.14em;line-height:1;color:#eaf8ff;
+  position:relative;text-shadow:0 0 18px var(--glow-c),0 0 40px rgba(0,229,255,.25);}
+/* chromatic aberration ghosts */
+.crt-uc .uc-title::before,.crt-uc .uc-title::after{content:attr(data-t);position:absolute;
+  left:0;top:0;width:100%;opacity:.55;}
+.crt-uc .uc-title::before{color:var(--orange);transform:translate(-2px,0);mix-blend-mode:screen;
+  animation:uc-ab1 3.3s infinite ease-in-out;}
+.crt-uc .uc-title::after{color:var(--cyan);transform:translate(2px,0);mix-blend-mode:screen;
+  animation:uc-ab2 3.3s infinite ease-in-out;}
+@keyframes uc-ab1{0%,100%{transform:translate(-2px,0)}50%{transform:translate(-4px,1px)}}
+@keyframes uc-ab2{0%,100%{transform:translate(2px,0)}50%{transform:translate(4px,-1px)}}
+/* hazard stripe bar */
+.crt-uc .uc-bar{margin-top:26px;position:relative;left:50%;transform:translateX(-50%);
+  width:118%;height:14px;border:1px solid var(--border);
+  background:repeating-linear-gradient(45deg,var(--orange) 0 14px,#0a1622 14px 28px);
+  background-size:39.6px 39.6px;animation:uc-march 1.1s linear infinite;
+  box-shadow:0 0 14px rgba(255,106,0,.4),inset 0 0 8px rgba(0,0,0,.5);opacity:.9;}
+@keyframes uc-march{0%{background-position:0 0}100%{background-position:39.6px 0}}
+.crt-uc .uc-sub{margin-top:20px;font-family:'Share Tech Mono',monospace;font-size:10.5px;
+  letter-spacing:.22em;text-transform:uppercase;color:var(--text-dim);line-height:1.9;}
+.crt-uc .uc-sub b{color:var(--orange);}
+.crt-uc .uc-sub .blink{color:var(--green);animation:uc-blink 1.05s steps(2) infinite;}
+@keyframes uc-blink{0%,49%{opacity:1}50%,100%{opacity:0}}
+/* one-shot roll-bar sweeping down the tube */
+.crt-uc .uc-rollbar{position:absolute;left:0;right:0;height:14%;z-index:2;pointer-events:none;
+  background:linear-gradient(180deg,transparent,rgba(0,229,255,.06) 45%,rgba(255,255,255,.05) 50%,transparent);
+  animation:uc-sweep 6.5s linear infinite;}
+@keyframes uc-sweep{0%{top:-14%}100%{top:114%}}
+@media (prefers-reduced-motion:reduce){
+  .crt-uc *,.crt-uc::after{animation:none!important;}
+}
 </style>
 </head>
 <body>
@@ -101,6 +159,21 @@ html.is-embedded .view-logo-box{visibility:hidden;}
     </svg>
     <div class="nova-note">PLACEHOLDER RADIAL ARRAY — <b>awaiting nav.html import</b>.
       Same iframe shape as Traditional &amp; Docs · constant logo top-left preserved.</div>
+
+    <!-- ╔══ CRT UNDER-CONSTRUCTION OVERLAY (delete to remove) ══╗ -->
+    <div class="crt-uc" aria-hidden="true">
+      <div class="uc-rollbar"></div>
+      <div class="uc-inner">
+        <div class="uc-kicker">H.E.L.I.X · NOVA</div>
+        <div class="uc-title" data-t="UNDER CONSTRUCTION">UNDER CONSTRUCTION</div>
+        <div class="uc-bar"></div>
+        <div class="uc-sub">
+          RADIAL NAVIGATOR &mdash; <b>BUILD IN PROGRESS</b><br>
+          SYSTEM ONLINE <span class="blink">_</span>
+        </div>
+      </div>
+    </div>
+    <!-- ╚══════════════════════════════════════════════════════╝ -->
   </main>
 </div>
 

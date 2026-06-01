@@ -31,6 +31,24 @@
       var el = document.getElementById("gantt-host");
       if (el) HelixGantt.render(el);
     }
+    if (window.HelixGlossary){
+      HelixGlossary.process(host);                   // wire inline <dfn> term modals
+      if (id === "glossary"){
+        var gh = document.getElementById("glossary-host");
+        if (gh) HelixGlossary.renderTable(gh);
+      }
+    }
+    if (id === "scripts" && window.HelixScripts){
+      var sh = document.getElementById("scripts-host");
+      if (sh) HelixScripts.renderList(sh);
+    }
+    if (window.HelixRefs){
+      HelixRefs.process(host);                       // number inline <cite> on every panel
+      if (id === "references"){
+        var rh = document.getElementById("refs-host");
+        if (rh) HelixRefs.renderList(rh);            // draw the bibliography
+      }
+    }
   }
 
   async function load(id, push){

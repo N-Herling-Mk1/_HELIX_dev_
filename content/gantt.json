@@ -1,34 +1,35 @@
 {
-  "week0_start": "2026-05-18",
-  "num_weeks": 13,
-  "last_updated": "2026-05-28",
+  "_comment": "HELIX Summer 2026 PoC sprint. 1-indexed weeks (W1..W10) — start/end and milestone.week are 1..10. week0_start = the Monday W1 begins (drives the TODAY line). Phases: Setup | P1 | P2 | P3 | Integration (see gantt.js PHASE map). Source of truth: edit JSON, commit, push.",
+  "week0_start": "2026-06-01",
+  "num_weeks": 10,
+  "last_updated": "2026-06-01",
   "tasks": [
-    { "name": "Course orientation & mentor sync",        "phase": "Intro",         "start": 0,  "end": 0,  "status": "done" },
-    { "name": "Bootstrap three repositories",             "phase": "Intro",         "start": 0,  "end": 0,  "status": "done" },
-    { "name": "Scope lock & proposal v1",                 "phase": "Planning",      "start": 1,  "end": 1,  "status": "in_progress" },
-    { "name": "Scaffold phase-1 architecture",            "phase": "Planning",      "start": 1,  "end": 1,  "status": "in_progress" },
-    { "name": "Genre-recognition reproduction",           "phase": "Design / Impl", "start": 2,  "end": 2,  "status": "planned" },
-    { "name": "Phonon DOS reproduction",                  "phase": "Design / Impl", "start": 3,  "end": 3,  "status": "planned" },
-    { "name": "ATLAS reproduction",                       "phase": "Design / Impl", "start": 4,  "end": 4,  "status": "planned" },
-    { "name": "Integrate three into phase-1 stack",       "phase": "Design / Impl", "start": 5,  "end": 5,  "status": "planned" },
-    { "name": "Deploy stack (MVP)",                       "phase": "Design / Impl", "start": 6,  "end": 6,  "status": "planned" },
-    { "name": "Bayesian + visualization layer",           "phase": "Design / Impl", "start": 6,  "end": 7,  "status": "planned" },
-    { "name": "MCP server (stretch)",                     "phase": "Design / Impl", "start": 8,  "end": 8,  "status": "planned" },
-    { "name": "Integration smoke test",                   "phase": "Design / Impl", "start": 8,  "end": 8,  "status": "planned" },
-    { "name": "Unit / integration / ground-truth tests",  "phase": "Testing",       "start": 9,  "end": 9,  "status": "planned" },
-    { "name": "UX pass, bug triage (buffer)",             "phase": "Testing",       "start": 10, "end": 10, "status": "planned" },
-    { "name": "Final paper",                              "phase": "Write-up",      "start": 11, "end": 11, "status": "planned" },
-    { "name": "iShowcase poster + demo prep",             "phase": "Write-up",      "start": 11, "end": 11, "status": "planned" },
-    { "name": "Final submission + iShowcase",             "phase": "Deliverables",  "start": 12, "end": 12, "status": "planned" },
-    { "name": "Repo freeze + v1.0 tag",                   "phase": "Deliverables",  "start": 12, "end": 12, "status": "planned" }
+    { "name": "Confirm mk3 CSVs / data24VR; set Branch A vs B", "phase": "Setup",       "start": 1,  "end": 1,  "status": "in_progress" },
+    { "name": "Bin-boundary design from feature quick-look",    "phase": "Setup",       "start": 1,  "end": 1,  "status": "in_progress" },
+
+    { "name": "Bigram discriminant — S1 + S3 tokenizations",    "phase": "P1",          "start": 1,  "end": 2,  "status": "in_progress" },
+    { "name": "Evt2Vec Phase-1 InfoNCE encoder",                "phase": "P1",          "start": 5,  "end": 6,  "status": "planned" },
+    { "name": "WEFAT on embedding (predicts L_xy / mass)",      "phase": "P1",          "start": 6,  "end": 6,  "status": "planned" },
+
+    { "name": "Round-3 Poisson/Exponential priors — barrel",    "phase": "P2",          "start": 1,  "end": 2,  "status": "in_progress" },
+    { "name": "Surprise handle: endcap banked, barrel characterize", "phase": "P2",     "start": 3,  "end": 4,  "status": "planned" },
+    { "name": "Event-mixing + 1D parametric cross-check",       "phase": "P2",          "start": 3,  "end": 4,  "status": "planned" },
+    { "name": "Signal-MC surprise pass (Branch A, MC-gated)",   "phase": "P2",          "start": 3,  "end": 4,  "status": "planned" },
+    { "name": "WEAT probe on NN1/NN2 activations",              "phase": "P2",          "start": 4,  "end": 4,  "status": "planned" },
+
+    { "name": "BLL-HMC on 4 models -> sigma_overall, sigma_boundary", "phase": "P3",    "start": 7,  "end": 8,  "status": "planned" },
+    { "name": "Laplace last-layer cross-check",                 "phase": "P3",          "start": 7,  "end": 7,  "status": "planned" },
+    { "name": "Posterior vs MaxEnt floor H(p_k) render",        "phase": "P3",          "start": 8,  "end": 8,  "status": "planned" },
+
+    { "name": "Consolidate three gates into HELIX hub",         "phase": "Integration", "start": 9,  "end": 10, "status": "planned" },
+    { "name": "PoC writeups + sprint review",                   "phase": "Integration", "start": 9,  "end": 10, "status": "planned" }
   ],
   "milestones": [
-    { "week": 1,  "label": "Proposal v1 submitted" },
-    { "week": 4,  "label": "All three reproductions at ground-truth" },
-    { "week": 5,  "label": "Phase-1 stack integrated (local)" },
-    { "week": 6,  "label": "MVP deployed" },
-    { "week": 8,  "label": "Feature-complete (stretch + smoke test)" },
-    { "week": 10, "label": "Testing complete" },
-    { "week": 12, "label": "Final hand-in" }
+    { "week": 1,  "label": "Endcap MaxEnt banked; Branch A/B decided" },
+    { "week": 2,  "label": "Barrel r(S,NN2) Round-3 test (< 0.055?)" },
+    { "week": 4,  "label": "P2 PoC met — complementary handle" },
+    { "week": 6,  "label": "Evt2Vec: AUC > raw, no collapse (P1 gate)" },
+    { "week": 8,  "label": "BLL-HMC converges, R-hat ~ 1 (P3 gate)" },
+    { "week": 10, "label": "Three-gate PoC sprint review" }
   ]
 }

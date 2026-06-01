@@ -19,11 +19,13 @@ window.HelixGantt = (function(){
   }
 
   const PHASE = {
-    "Intro":{cls:"fg-intro",group:"Intro / Planning"},"Planning":{cls:"fg-intro",group:"Intro / Planning"},
-    "Design / Impl":{cls:"fg-design",group:"Design / Implementation"},"Testing":{cls:"fg-testing",group:"Testing"},
-    "Write-up":{cls:"fg-writeup",group:"Write-up"},"Deliverables":{cls:"fg-deliver",group:"Deliverables"}
+    "Setup":{cls:"fg-intro",group:"Planning & setup"},
+    "P1":{cls:"fg-design",group:"P1 \u2014 Detector data as language"},
+    "P2":{cls:"fg-testing",group:"P2 \u2014 MaxEnt background"},
+    "P3":{cls:"fg-writeup",group:"P3 \u2014 Bayesian bounds"},
+    "Integration":{cls:"fg-deliver",group:"Integration & deliverables"}
   };
-  const LEGEND=[["fg-intro","Intro / Planning"],["fg-design","Design / Implementation"],["fg-testing","Testing"],["fg-writeup","Write-up"],["fg-deliver","Deliverables"]];
+  const LEGEND=[["fg-intro","Planning & setup"],["fg-design","P1 \u2014 Language"],["fg-testing","P2 \u2014 MaxEnt BG"],["fg-writeup","P3 \u2014 Bayesian"],["fg-deliver","Integration"]];
   const STATUS_KEY=[["is-planned","Planned"],["is-progress","In progress"],["is-done","Done"]];
 
   function row(x){var r=document.createElement("div");r.className="fg-row"+(x?" "+x:"");return r;}
@@ -37,7 +39,7 @@ window.HelixGantt = (function(){
     var tasks=data.tasks||[],n=data.num_weeks||(tasks.reduce(function(m,t){return Math.max(m,(t.end!=null?t.end:t.start)||0);},0)+1);
     var chart=document.createElement("div");chart.className="fg-chart";chart.style.setProperty("--fg-cols",n);
     var head=row("fg-head");head.appendChild(labelCell("Phase / Task"));var ht=trackCell();
-    for(var w=0;w<n;w++){var c=document.createElement("div");c.className="fg-wk";c.textContent="W"+w;ht.appendChild(c);}
+    for(var w=1;w<=n;w++){var c=document.createElement("div");c.className="fg-wk";c.textContent="W"+w;ht.appendChild(c);}
     head.appendChild(ht);chart.appendChild(head);
     var order=[],groups={};
     tasks.forEach(function(t){var m=PHASE[t.phase]||{cls:"",group:t.phase||"\u2014"};if(!groups[m.group]){groups[m.group]={cls:m.cls,items:[]};order.push(m.group);}groups[m.group].items.push(t);});
@@ -45,11 +47,11 @@ window.HelixGantt = (function(){
       gl.appendChild(sw);gl.appendChild(tx);gl.title=g;gh.appendChild(gl);gh.appendChild(trackCell());chart.appendChild(gh);
       G.items.forEach(function(t){var r=row();r.appendChild(labelCell(t.name));var tk=trackCell();var s=t.start||0,e=(t.end!=null?t.end:s);
         var bar=document.createElement("div");bar.className="fg-bar "+(PHASE[t.phase]?PHASE[t.phase].cls:"")+" "+statusClass(t.status);
-        bar.style.gridColumn=(s+1)+" / "+(e+2);bar.title=t.name+" ("+(e===s?"W"+s:"W"+s+"\u2013W"+e)+") \u2014 click for week details";
+        bar.style.gridColumn=s+" / "+(e+1);bar.title=t.name+" ("+(e===s?"W"+s:"W"+s+"\u2013W"+e)+") \u2014 click for week details";
         bar.dataset.week=String(s);bar.setAttribute("role","button");bar.tabIndex=0;tk.appendChild(bar);r.appendChild(tk);chart.appendChild(r);});});
     var ms=data.milestones||[];
     if(ms.length){var mr=row();mr.appendChild(labelCell("Milestones"));var mt=trackCell();
-      ms.forEach(function(m,i){var d=document.createElement("div");d.className="fg-ms";d.style.gridColumn=String(m.week+1);d.title="M"+(i+1)+": "+m.label+" (W"+m.week+")";
+      ms.forEach(function(m,i){var d=document.createElement("div");d.className="fg-ms";d.style.gridColumn=String(m.week);d.title="M"+(i+1)+": "+m.label+" (W"+m.week+")";
         var b=document.createElement("b");b.textContent=String(i+1);d.appendChild(b);mt.appendChild(d);});mr.appendChild(mt);chart.appendChild(mr);}
     var frac=todayFraction(data.week0_start,n);
     if(frac!=null){var tl=document.createElement("div");tl.className="fg-today";

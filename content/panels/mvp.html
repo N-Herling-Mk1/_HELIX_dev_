@@ -1,4 +1,61 @@
 <div class="kicker"><span class="bar"></span>05 · MVP</div>
-<h2 class="doc-h2">MVP Plan</h2>
-<div class="placeholder">Section stub — minimum-viable scope: the three reproductions at ground-truth,
-  phase-1 stack integrated locally, deployed MVP. Populate from the proposal's scope-lock section.</div>
+<h2 class="doc-h2">MVP — Week 10 Definition</h2>
+
+<div class="doc-callout">
+  <p class="doc-p">HELIX is research, but a week-10 MVP still pays off: it forces the summer to end with
+    something <b>demonstrable</b> rather than open-ended. The bar is <b>proof of concept</b> — each of the
+    three ideas shown to work <i>at all</i>, end-to-end on real ATLAS data — plus the unifying narrative made
+    legible in one place. Completeness (tuned models, note-grade validation) is Fall's job, not the MVP's.</p>
+</div>
+
+<div class="doc-layout">
+  <div class="doc-main">
+    <h3 class="doc-h3">Definition of done — by Fri 8/7</h3>
+    <p class="doc-p">The MVP ships when all three gates are cleared (even shallowly) and consolidated into the
+      HELIX hub:</p>
+    <ul class="gt-list">
+      <li><b>P1 &mdash; Language.</b> The <dfn data-term="bigram">bigram</dfn> runs on real mk3 CSVs and
+        produces an AUC plus the &Psi;<sub>sig</sub>/&Psi;<sub>bkg</sub> heatmap; the
+        <dfn data-term="evt2vec">Evt2Vec</dfn> Phase-1 <dfn data-term="infonce">InfoNCE</dfn> encoder trains
+        <i>without collapse</i>, with a linear-probe AUC that beats raw features.</li>
+      <li><b>P2 &mdash; MaxEnt background.</b> The <dfn data-term="surprise-score">surprise score</dfn>
+        <code>S(x)</code> is demonstrated as a complementary, NN-free handle in &ge;1 region (endcap banked);
+        the barrel failure mode is <b>fixed-or-characterized</b> via the Round-3 Poisson run.</li>
+      <li><b>P3 &mdash; Bayesian bounds.</b> <dfn data-term="bll">BLL</dfn>-<dfn data-term="hmc">HMC</dfn>
+        converges on the four models (<code>R&#770; &asymp; 1</code>, healthy ESS), yields
+        <code>&sigma;<sub>overall</sub></code> and <code>&sigma;<sub>boundary</sub></code>, and the
+        <dfn data-term="posterior">posterior</dfn> is rendered against the
+        <dfn data-term="maxent-floor">MaxEnt floor</dfn> <code>H(p<sub>k</sub>)</code>.</li>
+      <li><b>Hub &amp; narrative.</b> The three results are consolidated into the HELIX documentation hub,
+        each tied to its kill condition, with the Jaynes &rarr; InfoNCE-is-<code>Z</code> &rarr; one-spine
+        story legible end-to-end.</li>
+    </ul>
+
+    <h3 class="doc-h3">Minimum vs. target</h3>
+    <p class="doc-p"><b>Minimum</b> is the gate language above — pass/fail on real data. <b>Target</b> adds:
+      both tokenizations (S1 + S3) compared, the <dfn data-term="weat">WEAT</dfn>/<dfn data-term="wefat">WEFAT</dfn>
+      bias probes run, and the Laplace cross-check agreeing with HMC. The signal-MC validation is
+      target-but-MC-gated (Branch A); under Branch B it moves to Fall <i>without</i> blocking the MVP.</p>
+
+    <h3 class="doc-h3">Out of scope — defers to Fall</h3>
+    <ul class="gt-list">
+      <li><dfn data-term="cutformer">CutFormer</dfn> (Phase 2a) and Bayesian CutFormer (Phase 2b, 1000+ HMC samples)</li>
+      <li>MaxEnt validation to analysis-note grade — stress tests, systematic bootstrap, formal orthogonality (Levels 3&ndash;4)</li>
+      <li>Full <dfn data-term="rrm4">RRM-4</dfn> across all four models; full cutflow &Delta;I<sub>k</sub> audit</li>
+      <li>Tuned / production embeddings</li>
+    </ul>
+  </div>
+
+  <aside class="doc-aside">
+    <div class="ag-kicker">MVP at a glance</div>
+    <div class="ag-goal"><span class="n">P1</span><span>Bigram AUC + heatmap; Evt2Vec beats raw, no collapse.</span></div>
+    <div class="ag-goal"><span class="n">P2</span><span>Surprise handle in &ge;1 region; barrel characterized.</span></div>
+    <div class="ag-goal"><span class="n">P3</span><span>Converged HMC; <code>&sigma;</code>&rsquo;s vs. the floor.</span></div>
+
+    <h3>Spine</h3>
+    <p class="ag-row">One partition function demonstrated end-to-end: embedding &middot; background handle &middot; epistemic floor.</p>
+
+    <div class="ag-sep"></div>
+    <span class="ag-status"><i></i>Target · Fri 8/7</span>
+  </aside>
+</div>

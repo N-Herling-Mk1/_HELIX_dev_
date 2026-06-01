@@ -1,0 +1,134 @@
+<div class="kicker"><span class="bar"></span>02 · Motivation &amp; Genealogy</div>
+<h2 class="doc-h2">Motivation &amp; Genealogy</h2>
+
+<p class="lead">HELIX is not one idea but a confluence of several, organized around a single hinge. This panel
+  states that hinge — the <dfn data-term="infonce">InfoNCE</dfn> = <dfn data-term="partition-function">partition
+  function</dfn> identity — in full, then traces the four intellectual threads that feed into it, so the
+  architecture reads as a lineage rather than a list.</p>
+
+<div class="rule"></div>
+
+<h3 class="doc-h3">The hinge: InfoNCE is a Boltzmann distribution</h3>
+
+<p class="doc-p"><b>What it is.</b> InfoNCE is a <dfn data-term="contrastive">contrastive</dfn> objective: given an
+  anchor and a batch containing one matching (positive) example among many non-matching (negative) ones, the model
+  is trained to assign the positive the highest similarity, scored through a softmax. It was introduced as the loss
+  inside Contrastive Predictive Coding <cite data-ref="oord2018"></cite> and sharpened — as the NT-Xent loss, with
+  large negative batches and a tunable <dfn data-term="temperature">temperature</dfn> — by SimCLR
+  <cite data-ref="simclr2020"></cite>. It needs no labels: structure is learned from the data's own co-occurrence.</p>
+
+<p class="doc-p">The identity HELIX is built on is algebraic. An InfoNCE softmax has the form
+  <code>exp(sim/&tau;) / &Sigma; exp(sim/&tau;)</code> — and that is exactly the shape of a
+  <dfn data-term="boltzmann">Boltzmann distribution</dfn>: an exponential of a (negative) energy over a normalizing
+  sum. The denominator <i>is</i> the partition function <code>Z</code>; the temperature <code>&tau;</code> plays the
+  role of the thermodynamic <code>1/&beta;</code>. Reading a softmax as a Boltzmann distribution is not itself new —
+  it is recognized in the energy-based-model literature, and the softmax-as-Boltzmann observation predates this work.
+  So HELIX does not claim to have discovered that InfoNCE looks thermodynamic.</p>
+
+<p class="doc-p"><b>What is established, and what is ours.</b> Three layers, kept deliberately distinct so the
+  contribution is honest. <i>(1) The mechanism</i> — InfoNCE as a training loss — is standard and published
+  <cite data-ref="oord2018,simclr2020"></cite>; it is the least sacred layer, replaceable in principle by another
+  contrastive objective. <i>(2) The Boltzmann form</i> — that the loss is exponential-over-partition-function — is
+  recognized prior art, not a HELIX claim. <i>(3) What is HELIX's</i> is the binding: tying that Boltzmann form to the
+  <b>Bayesian</b> partition function, so that one and the same <code>Z</code> serves as the contrastive normalizer,
+  the Bayesian evidence, and the source of a <dfn data-term="maxent">maximum-entropy</dfn> uncertainty floor — and
+  then carrying that single object across all three project goals. The partition-function formalism that makes the
+  <code>Z</code> &harr; Bayesian-evidence half rigorous, rather than a loose analogy, is Kuntz et&nbsp;al.
+  <cite data-ref="kuntz2024"></cite>, from which the information entropy, the surprise statistic, and an
+  <dfn data-term="neff">effective dimension</dfn> all follow by differentiation. To our knowledge this specific
+  unification — one partition function spanning the embedding, the background handle, and the epistemic floor in a
+  collider search — has not appeared in the literature, though that is a novelty claim worth a careful citation
+  check before it is asserted hard.</p>
+
+<p class="doc-p"><b>Mechanism vs. core assumption — what actually has to be defended.</b> It is tempting to call
+  InfoNCE the core assumption of HELIX. It is not. InfoNCE is the load-bearing <i>wall</i>; the <i>foundation</i> is
+  the prior bet that detector data carries enough language-like structure for this machinery to transfer at all. A
+  committee would not attack InfoNCE — it is standard and hard to dispute — it would attack the foundation. That is
+  precisely why the Week-0 spikes (does <dfn data-term="discretization">tokenization</dfn> preserve separation? does
+  the <dfn data-term="cutflow">cutflow</dfn> have learnable grammar?) exist: they are the empirical test of the real
+  core assumption, run before any week is committed to it.</p>
+
+<p class="doc-p"><b>Why we use it.</b> Three reasons stack. First, InfoNCE is the natural objective once the
+  data-as-language bet is made — it is how distributional embeddings are learned, so <dfn data-term="evt2vec">Evt2Vec</dfn>
+  inherits a proven recipe. Second, the softmax-as-<code>Z</code> form is exactly what lets Jaynes' program govern the
+  embedding, making InfoNCE the structural hinge that turns three separate goals into one project. Third, it requires
+  no signal-MC labels, which sidesteps HELIX's hardest practical constraint — Monte-Carlo availability.</p>
+
+<p class="doc-p"><b>How it has been used before.</b> CPC established it across speech, vision, and text
+  <cite data-ref="oord2018"></cite>; SimCLR made it the backbone of state-of-the-art self-supervised vision
+  <cite data-ref="simclr2020"></cite>; and — most directly relevant — JetCLR carried contrastive pretraining into
+  high-energy physics, learning representations of jet constituents with a permutation-invariant transformer and
+  evaluating them by linear-probe <cite data-ref="jetclr2022"></cite>. That last result is the existence proof that
+  event-level contrastive representations work on physics data, and it sets the yardstick HELIX adopts.</p>
+
+<p class="doc-p"><b>What we expect.</b> Concretely, and bounded: Evt2Vec embeddings that beat raw features on a
+  linear-probe AUC (the Week 5–6 proof-of-concept gate), train without representation collapse, and — via
+  <dfn data-term="wefat">WEFAT</dfn> — provably encode physical quantities such as displacement or mass point. This is
+  a proof of concept, not a tuned production embedding; the claim is that the bridge holds and the representation
+  carries physics, not that it beats <dfn data-term="gn2">GN2</dfn> on day one.</p>
+
+<div class="rule"></div>
+
+<p class="doc-p">The four threads below trace where the pieces of that hinge come from. They cross-cut the three
+  goals — the information-theoretic spine feeds all of them.</p>
+
+<h3 class="doc-h3">1 · The information-theoretic spine</h3>
+<p class="doc-p">The oldest thread, and the load-bearing one. Shannon defined information as <i>surprise</i> — the
+  surprisal of an outcome is <code>&minus;log&nbsp;p(x)</code>, and its average is entropy
+  <cite data-ref="stone2019"></cite>. <dfn data-term="jaynes">Jaynes</dfn> then made the move HELIX is built on:
+  thermodynamics is in essence a theory of <i>inference</i>, and the maximum-entropy principle selects the
+  least-committal distribution consistent with known constraints <cite data-ref="jaynes1957"></cite>. Recent work makes
+  the bridge rigorous — the Bayesian evidence is a partition function, and from it the information entropy, the surprise
+  statistic, and an effective dimension all follow by differentiation <cite data-ref="kuntz2024"></cite> — with
+  <dfn data-term="normalising-flow">normalising flows</dfn> giving a sampler-free way to compute it for non-Gaussian
+  posteriors <cite data-ref="rospel2025"></cite>.</p>
+<p class="doc-p"><b>→ How HELIX uses it.</b> This thread is the spine the hinge attaches to. The
+  <dfn data-term="surprise-score">surprise score</dfn> <code>S(x) = &minus;log&nbsp;p(x)</code> becomes a background
+  handle, and the <dfn data-term="maxent-floor">MaxEnt floor</dfn> <code>H(p<sub>k</sub>)</code> becomes a
+  physics-derived bound on what the model can know.</p>
+
+<h3 class="doc-h3">2 · The language lineage</h3>
+<p class="doc-p">The bet that detector data is language-like has a clear ancestry. The distributional hypothesis —
+  meaning lives in co-occurrence — became practical with word2vec, which learned <dfn data-term="skip-gram">skip-gram</dfn>
+  embeddings cheaply at scale <cite data-ref="mikolov2013"></cite>. Contrastive self-supervision then generalized the
+  idea beyond text, through InfoNCE and SimCLR <cite data-ref="oord2018,simclr2020"></cite>, and into physics with JetCLR
+  <cite data-ref="jetclr2022"></cite> — the contrastive mechanics of which are treated in full in the hinge section
+  above.</p>
+<p class="doc-p"><b>→ How HELIX uses it.</b> Evt2Vec is word2vec for events; <dfn data-term="cutformer">CutFormer</dfn>
+  is the attention stage JetCLR shows is viable on physics data. The <dfn data-term="bigram">bigram</dfn> baseline
+  measures how much structure the <dfn data-term="markov">Markov</dfn> assumption misses, and tokenization is the one
+  genuinely new technical step.</p>
+
+<h3 class="doc-h3">3 · Background estimation &amp; bias</h3>
+<p class="doc-p">The second goal descends from the workhorse of data-driven background estimation: the
+  <dfn data-term="abcd">ABCD method</dfn>, which rests on two variables being independent for background. Machine
+  learning automated and stress-tested it — ABCDisCo constructs decorrelated discriminators and showed the method's
+  accuracy hinges on low signal contamination in the control regions <cite data-ref="abcddisco2021"></cite> — while
+  CWoLa demonstrated classifiers can be trained on real mixed samples without labels, avoiding the risk of a model
+  learning artifacts of the simulation <cite data-ref="cwola2017"></cite>. A separate lineage from NLP closes the loop:
+  word embeddings necessarily absorb the statistical regularities — including biases — of their training distribution,
+  and WEAT/WEFAT were introduced to measure that <cite data-ref="caliskan2017"></cite>.</p>
+<p class="doc-p"><b>→ How HELIX uses it.</b> The MaxEnt surprise score is a second background handle, structurally
+  orthogonal to the ABCD plane. <dfn data-term="weat">WEAT</dfn> cross-checks the independence ABCD assumes and — echoing
+  CWoLa's concern — probes where a discriminant has learned simulation provenance rather than physics; WEFAT validates
+  that Evt2Vec embeddings encode genuine physical quantities.</p>
+
+<h3 class="doc-h3">4 · The Bayesian-uncertainty lineage</h3>
+<p class="doc-p">The third goal asks what a model <i>cannot</i> know — which a point estimate hides. Dropout-as-Bayesian
+  showed that <dfn data-term="epistemic">epistemic uncertainty</dfn> can be extracted cheaply from networks already in use,
+  legitimizing practical Bayesian deep learning <cite data-ref="gal2016"></cite>. The partition-function formalism ties
+  this back to the spine: entropy and effective dimension fall out of the same <code>Z</code>
+  <cite data-ref="kuntz2024"></cite>. HELIX positions against GN2, ATLAS's transformer flavour-tagger and the current
+  state of the art, differentiating not on raw tagging power but on quantified epistemic error
+  <cite data-ref="gn2_2026"></cite>.</p>
+<p class="doc-p"><b>→ How HELIX uses it.</b> A <dfn data-term="bll">Bayesian last layer</dfn> with <dfn data-term="hmc">HMC</dfn>
+  (with the normalising-flow route in reserve <cite data-ref="rospel2025"></cite>) yields overall and decision-boundary
+  uncertainty, rendered as a <dfn data-term="posterior">posterior</dfn> against the floor; the
+  <dfn data-term="rrm4">RRM-4</dfn> vector turns that floor into a stopping criterion.</p>
+
+<div class="rule"></div>
+<p class="doc-p">A closing observation on the lineage: the HEP-ML half is a connected cluster, not scattered picks —
+  Kasieczka co-authors both JetCLR <cite data-ref="jetclr2022"></cite> and ABCDisCo <cite data-ref="abcddisco2021"></cite>,
+  and Nachman both ABCDisCo and CWoLa <cite data-ref="cwola2017"></cite>. HELIX sits at the confluence of these established
+  threads; its contribution is the binding of them through a single partition function. See the
+  <a href="#references">References</a> for the full bibliography.</p>

@@ -1,13 +1,91 @@
 {
-  "_comment": "Per-week task lists for the Gantt detail panel. Hand-edit this file. Keys are week numbers (strings) matching the Gantt's W0..W12. Each task: { name, status } where status is 'todo' or 'done'.",
-  "last_updated": "2026-05-29",
+  "_comment": "Per-week task lists for the Gantt detail panel. Hand-edit this file. Keys are week numbers (strings) matching the Gantt's W1..W10; a week is click-reachable when a task bar STARTS that week (1,3,4,5,6,7,8,9 in the current chart). status is 'todo' or 'done'.",
+  "last_updated": "2026-06-01",
   "weeks": {
     "1": {
-      "label": "Planning",
+      "label": "Bring-up — bigram + Round-3 + branch decision",
       "tasks": [
-        { "name": "Get front-end doc site up", "status": "todo" },
-        { "name": "Create hybrid project proposal", "status": "todo" },
-        { "name": "Get Project Video section done", "status": "todo" }
+        { "name": "Confirm mk3 CSVs / data24VR flats are current on atlng01; resolve signal-MC availability (mS5/16/35/55) -> decide Branch A or B and write it down", "status": "todo" },
+        { "name": "Pull real mk3 column names: label col, counts (nMDT/nRPC/nTGC/nBOL), continuous (mindR/m_vtx/Lxy/d0/nSeg), cut-stage pass/fail cols, NN2 score col, region col -> unblocks everything downstream", "status": "todo" },
+        { "name": "Quick-look sig-vs-bkg feature distributions; choose KBinsDiscretizer bin boundaries (count + strategy); confirm binning does not erase separation before committing", "status": "todo" },
+        { "name": "Build S3 cutflow-transition matrix P(pass c_n | pass c_n-1) for sig and bkg; first Psi_sig/Psi_bkg heatmap draft; call grammar vs Markov-trivial", "status": "todo" },
+        { "name": "Scaffold bigram classifier pipeline: StandardScaler -> KBinsDiscretizer -> DictVectorizer, with S1 (object) + S3 (cutflow) tokenization stubs", "status": "todo" },
+        { "name": "Swap barrel MaxEnt priors -> Poisson (counts) + Exponential (mindR); compute r(S,NN2) Gaussian-baseline vs new-priors against |r_D| = 0.055", "status": "todo" },
+        { "name": "Create week-1 branch in the HELIX repo (_HELIX_dev_); commit scaffolds + this week's plan", "status": "todo" }
+      ]
+    },
+    "2": {
+      "label": "Bigram results + barrel gate",
+      "tasks": [
+        { "name": "S1 object-level bigram -> AUC vs the mk3 gap; S3 AUC + cut-redundancy read", "status": "todo" },
+        { "name": "Finalize Psi_sig/Psi_bkg heatmap; call grammar vs Markov-trivial", "status": "todo" },
+        { "name": "Round-3 barrel run: read r(S,NN2). GATE: below |r_D| = 0.055?", "status": "todo" },
+        { "name": "Log P1/P2 week 1-2 findings to the experiments repo", "status": "todo" }
+      ]
+    },
+    "3": {
+      "label": "P2 validation — complementarity",
+      "tasks": [
+        { "name": "Event-mixing prototype on one control region", "status": "todo" },
+        { "name": "1D parametric (n_Seg / m_vtx) cross-check of surprise independence", "status": "todo" },
+        { "name": "(Branch A) signal-MC surprise pass: do mS5/16/35/55 sit in the high-S tail?", "status": "todo" },
+        { "name": "Extract NN1/NN2 penultimate-layer activations as event vectors (WEAT input)", "status": "todo" }
+      ]
+    },
+    "4": {
+      "label": "WEAT probe + P2 PoC close-out",
+      "tasks": [
+        { "name": "WEAT on activations: two CRs ABCD assumes independent -> differential association?", "status": "todo" },
+        { "name": "WEAT: signal-MC vs data-CR at identical cuts -> provenance vs physics?", "status": "todo" },
+        { "name": "Consolidate P2 evidence. GATE: P2 PoC-met (complementary handle, failure mode understood)", "status": "todo" }
+      ]
+    },
+    "5": {
+      "label": "Evt2Vec Phase-1 build",
+      "tasks": [
+        { "name": "EventEncoder + InfoNCE loop on mk3 CSVs (PhysicsRegionDataset positive/negative pairs)", "status": "todo" },
+        { "name": "Collapse diagnostics (embedding rank, alignment/uniformity); first tau/d/batch points", "status": "todo" },
+        { "name": "FORGE convergence: pull the validated BLL/HMC technique into the P3 plan", "status": "todo" }
+      ]
+    },
+    "6": {
+      "label": "Evt2Vec gate + WEFAT",
+      "tasks": [
+        { "name": "tau / embedding-dim / batch-size sweep", "status": "todo" },
+        { "name": "Linear-probe AUC on the embedding vs raw features. GATE: AUC gain? no collapse?", "status": "todo" },
+        { "name": "WEFAT on the embedding -> predicts true L_xy / mass point? (P1 validation)", "status": "todo" }
+      ]
+    },
+    "7": {
+      "label": "P3 — BLL-HMC bring-up",
+      "tasks": [
+        { "name": "BLL-HMC on the 4 models (NN1/NN2 x barrel/endcap); watch ESS / R-hat (no mk2 collapse)", "status": "todo" },
+        { "name": "Laplace (laplace-torch, last-layer) lightweight cross-check", "status": "todo" },
+        { "name": "If HMC mixing fails -> stand up the Roespel normalising-flow fallback", "status": "todo" }
+      ]
+    },
+    "8": {
+      "label": "P3 — sigmas vs the floor",
+      "tasks": [
+        { "name": "Extract sigma_overall, sigma_boundary from the converged posterior. GATE: R-hat ~ 1 / healthy ESS?", "status": "todo" },
+        { "name": "Render the posterior with the MaxEnt floor H(p_k) as a reference line", "status": "todo" },
+        { "name": "Cross-check flow entropy vs HMC entropy (if the flow route was used)", "status": "todo" }
+      ]
+    },
+    "9": {
+      "label": "Integration",
+      "tasks": [
+        { "name": "Consolidate P1/P2/P3 results into the HELIX hub (panels + plots)", "status": "todo" },
+        { "name": "Draft the three-gate writeups; map each to its kill-condition outcome", "status": "todo" },
+        { "name": "MVP check against the week-10 definition; triage any slipped item into the buffer", "status": "todo" }
+      ]
+    },
+    "10": {
+      "label": "Sprint review + buffer",
+      "tasks": [
+        { "name": "Finish writeups; freeze plots; tag the experiments repo", "status": "todo" },
+        { "name": "Buffer for slippage (the one slack window)", "status": "todo" },
+        { "name": "PoC sprint review with Prof. Johns; set the Fall (15-week) entry state", "status": "todo" }
       ]
     }
   }

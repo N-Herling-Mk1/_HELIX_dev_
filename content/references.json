@@ -1,0 +1,195 @@
+{
+  "_comment": "HELIX bibliography. Inline <cite data-ref=\"KEY\"></cite> tags in any panel auto-number by this array's order and link to the References panel. APPEND-ONLY: add new entries at the end so existing citation numbers never shift. Each entry: id (the data-ref key), authors, year, title, venue, links[].",
+  "last_updated": "2026-05-31",
+  "refs": [
+    {
+      "id": "jaynes1957",
+      "authors": "E. T. Jaynes",
+      "year": 1957,
+      "title": "Information Theory and Statistical Mechanics",
+      "venue": "Physical Review 106(4), 620",
+      "links": [
+        {
+          "label": "DOI",
+          "url": "https://doi.org/10.1103/PhysRev.106.620"
+        }
+      ]
+    },
+    {
+      "id": "stone2019",
+      "authors": "J. V. Stone",
+      "year": 2019,
+      "title": "Information Theory: A Tutorial Introduction",
+      "venue": "arXiv preprint (Sebtel Press)",
+      "links": [
+        {
+          "label": "arXiv:1802.05968",
+          "url": "https://arxiv.org/abs/1802.05968"
+        }
+      ]
+    },
+    {
+      "id": "kuntz2024",
+      "authors": "R. M. Kuntz, H. von Campe, T. Röspel, M. P. Herzog & B. M. Schäfer",
+      "year": 2024,
+      "title": "Partition Function Approach to Non-Gaussian Likelihoods: Information Theory and State Variables for Bayesian Inference",
+      "venue": "arXiv preprint",
+      "links": [
+        {
+          "label": "arXiv:2411.13625",
+          "url": "https://arxiv.org/abs/2411.13625"
+        }
+      ]
+    },
+    {
+      "id": "rospel2025",
+      "authors": "T. Röspel, A. Schlosser & B. M. Schäfer",
+      "year": 2025,
+      "title": "Approximating Non-Gaussian Bayesian Partitions with Normalising Flows: Statistics, Inference and Application to Cosmology",
+      "venue": "arXiv preprint",
+      "links": [
+        {
+          "label": "arXiv:2501.04791",
+          "url": "https://arxiv.org/abs/2501.04791"
+        }
+      ]
+    },
+    {
+      "id": "caliskan2017",
+      "authors": "A. Caliskan, J. J. Bryson & A. Narayanan",
+      "year": 2017,
+      "title": "Semantics Derived Automatically from Language Corpora Contain Human-like Biases",
+      "venue": "Science 356(6334), 183–186",
+      "links": [
+        {
+          "label": "DOI",
+          "url": "https://doi.org/10.1126/science.aal4230"
+        },
+        {
+          "label": "arXiv:1608.07187",
+          "url": "https://arxiv.org/abs/1608.07187"
+        }
+      ]
+    },
+    {
+      "id": "mikolov2013",
+      "authors": "T. Mikolov, K. Chen, G. Corrado & J. Dean",
+      "year": 2013,
+      "title": "Efficient Estimation of Word Representations in Vector Space",
+      "venue": "ICLR Workshop (arXiv)",
+      "links": [
+        {
+          "label": "arXiv:1301.3781",
+          "url": "https://arxiv.org/abs/1301.3781"
+        }
+      ]
+    },
+    {
+      "id": "oord2018",
+      "authors": "A. van den Oord, Y. Li & O. Vinyals",
+      "year": 2018,
+      "title": "Representation Learning with Contrastive Predictive Coding",
+      "venue": "arXiv preprint",
+      "links": [
+        {
+          "label": "arXiv:1807.03748",
+          "url": "https://arxiv.org/abs/1807.03748"
+        }
+      ]
+    },
+    {
+      "id": "simclr2020",
+      "authors": "T. Chen, S. Kornblith, M. Norouzi & G. Hinton",
+      "year": 2020,
+      "title": "A Simple Framework for Contrastive Learning of Visual Representations (SimCLR)",
+      "venue": "ICML, PMLR 119, 1597",
+      "links": [
+        {
+          "label": "arXiv:2002.05709",
+          "url": "https://arxiv.org/abs/2002.05709"
+        }
+      ]
+    },
+    {
+      "id": "jetclr2022",
+      "authors": "B. M. Dillon, G. Kasieczka, H. Olischläger, T. Plehn, P. Sorrenson & L. Vogel",
+      "year": 2022,
+      "title": "Symmetries, Safety, and Self-Supervision (JetCLR)",
+      "venue": "SciPost Phys. 12, 188",
+      "links": [
+        {
+          "label": "arXiv:2108.04253",
+          "url": "https://arxiv.org/abs/2108.04253"
+        },
+        {
+          "label": "DOI",
+          "url": "https://doi.org/10.21468/SciPostPhys.12.6.188"
+        }
+      ]
+    },
+    {
+      "id": "gn2_2026",
+      "authors": "ATLAS Collaboration",
+      "year": 2026,
+      "title": "Transforming Jet Flavour Tagging at ATLAS (GN2)",
+      "venue": "Nature Commun. 17, 541",
+      "links": [
+        {
+          "label": "arXiv:2505.19689",
+          "url": "https://arxiv.org/abs/2505.19689"
+        },
+        {
+          "label": "DOI",
+          "url": "https://doi.org/10.1038/s41467-025-65059-6"
+        }
+      ]
+    },
+    {
+      "id": "abcddisco2021",
+      "authors": "G. Kasieczka, B. Nachman, M. D. Schwartz & D. Shih",
+      "year": 2021,
+      "title": "ABCDisCo: Automating the ABCD Method with Machine Learning",
+      "venue": "Phys. Rev. D 103, 035021",
+      "links": [
+        {
+          "label": "arXiv:2007.14400",
+          "url": "https://arxiv.org/abs/2007.14400"
+        },
+        {
+          "label": "DOI",
+          "url": "https://doi.org/10.1103/PhysRevD.103.035021"
+        }
+      ]
+    },
+    {
+      "id": "cwola2017",
+      "authors": "E. M. Metodiev, B. Nachman & J. Thaler",
+      "year": 2017,
+      "title": "Classification Without Labels: Learning from Mixed Samples in High Energy Physics (CWoLa)",
+      "venue": "JHEP 10, 174",
+      "links": [
+        {
+          "label": "arXiv:1708.02949",
+          "url": "https://arxiv.org/abs/1708.02949"
+        },
+        {
+          "label": "DOI",
+          "url": "https://doi.org/10.1007/JHEP10(2017)174"
+        }
+      ]
+    },
+    {
+      "id": "gal2016",
+      "authors": "Y. Gal & Z. Ghahramani",
+      "year": 2016,
+      "title": "Dropout as a Bayesian Approximation: Representing Model Uncertainty in Deep Learning",
+      "venue": "ICML, PMLR 48, 1050",
+      "links": [
+        {
+          "label": "arXiv:1506.02142",
+          "url": "https://arxiv.org/abs/1506.02142"
+        }
+      ]
+    }
+  ]
+}

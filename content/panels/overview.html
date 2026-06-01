@@ -1,12 +1,231 @@
 <div class="kicker"><span class="bar"></span>01 · Overview</div>
 <h2 class="doc-h2">Project Overview</h2>
-<p class="doc-p">The central claim is an identity: the <b>InfoNCE contrastive loss is a Boltzmann
-  distribution</b> — the softmax denominator <i>is</i> the partition function <code>Z</code>, and the
-  temperature <code>&tau;</code> is the inverse of an entropy scale. That single bridge lets Jaynes'
-  maximum-entropy program govern both the embedding objective and the inference downstream.</p>
-<p class="doc-p">The cutflow is read as a <b>thermodynamic process</b>: each selection cut is a prior
-  update, and the entropy drop across a cut is the per-cut information gain. The architecture is two-phase —
-  <b>Evt2Vec</b> (a Word2Vec analogue producing self-supervised event embeddings) feeding <b>CutFormer</b>
-  (a transformer over the cutflow sequence) — positioned against ATLAS GN2 and distinguished by its
-  information-theoretic grounding and novel epistemic metrics (overall &amp; boundary epistemic error,
-  the <code>RRM-4</code> penalty vector).</p>
+
+<div class="doc-callout">
+  <p class="doc-p">The central claim is an identity: the <b><dfn data-term="infonce">InfoNCE</dfn> contrastive
+    loss is a <dfn data-term="boltzmann">Boltzmann distribution</dfn></b> — the softmax denominator <i>is</i>
+    the <dfn data-term="partition-function">partition function</dfn> <code>Z</code>, and the
+    <dfn data-term="temperature">temperature</dfn> <code>&tau;</code> is the inverse of an entropy scale.
+    That single bridge lets Jaynes&rsquo; <dfn data-term="maxent">maximum-entropy</dfn> program
+    <cite data-ref="jaynes1957"></cite> govern both the embedding objective and the inference downstream, and
+    places the work on the formal footing of the Bayes-partition framework
+    <cite data-ref="kuntz2024"></cite>.</p>
+</div>
+
+<div class="doc-layout">
+  <div class="doc-main">
+    <p class="doc-p">The <dfn data-term="cutflow">cutflow</dfn> is read as a <b>thermodynamic process</b>: each
+      selection cut is a prior update, and the entropy drop across a cut is the per-cut information gain. The
+      architecture is two-phase — <b><dfn data-term="evt2vec">Evt2Vec</dfn></b> (a Word2Vec analogue producing
+      self-supervised event embeddings) feeding <b><dfn data-term="cutformer">CutFormer</dfn></b> (a transformer
+      over the cutflow sequence) — positioned against ATLAS <dfn data-term="gn2">GN2</dfn> and distinguished by
+      its information-theoretic grounding and novel epistemic metrics (overall &amp; boundary epistemic error,
+      the <dfn data-term="rrm4"><code>RRM-4</code></dfn> penalty vector).</p>
+
+    <div class="rule"></div>
+
+    <p class="doc-p">HELIX pursues <b>three goals</b>. Each is a distinct proof of concept that would stand on
+      its own, yet all three are consequences of the same partition-function spine — so a successful
+      demonstration of any one reinforces the others. Each is framed below as a <b>falsifiable hypothesis</b>:
+      a claim, the test that could break it, the evidence for and against, and the <b>kill condition</b> that
+      would end it. They are not equally settled — <b>Goal&nbsp;2</b> already carries a banked positive result,
+      <b>Goal&nbsp;1</b> is the foundation bet the Week-0 spikes exist to test, and <b>Goal&nbsp;3</b> is the
+      hardest to make converge.</p>
+
+    <!-- ─────────────── GOAL 1 ─────────────── -->
+    <article class="gt-card">
+      <div class="gt-head">
+        <span class="gt-num">1</span>
+        <h3 class="gt-title">Detector data as language</h3>
+        <span class="gt-tag gt-bet">Foundation bet</span>
+      </div>
+
+      <div class="gt-field">
+        <span class="gt-k">Claim</span>
+        <p>Treat an ATLAS event as a sentence and its physics objects as tokens: events carry enough
+          sequential and distributional structure that machinery built for text —
+          <dfn data-term="skip-gram">skip-gram</dfn> embeddings, <dfn data-term="contrastive">contrastive</dfn>
+          pretraining, attention — transfers to detector data and extracts discriminating power. The standing
+          wrinkle is that we have <i>numbers, not words</i>: the numeric-to-token discretization is the core
+          technical step, not a footnote.</p>
+      </div>
+
+      <div class="gt-field">
+        <span class="gt-k">Test</span>
+        <ul class="gt-list">
+          <li><b>Cutflow-grammar <dfn data-term="bigram">bigram</dfn></b> — do signal and background
+            cut-transition matrices differ, or is the cutflow <dfn data-term="markov">Markov</dfn>-trivial?</li>
+          <li><b><dfn data-term="discretization">Discretization</dfn> sanity</b> — does tokenizing the numeric
+            features preserve signal/background separation?</li>
+          <li><b>The real gate</b> — does an Evt2Vec linear-probe AUC beat raw-feature AUC?</li>
+        </ul>
+      </div>
+
+      <div class="gt-grid">
+        <div class="gt-box gt-for">
+          <span class="gt-k">Evidence for</span>
+          <ul class="gt-list">
+            <li>binned AUC &asymp; raw AUC (discretization loses nothing)</li>
+            <li>transition matrices structurally diverge</li>
+            <li>Evt2Vec linear-probe AUC measurably exceeds raw features</li>
+            <li>no embedding collapse</li>
+          </ul>
+        </div>
+        <div class="gt-box gt-against">
+          <span class="gt-k">Evidence against</span>
+          <ul class="gt-list">
+            <li>binning erases separation</li>
+            <li>matrices near-identical — no grammar to learn</li>
+            <li>Evt2Vec &le; raw features on the probe</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="gt-box gt-kill">
+        <span class="gt-k">Kill condition</span>
+        <p>If discretization destroys separation <i>and</i> the bigram shows no grammar, the foundation is
+          false — stop before Evt2Vec is ever trained. This is exactly why those two checks are
+          <b>Week&nbsp;0</b>, not Week&nbsp;5.</p>
+      </div>
+
+      <p class="gt-note">Not fatal to the project: Goals&nbsp;2 and 3 do not strictly require Evt2Vec, so a
+        Goal-1 failure costs the headline unification but leaves HELIX standing as &ldquo;MaxEnt background +
+        Bayesian bounds.&rdquo; <b>Framing default — flip if the committee posture is that Goal&nbsp;1 is
+        load-bearing.</b></p>
+    </article>
+
+    <!-- ─────────────── GOAL 2 ─────────────── -->
+    <article class="gt-card">
+      <div class="gt-head">
+        <span class="gt-num">2</span>
+        <h3 class="gt-title">Maximum-entropy background</h3>
+        <span class="gt-tag gt-banked">Banked &middot; endcap</span>
+      </div>
+
+      <div class="gt-field">
+        <span class="gt-k">Claim</span>
+        <p>A Jaynes/MaxEnt model of the background yields a <dfn data-term="surprise-score">surprise
+          score</dfn> <code>S(x) = &minus;log&nbsp;p(x)</code> <cite data-ref="stone2019"></cite> that flags
+          signal-like events and is structurally orthogonal to the <dfn data-term="abcd">ABCD</dfn> plane
+          <cite data-ref="abcddisco2021"></cite> — a second, neural-network-free background handle that does
+          not depend on the discriminant. This goal also carries the human-bias bridge: WEAT/WEFAT
+          <cite data-ref="caliskan2017"></cite> adapted to probe where a discriminant has learned simulation
+          artifacts rather than physics.</p>
+      </div>
+
+      <div class="gt-field">
+        <span class="gt-k">Test</span>
+        <ul class="gt-list">
+          <li>correlation <code>r(S, NN)</code> in each region vs. the ABCD reference <code>|r<sub>D</sub>|</code></li>
+          <li>agreement of the surprise-defined region with ABCD region&nbsp;A</li>
+          <li>the barrel-Poisson sniff</li>
+        </ul>
+      </div>
+
+      <div class="gt-grid">
+        <div class="gt-box gt-for">
+          <span class="gt-k">Evidence for</span>
+          <ul class="gt-list">
+            <li><b>Endcap:</b> &asymp;97% agreement with ABCD region&nbsp;A, <code>r(S, NN1) &asymp; &minus;0.0009</code> — essentially independent. <b>Banked pass.</b></li>
+            <li><b>Barrel:</b> <code>r(S, NN2)</code> falls from 0.27 toward <code>|r<sub>D</sub>| = 0.055</code> under Poisson priors on the counts.</li>
+          </ul>
+        </div>
+        <div class="gt-box gt-against">
+          <span class="gt-k">Evidence against</span>
+          <ul class="gt-list">
+            <li>surprise correlates strongly with the NN everywhere — not orthogonal, just re-deriving the discriminant</li>
+            <li>barrel stays at <code>r &asymp; 0.27</code> even with correct priors — orthogonality is region-specific and fragile</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="gt-box gt-kill">
+        <span class="gt-k">Kill condition</span>
+        <p>If <code>S(x)</code> cannot be made orthogonal to the NN in <i>any</i> region, it is not an
+          independent handle and Goal&nbsp;2 collapses to &ldquo;redundant with the classifier.&rdquo; The
+          endcap result already rules this out — so the live risk is <b>breadth</b> (how many regions), not
+          existence.</p>
+      </div>
+    </article>
+
+    <!-- ─────────────── GOAL 3 ─────────────── -->
+    <article class="gt-card">
+      <div class="gt-head">
+        <span class="gt-num">3</span>
+        <h3 class="gt-title">Bayesian epistemic bounds</h3>
+        <span class="gt-tag gt-hard">Hardest to converge</span>
+      </div>
+
+      <div class="gt-field">
+        <span class="gt-k">Claim</span>
+        <p>Quantify what the model <i>cannot</i> know: <dfn data-term="epistemic">epistemic</dfn> uncertainty
+          decomposes into overall and decision-boundary components, can be measured against the
+          <dfn data-term="maxent-floor">MaxEnt floor</dfn> <code>H(p<sub>k</sub>)</code>
+          <cite data-ref="kuntz2024"></cite>, and that comparison tells you whether a model has hit its
+          epistemic limit.</p>
+      </div>
+
+      <div class="gt-field">
+        <span class="gt-k">Test</span>
+        <ul class="gt-list">
+          <li><dfn data-term="bll">BLL</dfn>-<dfn data-term="hmc">HMC</dfn> convergence
+            (<code>R&#770; &asymp; 1</code>, healthy ESS) yielding <code>&sigma;<sub>overall</sub></code> and
+            <code>&sigma;<sub>boundary</sub></code></li>
+          <li>the <dfn data-term="posterior">posterior</dfn> rendered against the floor <code>H(p<sub>k</sub>)</code></li>
+          <li>the <dfn data-term="normalising-flow">normalising-flow</dfn> route
+            <cite data-ref="rospel2025"></cite> as a convergence-proof fallback</li>
+        </ul>
+      </div>
+
+      <div class="gt-grid">
+        <div class="gt-box gt-for">
+          <span class="gt-k">Evidence for</span>
+          <ul class="gt-list">
+            <li>HMC converges and produces stable <code>&sigma;</code>&rsquo;s</li>
+            <li>the posterior sits at or above the floor, as theory predicts</li>
+            <li>flow-based entropy agrees with HMC entropy — cross-method validation (R&ouml;spel agreeing with Kuntz)</li>
+          </ul>
+        </div>
+        <div class="gt-box gt-against">
+          <span class="gt-k">Evidence against</span>
+          <ul class="gt-list">
+            <li>HMC will not converge (the mk2 <code>ESS = 5</code>, <code>R&#770; = 9&ndash;189</code> collapse)</li>
+            <li><code>&sigma;</code>&rsquo;s unstable across reruns</li>
+            <li>the posterior violates the floor — which would mean the floor is mis-derived, not that the model is good</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="gt-box gt-kill">
+        <span class="gt-k">Kill condition</span>
+        <p>Harder to kill outright. But if neither HMC nor flows produce stable epistemic estimates, the
+          &ldquo;quantify what the model cannot know&rdquo; claim is unsupported and Goal&nbsp;3 degrades
+          from <i>diagnostic</i> to merely <i>descriptive</i>.</p>
+      </div>
+    </article>
+
+    <p class="doc-p">The thread tying them together: <b>Jaynes &rarr; InfoNCE-as-<code>Z</code></b>
+      <cite data-ref="jaynes1957,kuntz2024"></cite> &rarr; one shared spine that yields a learned event
+      embedding (Goal&nbsp;1), a complementary background handle (Goal&nbsp;2), and a physics-derived epistemic
+      floor (Goal&nbsp;3).</p>
+  </div>
+
+  <aside class="doc-aside">
+    <div class="ag-kicker">At a glance</div>
+
+    <h3>Central identity</h3>
+    <p class="ag-row">InfoNCE <b>is</b> a Boltzmann distribution. Softmax denominator <code>= Z</code>;
+      temperature <code>&tau; = 1/&beta;</code>.</p>
+
+    <h3>Architecture</h3>
+    <p class="ag-row"><b>Evt2Vec</b> &rarr; <b>CutFormer</b>, positioned against ATLAS GN2.</p>
+
+    <h3>Where each goal stands</h3>
+    <div class="ag-goal"><span class="n">2</span><span><b>Banked.</b> One falsification test already passed (endcap). The open question is breadth.</span></div>
+    <div class="ag-goal"><span class="n">1</span><span><b>Foundation bet.</b> Week-0 spikes are its early-warning system. Not fatal if it fails.</span></div>
+    <div class="ag-goal"><span class="n">3</span><span><b>Hardest.</b> The risk is convergence, not concept.</span></div>
+
+    <div class="ag-sep"></div>
+    <span class="ag-status"><i></i>Endcap MaxEnt validated</span>
+  </aside>
+</div>

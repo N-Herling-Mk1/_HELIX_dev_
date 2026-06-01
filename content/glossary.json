@@ -1,0 +1,157 @@
+{
+  "_comment": "HELIX glossary. Inline <dfn data-term=\"KEY\">...</dfn> tags open a modal with the term's definition; the Glossary panel renders the full table. APPEND new terms anywhere — order within a category is alphabetical by convention but not required. Each entry: id (the data-term key), term (display), cat (category for table grouping), gloss (one-line, for tooltip/modal header), def (fuller, for the table).",
+  "last_updated": "2026-05-31",
+  "categories": ["Architecture", "Information theory", "Statistics & Bayesian", "NLP", "Physics & ATLAS"],
+  "terms": [
+    {
+      "id": "infonce", "term": "InfoNCE", "cat": "Information theory",
+      "gloss": "Info Noise-Contrastive Estimation — a contrastive loss whose softmax denominator HELIX reads as a partition function.",
+      "def": "Information Noise-Contrastive Estimation: a self-supervised loss that pulls matched (positive) pairs together and pushes mismatched (negative) pairs apart in embedding space. HELIX's central identity is that its softmax denominator IS the partition function Z, making the loss a Boltzmann distribution."
+    },
+    {
+      "id": "boltzmann", "term": "Boltzmann distribution", "cat": "Information theory",
+      "gloss": "Statistical-mechanics distribution p ∝ exp(−E/kT) over states by energy.",
+      "def": "The statistical-mechanics distribution assigning probability proportional to exp(−E/kT) across states by energy E. HELIX identifies the InfoNCE softmax with this form, which is what lets Jaynes' maximum-entropy program govern the embedding objective."
+    },
+    {
+      "id": "partition-function", "term": "Partition function (Z)", "cat": "Information theory",
+      "gloss": "The normalizing denominator of a Boltzmann/softmax distribution.",
+      "def": "The normalizing sum Z = Σ exp(−E/T) over all states in a Boltzmann distribution. It is the bridge object in HELIX: the InfoNCE denominator, the Bayesian evidence at unit temperature, and the spine connecting the embedding, background, and epistemic goals."
+    },
+    {
+      "id": "temperature", "term": "Temperature (τ)", "cat": "Information theory",
+      "gloss": "The InfoNCE scale parameter; τ = 1/β, the inverse entropy scale.",
+      "def": "The InfoNCE scale parameter. In the thermodynamic reading τ = 1/β, the inverse temperature, controlling how sharply the distribution concentrates. Lowering τ sharpens the contrast; raising it softens it."
+    },
+    {
+      "id": "evt2vec", "term": "Evt2Vec", "cat": "Architecture",
+      "gloss": "\"Event to vector\" — a Word2Vec/skip-gram analogue learning self-supervised event embeddings.",
+      "def": "The phase-1 model: an analogue of Word2Vec that learns self-supervised vector embeddings of ATLAS events from their constituent physics objects, using contrastive (InfoNCE) pretraining."
+    },
+    {
+      "id": "cutformer", "term": "CutFormer", "cat": "Architecture",
+      "gloss": "Transformer encoder over the ordered cutflow sequence (phase 2).",
+      "def": "The phase-2 model: a transformer encoder that reads the ordered cutflow as a sequence, consuming Evt2Vec embeddings and applying attention across cut stages. Slated for the Fall build, not the summer proof of concept."
+    },
+    {
+      "id": "cutflow", "term": "Cutflow", "cat": "Physics & ATLAS",
+      "gloss": "The ordered sequence of selection cuts applied to events in an analysis.",
+      "def": "The ordered series of selection criteria (\"cuts\") applied to events to isolate a signal region. HELIX reads it two ways: as a sentence (cut stages as tokens) and as a thermodynamic process (each cut a prior update, the entropy drop the per-cut information gain)."
+    },
+    {
+      "id": "gn2", "term": "GN2", "cat": "Physics & ATLAS",
+      "gloss": "ATLAS's graph-neural-network flavour tagger; HELIX's published baseline for comparison.",
+      "def": "ATLAS's graph-neural-network-based flavour-tagging model. HELIX positions its architecture against GN2, differentiating on information-theoretic grounding and novel epistemic metrics rather than raw tagging performance."
+    },
+    {
+      "id": "rrm4", "term": "RRM-4", "cat": "Statistics & Bayesian",
+      "gloss": "Four-axis Robust Ranking Metric penalty vector — a principled model-selection / stopping criterion.",
+      "def": "A four-component penalty vector extending the Robust Ranking Metric (accuracy, fold stability, posterior variance, and a fourth axis such as ABCD closure quality). It turns the MaxEnt uncertainty floor into a principled criterion for when a model has reached its epistemic limit."
+    },
+    {
+      "id": "maxent", "term": "MaxEnt", "cat": "Information theory",
+      "gloss": "Maximum entropy — Jaynes' principle of the least-committal distribution consistent with known constraints.",
+      "def": "The maximum-entropy principle (Jaynes): given known constraints, choose the distribution with the most entropy — the least-committal one consistent with what is known. The correct MaxEnt distribution depends on the constraints (Gaussian for fixed variance, Exponential for non-negative fixed-mean, Poisson for counts)."
+    },
+    {
+      "id": "jaynes", "term": "Jaynes / maximum-entropy program", "cat": "Information theory",
+      "gloss": "E. T. Jaynes' framework casting statistical mechanics as inference.",
+      "def": "E. T. Jaynes' 1957 framework showing thermodynamics is in essence a theory of information, and that statistical-mechanics tools apply to inference. It is the foundation for HELIX's MaxEnt floor and the InfoNCE-as-Boltzmann identity."
+    },
+    {
+      "id": "hmc", "term": "HMC", "cat": "Statistics & Bayesian",
+      "gloss": "Hamiltonian Monte Carlo — a gradient-guided MCMC sampler for posteriors.",
+      "def": "Hamiltonian Monte Carlo: a Markov-chain Monte Carlo method that uses gradient information to draw efficient samples from a posterior over weights. HELIX uses it (last-layer) to estimate epistemic uncertainty; a prior run suffered convergence collapse (low ESS), motivating the normalising-flow alternative."
+    },
+    {
+      "id": "abcd", "term": "ABCD method", "cat": "Physics & ATLAS",
+      "gloss": "Data-driven background estimate from two assumed-independent variables defining four regions.",
+      "def": "A data-driven background-estimation technique that uses two variables, assumed uncorrelated for background, to define four regions (A, B, C, D) and predict the signal-region background from the others. HELIX's MaxEnt surprise score is a handle structurally orthogonal to the ABCD plane."
+    },
+    {
+      "id": "weat", "term": "WEAT", "cat": "NLP",
+      "gloss": "Word Embedding Association Test — permutation test for differential association in an embedding.",
+      "def": "Word Embedding Association Test (Caliskan et al., 2017): a permutation test for whether two sets of concepts differ in their association with an attribute, measured by cosine similarity. HELIX adapts it to cross-check ABCD's independence assumption and to detect simulation-vs-data provenance artifacts."
+    },
+    {
+      "id": "wefat", "term": "WEFAT", "cat": "NLP",
+      "gloss": "Word Embedding Factual Association Test — tests whether an embedding encodes a real-valued property.",
+      "def": "Word Embedding Factual Association Test (Caliskan et al., 2017): tests whether an embedding has absorbed a veridical real-valued property of the world. HELIX uses it to validate that Evt2Vec embeddings predict physical quantities (e.g. displacement, mass point), evidence the embedding learned physics."
+    },
+    {
+      "id": "llp", "term": "LLP", "cat": "Physics & ATLAS",
+      "gloss": "Long-Lived Particle — travels a measurable distance before decaying, giving displaced signatures.",
+      "def": "Long-Lived Particle: a hypothesized particle whose lifetime is long enough to traverse measurable detector distance before decaying, producing displaced (rather than prompt) decay signatures. The target of HELIX's physics application."
+    },
+    {
+      "id": "hss", "term": "HSS", "cat": "Physics & ATLAS",
+      "gloss": "Hidden Sector Scalar — the specific LLP signal model HELIX targets.",
+      "def": "Hidden Sector Scalar: the specific long-lived-particle signal model under study, in which a scalar from a hidden sector decays to produce displaced vertices in the muon spectrometer."
+    },
+    {
+      "id": "msvtx", "term": "MSVtx", "cat": "Physics & ATLAS",
+      "gloss": "Displaced Muon-Spectrometer Vertex — the detector signature HELIX searches for.",
+      "def": "Muon-Spectrometer Vertex: a decay vertex reconstructed in the ATLAS muon spectrometer, displaced from the collision point. It is the characteristic signature of the long-lived-particle decay HELIX targets."
+    },
+    {
+      "id": "surprise-score", "term": "Surprise score S(x)", "cat": "Information theory",
+      "gloss": "S(x) = −log p(x): the information content of an event under the background model.",
+      "def": "The surprisal S(x) = −log p(x): how unexpected an event is under the MaxEnt background model. Large surprise flags signal-like events. It is HELIX's neural-network-free background handle, complementary to the ABCD plane."
+    },
+    {
+      "id": "skip-gram", "term": "Skip-gram", "cat": "NLP",
+      "gloss": "Word2Vec scheme predicting context tokens from a center token.",
+      "def": "A Word2Vec training scheme that learns embeddings by predicting surrounding context tokens from a center token. Evt2Vec adapts this, treating an event's physics objects as the tokens."
+    },
+    {
+      "id": "contrastive", "term": "Contrastive pretraining", "cat": "NLP",
+      "gloss": "Self-supervised representation learning by distinguishing positive from negative pairs.",
+      "def": "Self-supervised learning that builds representations by distinguishing matched (positive) pairs from mismatched (negative) pairs — the family that includes InfoNCE. It needs no labels, learning structure directly from the data."
+    },
+    {
+      "id": "bigram", "term": "Bigram", "cat": "NLP",
+      "gloss": "A two-token model capturing first-order (adjacent) sequence structure.",
+      "def": "A model over adjacent token pairs, capturing only first-order sequence structure. In HELIX the bigram is not a baseline to beat but a measurement instrument: the gap between bigram and full-model performance quantifies how much discriminating power lives in higher-order structure."
+    },
+    {
+      "id": "markov", "term": "Markov assumption", "cat": "NLP",
+      "gloss": "The assumption that the next state depends only on the current one.",
+      "def": "The assumption that the next element of a sequence depends only on the current one, ignoring longer-range structure. The bigram embodies it; attention (CutFormer) is meant to exceed it, and the gap between them is what HELIX measures."
+    },
+    {
+      "id": "discretization", "term": "Tokenization / discretization", "cat": "NLP",
+      "gloss": "Converting continuous detector features into discrete tokens — the \"numbers, not words\" step.",
+      "def": "Turning continuous detector features into discrete tokens, via the pipeline StandardScaler → KBinsDiscretizer → DictVectorizer. Because HELIX has numbers rather than words, this is the core technical step on which every language-model result depends."
+    },
+    {
+      "id": "epistemic", "term": "Epistemic uncertainty", "cat": "Statistics & Bayesian",
+      "gloss": "Reducible uncertainty from incomplete knowledge or finite data (vs. aleatoric noise).",
+      "def": "Uncertainty arising from incomplete knowledge — finite training data, underdetermined weights, ambiguous decision boundaries — and therefore reducible with more or better data. Distinct from aleatoric (intrinsic) noise. It is what HELIX's Bayesian layer quantifies and decomposes into overall and boundary components."
+    },
+    {
+      "id": "maxent-floor", "term": "MaxEnt floor H(p_k)", "cat": "Statistics & Bayesian",
+      "gloss": "Per-cut-stage entropy of the MaxEnt distribution — a physics-derived lower bound on uncertainty.",
+      "def": "The entropy H(p_k) of the maximum-entropy distribution at each cut stage k, serving as a physics-derived lower bound on model uncertainty — a floor below which confidence cannot be justified. Epistemic error is measured against it."
+    },
+    {
+      "id": "bll", "term": "Bayesian last layer (BLL)", "cat": "Statistics & Bayesian",
+      "gloss": "Posterior over only the final layer's weights, with the trunk frozen — fast, HMC-tractable.",
+      "def": "A configuration placing a posterior over only the output layer's weights while freezing the deterministic feature extractor. Fast enough to resample interactively while still surfacing epistemic structure at the decision boundary, where the interesting questions live."
+    },
+    {
+      "id": "normalising-flow", "term": "Normalising flow", "cat": "Statistics & Bayesian",
+      "gloss": "An invertible neural map between a Gaussian and a complex distribution.",
+      "def": "An invertible, differentiable neural network mapping a simple (Gaussian) distribution to a complex one. In HELIX it offers a sampler-free route to partition functions, evidences, and entropies — sidestepping the convergence failures of HMC (reliable through second moments)."
+    },
+    {
+      "id": "posterior", "term": "Posterior", "cat": "Statistics & Bayesian",
+      "gloss": "The distribution over weights/predictions given data, p(w|D); its width is epistemic uncertainty.",
+      "def": "The distribution p(w|D) over model weights given the data, replacing a single trained weight set. Every prediction becomes a distribution; its width is the model's epistemic uncertainty made visible — narrow means earned confidence, wide means borrowed."
+    },
+    {
+      "id": "neff", "term": "Effective dimension (n_eff)", "cat": "Statistics & Bayesian",
+      "gloss": "Temperature-dependent measure of model complexity from the Bayes-partition formalism; n_eff ≤ n.",
+      "def": "A temperature-dependent complexity measure from the Bayes-partition formalism (Kuntz et al., 2024), defined via the heat-capacity analogue. n_eff ≤ n, shrinking as higher-order (non-Gaussian) correlations appear — a diagnostic of how many degrees of freedom a model genuinely uses."
+    }
+  ]
+}

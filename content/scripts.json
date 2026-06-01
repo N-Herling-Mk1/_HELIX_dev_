@@ -1,0 +1,43 @@
+{
+  "_comment": "Index of analysis scripts living in assets/py_scripts/. Drives the Scripts panel (FORGE-style cards). APPEND entries as scripts are added. Each: id, file (relative to assets/py_scripts/), title, tag (release/spike group), purpose, metric (what it computes), graph (what it plots), pass (go/no-go read, optional), status (mk_1 | wip | done), needs (data dependency note, optional).",
+  "last_updated": "2026-05-31",
+  "base": "../assets/py_scripts/",
+  "scripts": [
+    {
+      "id": "discretization_sanity",
+      "file": "discretization_sanity.py",
+      "title": "Discretization Sanity",
+      "tag": "Week 0 · mk_1",
+      "purpose": "Confirm that binning continuous features into tokens preserves signal/background separation — the precondition for treating detector data as language.",
+      "metric": "Per-feature separation retained: 1-D AUC and KS statistic computed on the raw feature vs. the KBinsDiscretizer-binned feature (sig vs. bkg).",
+      "graph": "Per feature, overlaid signal/background histograms — raw (top) and binned (bottom) — with AUC and KS annotated, in the TRON palette.",
+      "pass": "Binning preserves visible separation (binned AUC ≈ raw AUC; no collapse). If binning erases separation, the numbers-as-tokens premise needs rethinking before Week 1.",
+      "status": "mk_1",
+      "needs": "mk3 CSVs — set the COLUMN_MAP at the top of the script to your real column names."
+    },
+    {
+      "id": "cutflow_bigram",
+      "file": "cutflow_bigram.py",
+      "title": "Cutflow Grammar (Bigram)",
+      "tag": "Week 0 · mk_1",
+      "purpose": "Test whether the cutflow carries learnable transition structure — i.e. whether there is grammar for a sequence model to exploit.",
+      "metric": "Cut-stage transition matrices P(pass c_n | pass c_{n-1}) for signal vs. background, and their divergence (per-cell difference + summary distance).",
+      "graph": "Two transition heatmaps (signal, background) side by side, plus a signed difference heatmap highlighting where the grammars diverge.",
+      "pass": "The signal and background transition matrices differ structurally → there is grammar to model and Goal 1 is alive.",
+      "status": "mk_1",
+      "needs": "Cutflow pass/fail columns per stage (boolean or 0/1). Set CUT_STAGES in the COLUMN_MAP."
+    },
+    {
+      "id": "barrel_poisson_sniff",
+      "file": "barrel_poisson_sniff.py",
+      "title": "Barrel Poisson Sniff",
+      "tag": "Week 0 · mk_1",
+      "purpose": "Fast Round-3 test: refit the barrel MaxEnt surprise with a Poisson prior on count features (instead of Gaussian) and see whether the surprise–NN correlation drops toward independence.",
+      "metric": "Pearson r between the MaxEnt surprise score S(x) and the NN2 discriminant in the barrel, computed under a Gaussian model and under a Poisson-on-counts model.",
+      "graph": "Side-by-side S vs. NN2 scatter (Gaussian model | Poisson model), each annotated with r; reference line at |r_D| = 0.055.",
+      "pass": "Barrel r(S, NN2) drops off the Round-2 value of 0.27 toward |r_D| = 0.055 → the Poisson prior story is validated and Week 1–2 becomes execution.",
+      "status": "mk_1",
+      "needs": "Barrel rows with count features (e.g. nMDT/nRPC/nTGC/nBOL), continuous features, and the NN2 score. Set the COLUMN_MAP."
+    }
+  ]
+}

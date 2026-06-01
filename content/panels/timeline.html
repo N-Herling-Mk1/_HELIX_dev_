@@ -1,6 +1,146 @@
 <div class="kicker"><span class="bar"></span>02 · Timeline</div>
 <h2 class="doc-h2">Project Timeline</h2>
-<p class="doc-p">The build runs as a single-contributor effort across a 13-week window: Intro/Planning &rarr;
-  Design/Implementation &rarr; Testing &rarr; Write-up &rarr; Deliverables. The schedule is data-driven — edit
-  <code>content/gantt.json</code> and <code>content/weekly_todos.json</code>, commit, push. Open the
-  <b>Gantt Chart</b> panel to see it rendered live.</p>
+
+<div class="doc-callout">
+  <p class="doc-p">HELIX runs a <b>two-phase arc</b> on its own track. <b>Summer 2026 (10 weeks)</b> proves that
+    each of three ideas works <i>at all</i>, end-to-end on real ATLAS data — the bar is <b>proof of
+    concept</b>, not completeness. <b>Fall 2026 (15 weeks)</b> is depth: validation to note/thesis grade,
+    <dfn data-term="cutformer">CutFormer</dfn>, full Run 3 integration. The summer is built to demonstrate one
+    claim end-to-end, even shallowly: Jaynes <cite data-ref="jaynes1957"></cite> &rarr;
+    <dfn data-term="infonce">InfoNCE</dfn>-is-<code>Z</code> &rarr; one shared partition-function spine that
+    yields <b>(a)</b> a learned event embedding, <b>(b)</b> a complementary background handle, and <b>(c)</b> a
+    physics-derived epistemic floor. <b>Three PoCs, one spine.</b></p>
+</div>
+
+<p class="doc-p">FORGE runs in parallel as the Bayesian-methods sandbox and does <i>not</i> compete for these ten
+  weeks. Its validated <dfn data-term="bll">BLL</dfn>-<dfn data-term="hmc">HMC</dfn> technique converges into
+  HELIX around week&nbsp;5&ndash;6 — deliberately just ahead of the P3 run, so P3 applies a method that has
+  already been shaken out rather than debugging convergence from scratch.</p>
+
+<h3 class="doc-h3">The 10-week sprint</h3>
+<p class="doc-p">Sequenced to the three gates, anchored to a Week&nbsp;1 start of <b>Mon 6/1</b>. Workstreams
+  overlap because no PoC has to reach completion — each two-week block carries a concrete output and a
+  go/no-go decision.</p>
+
+<div class="tl-scroll">
+<table class="tl-table">
+  <thead>
+    <tr>
+      <th>Wk</th>
+      <th>Dates</th>
+      <th>Primary</th>
+      <th>Concrete output</th>
+      <th>Gate / decision</th>
+    </tr>
+  </thead>
+  <tbody>
+    <!-- ── Block 1–2 ── -->
+    <tr>
+      <td class="tl-wk">01</td>
+      <td class="tl-date">6/1 &ndash; 6/5</td>
+      <td class="tl-primary" rowspan="2">P1 <dfn data-term="bigram">bigram</dfn> + P2 Round&nbsp;3</td>
+      <td class="tl-out" rowspan="2">Bigram AUC (S1 + S3) vs. mk3 gap; &Psi;<sub>sig</sub>/&Psi;<sub>bkg</sub> heatmap; Poisson-prior barrel run</td>
+      <td class="tl-gate" rowspan="2">Barrel <code>r(S,NN2) &lt; 0.055</code>?</td>
+    </tr>
+    <tr>
+      <td class="tl-wk">02</td>
+      <td class="tl-date">6/8 &ndash; 6/12</td>
+    </tr>
+
+    <!-- ── Block 3–4 ── -->
+    <tr>
+      <td class="tl-wk">03</td>
+      <td class="tl-date">6/15 &ndash; 6/19</td>
+      <td class="tl-primary" rowspan="2">P2 validation + bias bridge</td>
+      <td class="tl-out" rowspan="2">Event-mixing prototype on 1 CR; 1D parametric (<code>n_Seg</code>/<code>m_vtx</code>) cross-check; signal-MC surprise pass <i>(MC branch)</i>; <dfn data-term="weat">WEAT</dfn> probe on NN1/NN2 penultimate-layer activations</td>
+      <td class="tl-gate" rowspan="2">P2 &rarr; PoC-met</td>
+    </tr>
+    <tr>
+      <td class="tl-wk">04</td>
+      <td class="tl-date">6/22 &ndash; 6/26</td>
+    </tr>
+
+    <!-- ── Block 5–6 · FORGE convergence ── -->
+    <tr class="tl-converge">
+      <td class="tl-wk">05</td>
+      <td class="tl-date">6/29 &ndash; 7/3</td>
+      <td class="tl-primary" rowspan="2">P1 <dfn data-term="evt2vec">Evt2Vec</dfn> Phase&nbsp;1</td>
+      <td class="tl-out" rowspan="2">EventEncoder + InfoNCE on mk3 CSVs (PhysicsRegionDataset pairs); linear-probe AUC vs. raw; <code>&tau;</code>/<code>d</code>/batch sweep; <dfn data-term="wefat">WEFAT</dfn> on embedding &rarr; predicts <code>L<sub>xy</sub></code>/mass?<span class="tl-fc">&rarr; FORGE convergence point</span></td>
+      <td class="tl-gate" rowspan="2">AUC gain over raw? collapse check</td>
+    </tr>
+    <tr class="tl-converge">
+      <td class="tl-wk">06</td>
+      <td class="tl-date">7/6 &ndash; 7/10</td>
+    </tr>
+
+    <!-- ── Block 7–8 ── -->
+    <tr>
+      <td class="tl-wk">07</td>
+      <td class="tl-date">7/13 &ndash; 7/17</td>
+      <td class="tl-primary" rowspan="2">P3 Bayesian</td>
+      <td class="tl-out" rowspan="2">BLL-HMC on the 4 models &rarr; <code>&sigma;<sub>overall</sub></code>, <code>&sigma;<sub>boundary</sub></code>; <dfn data-term="posterior">posterior</dfn> rendered vs. <dfn data-term="maxent-floor">MaxEnt floor</dfn> <code>H(p<sub>k</sub>)</code>; Laplace last-layer cross-check</td>
+      <td class="tl-gate" rowspan="2"><code>R&#770; &asymp; 1</code> / healthy ESS?</td>
+    </tr>
+    <tr>
+      <td class="tl-wk">08</td>
+      <td class="tl-date">7/20 &ndash; 7/24</td>
+    </tr>
+
+    <!-- ── Block 9–10 ── -->
+    <tr>
+      <td class="tl-wk">09</td>
+      <td class="tl-date">7/27 &ndash; 7/31</td>
+      <td class="tl-primary" rowspan="2">Integration + buffer</td>
+      <td class="tl-out" rowspan="2">Three-gate results consolidated into the HELIX hub + writeups; buffer for slippage</td>
+      <td class="tl-gate" rowspan="2">PoC sprint review</td>
+    </tr>
+    <tr>
+      <td class="tl-wk">10</td>
+      <td class="tl-date">8/3 &ndash; 8/7</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="doc-layout">
+  <div class="doc-main">
+    <h3 class="doc-h3">Signal-MC branch</h3>
+    <p class="doc-p">Several P2 steps and the P3 <i>remedy</i> story need the signal mass points
+      (mS5/16/35/55) runnable on <code>atlng01</code> this summer. The sprint is built so that <b>either
+      branch clears all three gates</b> — MC status shifts only <i>when</i> the MC-specific validation lands,
+      not <i>whether</i> the sprint succeeds.</p>
+
+    <div class="tl-branch">
+      <div class="tl-b">
+        <h4>Branch A — MC available</h4>
+        <p>Wk&nbsp;3&ndash;4 includes the signal-MC surprise validation (signal sits in the high-<code>S</code>
+          tail); P3 can frame the &ldquo;diverse MC fixes underdetermined weights&rdquo; remedy directly.</p>
+      </div>
+      <div class="tl-b tl-b-alt">
+        <h4>Branch B — MC unavailable</h4>
+        <p>P2 PoC is met via <b>data-only complementarity + barrel characterization</b>; the signal-MC pass
+          moves to Fall. P3 is <b>unaffected</b> — it runs on the already-trained models; only the MC remedy
+          interpretation defers.</p>
+      </div>
+    </div>
+
+    <h3 class="doc-h3">Tracking</h3>
+    <p class="doc-p">The schedule is data-driven — edit <code>content/gantt.json</code> and
+      <code>content/weekly_todos.json</code>, commit, push. Open the <b>Gantt Chart</b> panel to see it
+      rendered live; git commits provide the frozen paper trail.</p>
+  </div>
+
+  <aside class="doc-aside">
+    <div class="ag-kicker">The three gates</div>
+    <div class="ag-goal"><span class="n">P1</span><span><b>NLP transfers.</b> Bigram runs on real CSVs; Evt2Vec trains without collapse, linear-probe AUC beats raw.</span></div>
+    <div class="ag-goal"><span class="n">P2</span><span><b>Complementary handle.</b> Surprise score independent in &ge;1 region (endcap done); barrel failure characterized.</span></div>
+    <div class="ag-goal"><span class="n">P3</span><span><b>Bounded epistemic error.</b> BLL-HMC converges on the 4 models; <code>&sigma;</code>&rsquo;s rendered vs. the floor.</span></div>
+
+    <h3>FORGE convergence</h3>
+    <p class="ag-row">Bidirectional at wk&nbsp;5&ndash;6: FORGE feeds in validated Bayesian technique; HELIX
+      feeds back <code>&Delta;I<sub>k</sub></code>, surprise scores, representation entropy.</p>
+
+    <div class="ag-sep"></div>
+    <span class="ag-status"><i></i>10-week PoC sprint · 6/1 &ndash; 8/7</span>
+  </aside>
+</div>
