@@ -322,6 +322,11 @@
   color:var(--orange);
   box-shadow:0 0 14px rgba(255,106,0,0.2);
 }
+/* disabled nav button (BLOG — coming soon) */
+.navbtn.is-disabled, .navbtn:disabled {
+  opacity:0.35; cursor:not-allowed; color:var(--text-faint);
+  border-color:var(--border-dim); pointer-events:none; box-shadow:none;
+}
 .subtab.active {
   color:var(--cyan);
   border-color:var(--cyan);
@@ -408,13 +413,14 @@
 /* ── ARTICLE LIST ── */
 .article-list {
   flex:1; overflow-y:auto;
-  padding:20px 36px 40px;
-  display:flex; flex-direction:column; gap:12px;
+  padding:22px 36px 48px;
+  display:flex; flex-direction:column; gap:18px;
 }
 
 /* ── ARTICLE CARD ── */
 .article-card {
   position:relative;
+  flex-shrink:0;
   border:1px solid var(--border-dim);
   background:var(--bg-panel);
   padding:18px 22px;
@@ -440,6 +446,10 @@
 .article-card:nth-child(3) { animation-delay:0.16s; }
 .article-card:nth-child(4) { animation-delay:0.22s; }
 .article-card:nth-child(5) { animation-delay:0.28s; }
+.article-card:nth-child(6) { animation-delay:0.34s; }
+.article-card:nth-child(7) { animation-delay:0.40s; }
+.article-card:nth-child(8) { animation-delay:0.46s; }
+.article-card:nth-child(n+9) { animation-delay:0.50s; }
 
 .card-index {
   font-family:'Share Tech Mono',monospace;

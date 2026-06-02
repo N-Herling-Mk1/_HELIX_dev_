@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About — H·E·L·I·X</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Exo+2:wght@200;300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cyan:#00e5ff; --cyan-dim:#007a8c; --orange:#ff6a00; --green:#00ff41; --purple:#b044ff;
+    --bg:#020c14; --panel:rgba(2,12,20,.55); --text:#c8eef5; --text-dim:#6aabbc; --text-faint:#2e6878;
+    --border:rgba(0,229,255,.18); --border-dim:rgba(0,229,255,.08); --glow-c:rgba(0,229,255,.5);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;}
+  body{
+    background:var(--bg); color:var(--text); font-family:'Exo 2',sans-serif; font-weight:300;
+    line-height:1.65; padding:38px 44px 60px; overflow-x:hidden;
+    background-image:
+      linear-gradient(rgba(0,229,255,.02) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(0,229,255,.02) 1px,transparent 1px);
+    background-size:46px 46px;
+  }
+  .wrap{max-width:880px; margin:0 auto;}
+  .kicker{font-family:'Share Tech Mono',monospace; font-size:11px; letter-spacing:.32em;
+    color:var(--orange); text-transform:uppercase; margin-bottom:6px;}
+  h1{font-family:'Orbitron',sans-serif; font-weight:900; font-size:30px; letter-spacing:.04em;
+    margin:0 0 4px; color:#eaf8ff; text-shadow:0 0 22px var(--glow-c);}
+  h1 .dot{color:var(--cyan); margin:0 .12em;}
+  .lede{color:var(--text-dim); font-size:15px; max-width:70ch; margin:14px 0 30px;}
+  .hinge{
+    position:relative; border:1px solid var(--border); background:var(--panel);
+    padding:20px 24px; margin:0 0 34px; border-radius:2px; overflow:hidden;
+  }
+  .hinge::before{content:''; position:absolute; top:0; left:0; bottom:0; width:3px;
+    background:var(--cyan); box-shadow:0 0 14px var(--glow-c);}
+  .hinge h2{font-family:'Orbitron',sans-serif; font-weight:700; font-size:14px; letter-spacing:.14em;
+    text-transform:uppercase; color:var(--cyan); margin:0 0 8px;}
+  .hinge .eq{font-family:'Share Tech Mono',monospace; font-size:15px; color:#eaf8ff;
+    background:rgba(0,229,255,.05); border:1px solid var(--border-dim); padding:8px 12px;
+    display:inline-block; margin:4px 0 10px; border-radius:2px;}
+  .hinge p{margin:0; color:var(--text-dim); font-size:14px;}
+  .hinge b{color:var(--text);}
+  .section-label{font-family:'Share Tech Mono',monospace; font-size:11px; letter-spacing:.26em;
+    color:var(--text-faint); text-transform:uppercase; margin:0 0 16px; padding-bottom:8px;
+    border-bottom:1px solid var(--border-dim);}
+  .threads{display:grid; grid-template-columns:repeat(2,1fr); gap:16px; margin-bottom:34px;}
+  .thread{border:1px solid var(--border-dim); background:rgba(2,10,16,.4); padding:16px 18px;
+    border-radius:2px; transition:border-color .2s, transform .18s;}
+  .thread:hover{border-color:var(--c,var(--cyan)); transform:translateY(-2px);}
+  .thread .n{font-family:'Orbitron',sans-serif; font-weight:900; font-size:13px; color:var(--c,var(--cyan));
+    letter-spacing:.1em;}
+  .thread h3{font-family:'Exo 2',sans-serif; font-weight:600; font-size:15px; color:#eaf8ff;
+    margin:4px 0 7px;}
+  .thread p{margin:0; font-size:13px; color:var(--text-dim); line-height:1.55;}
+  .thread .use{margin-top:9px; font-size:12.5px; color:var(--text-faint);}
+  .thread .use b{color:var(--text-dim); font-weight:400;}
+  .t1{--c:var(--cyan);} .t2{--c:var(--green);} .t3{--c:var(--orange);} .t4{--c:var(--purple);}
+  .ours{border:1px dashed var(--border); background:rgba(176,68,255,.04); padding:16px 20px;
+    border-radius:2px; margin-bottom:34px;}
+  .ours h2{font-family:'Orbitron',sans-serif; font-weight:700; font-size:13px; letter-spacing:.14em;
+    text-transform:uppercase; color:var(--purple); margin:0 0 8px;}
+  .ours p{margin:0; font-size:14px; color:var(--text-dim);}
+  .ours b{color:var(--text);}
+  .docs-cta{display:flex; align-items:center; gap:16px; flex-wrap:wrap;
+    border-top:1px solid var(--border-dim); padding-top:24px;}
+  .docs-btn{font-family:'Share Tech Mono',monospace; font-size:13px; letter-spacing:.16em;
+    text-transform:uppercase; color:var(--bg); background:var(--cyan); border:none;
+    padding:11px 20px; cursor:pointer; border-radius:2px; transition:box-shadow .2s, transform .15s;}
+  .docs-btn:hover{box-shadow:0 0 22px var(--glow-c); transform:translateY(-1px);}
+  .docs-note{font-size:12.5px; color:var(--text-faint); font-family:'Share Tech Mono',monospace;
+    letter-spacing:.05em;}
+  @media (max-width:680px){ body{padding:26px 20px 48px;} .threads{grid-template-columns:1fr;} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="kicker">02 · Motivation &amp; Genealogy</div>
+  <h1>H<span class="dot">·</span>E<span class="dot">·</span>L<span class="dot">·</span>I<span class="dot">·</span>X</h1>
+  <p class="lede">HELIX is not one idea but a confluence of several, organized around a single hinge.
+    It treats an ATLAS event as language and reads a cutflow as a thermodynamic process — then binds
+    the contrastive, the background, and the Bayesian pieces together through one shared object.</p>
+
+  <div class="hinge">
+    <h2>The Hinge — InfoNCE is a Boltzmann distribution</h2>
+    <span class="eq">exp(sim/τ) / Σ exp(sim/τ)&nbsp;&nbsp;⇔&nbsp;&nbsp;Z&nbsp;,&nbsp;&nbsp;τ = 1/β</span>
+    <p>The InfoNCE softmax has the exact shape of a Boltzmann distribution: the denominator is the
+      partition function <b>Z</b> and the temperature τ plays the role of 1/β. That the softmax looks
+      thermodynamic is recognized prior art — <b>what is HELIX's is the binding</b>: tying that Boltzmann
+      form to the Bayesian partition function so one and the same Z serves as contrastive normalizer,
+      Bayesian evidence, and the source of a maximum-entropy uncertainty floor.</p>
+  </div>
+
+  <div class="section-label">Four threads feeding the hinge</div>
+  <div class="threads">
+    <div class="thread t1">
+      <div class="n">01</div>
+      <h3>The information-theoretic spine</h3>
+      <p>Shannon defined information as surprise (−log p); Jaynes made thermodynamics a theory of
+        inference via maximum entropy; the partition-function formalism makes the Z ↔ Bayesian-evidence
+        bridge rigorous.</p>
+      <div class="use"><b>Use →</b> surprise score S(x) = −log p(x) as a background handle; MaxEnt floor
+        H(pₖ) as a physics-derived bound.</div>
+    </div>
+    <div class="thread t2">
+      <div class="n">02</div>
+      <h3>The language lineage</h3>
+      <p>The distributional hypothesis became practical with word2vec; contrastive self-supervision
+        (InfoNCE, SimCLR) generalized it; JetCLR carried it into high-energy physics.</p>
+      <div class="use"><b>Use →</b> Evt2Vec is word2vec for events; CutFormer is the attention stage,
+        with tokenization as the one genuinely new step.</div>
+    </div>
+    <div class="thread t3">
+      <div class="n">03</div>
+      <h3>Background estimation &amp; bias</h3>
+      <p>Descends from the ABCD method; ABCDisCo and CWoLa automated and stress-tested data-driven
+        background estimation, while WEAT/WEFAT measure learned bias.</p>
+      <div class="use"><b>Use →</b> the MaxEnt surprise score as a second handle orthogonal to ABCD;
+        WEAT/WEFAT probe physics-vs-simulation artifacts.</div>
+    </div>
+    <div class="thread t4">
+      <div class="n">04</div>
+      <h3>The Bayesian-uncertainty lineage</h3>
+      <p>Dropout-as-Bayesian legitimized practical Bayesian deep learning; the partition function ties
+        entropy and effective dimension back to the spine.</p>
+      <div class="use"><b>Use →</b> a Bayesian last layer (HMC, flows in reserve) yields overall and
+        boundary uncertainty against the floor; the RRM-4 vector turns it into a stopping criterion.</div>
+    </div>
+  </div>
+
+  <div class="ours">
+    <h2>What is ours</h2>
+    <p>One partition function spanning the <b>embedding</b> (Goal 1), the <b>background handle</b>
+      (Goal 2), and the <b>epistemic floor</b> (Goal 3) of a collider search — the binding of established
+      threads through a single Z. The load-bearing wall is InfoNCE; the foundation is the prior bet that
+      detector data carries enough language-like structure for the machinery to transfer at all.</p>
+  </div>
+
+  <div class="docs-cta">
+    <button class="docs-btn" id="to-docs">Open Documentation ↗</button>
+    <span class="docs-note">see <b>Motivation &amp; Genealogy</b> for the full treatment + citations</span>
+  </div>
+</div>
+
+<script>
+  document.getElementById('to-docs').addEventListener('click', function(){
+    try { window.top.postMessage({ helix:true, type:'navigate', view:'docs' }, '*'); } catch(e){}
+  });
+</script>
+</body>
+</html>

@@ -154,13 +154,10 @@
 
       const viewBtn = card.querySelector(".btn-view");
       if (isRef) {
-        viewBtn.addEventListener("click", () => {
-          const target = art.url || art.pdf;
-          window.open(target, "_blank", "noopener");
-        });
-        card.querySelector(".btn-dl-ref").addEventListener("click", () => {
-          downloadAndView(art, s);
-        });
+        // VIEW → article home page (abstract/landing). DOWNLOAD → direct PDF.
+        // Both open at the source in a new tab: reliable, no cross-origin fetch.
+        viewBtn.addEventListener("click", () => window.open(art.url || art.pdf, "_blank", "noopener"));
+        card.querySelector(".btn-dl-ref").addEventListener("click", () => window.open(art.pdf || art.url, "_blank", "noopener"));
       } else {
         viewBtn.addEventListener("click", () => openViewer(art.file, art.title, s));
       }
@@ -289,49 +286,6 @@
     loadIntoFrame(file, true);
   }
 
-  // REFERENCE articles — fetch the external PDF, show it in the viewer, offer a browser download.
-  async function downloadAndView(art, s) {
-    revokeBlob();
-    frameShell(s);
-    if (viewerTitle) viewerTitle.textContent = art.title;
-    if (viewerFrame) viewerFrame.src = "about:blank";
-
-    // Download button is wired immediately to the direct link, so it works even if fetch is blocked.
-    if (viewerDl) {
-      viewerDl.style.display = "";
-      viewerDl.href = art.pdf || art.url;
-      viewerDl.download = sanitizeName(art.title) + ".pdf";
-      viewerDl.target = "_blank"; viewerDl.rel = "noopener";
-      viewerDl.textContent = "↓ DOWNLOAD";
-    }
-
-    // Loading state
-    setGrain("···", "FETCHING PDF", "retrieving the external document");
-    if (viewerGrain) viewerGrain.classList.add("active");
-
-    try {
-      const resp = await fetch(art.pdf, { mode: "cors" });
-      if (!resp.ok) throw new Error("HTTP " + resp.status);
-      const blob = await resp.blob();
-      currentBlobUrl = URL.createObjectURL(blob);
-      loadIntoFrame(currentBlobUrl, false);                 // inline view from memory
-      if (viewerDl) {                                       // browser download from the same blob
-        viewerDl.href = currentBlobUrl;
-        viewerDl.download = sanitizeName(art.title) + ".pdf";
-        viewerDl.target = ""; viewerDl.removeAttribute("rel");
-      }
-    } catch (err) {
-      // CORS / network block — best-effort inline embed of the remote PDF, with a clear escape hatch.
-      loadIntoFrame(art.pdf, false);
-      setGrain("↗", "OPEN EXTERNALLY",
-        `Inline embedding may be blocked by the source.<br>` +
-        `Use <b>↓ DOWNLOAD</b> (top-right) or ` +
-        `<a href="${art.pdf}" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline">open the PDF&nbsp;↗</a>`);
-      // give the embed a moment; if it paints, the user sees it under a dismissible note
-      setTimeout(() => { if (viewerGrain) viewerGrain.classList.remove("active"); }, 1400);
-    }
-  }
-
   function closeViewer() {
     hide(viewerPanel);
     revokeBlob();
@@ -365,6 +319,20 @@
     if (viewerGrain) viewerGrain.classList.remove("active");
     if (viewerBack)  { viewerBack.style.color = ""; viewerBack.style.borderColor = ""; }
     if (viewerFrame) viewerFrame.src = "about.html";
+  }
+
+  function openGoals() {
+    pageMode = true;
+    subtabs.forEach(t => t.classList.toggle("active", t.dataset.tab === "goals"));
+    if (navAbout) navAbout.classList.remove("active");
+    hide(panelEmpty);
+    hide(articleList);
+    show(viewerPanel);
+    if (viewerTitle) viewerTitle.textContent = "PROJECT GOALS — H·E·L·I·X";
+    if (viewerDl)    viewerDl.style.display = "none";
+    if (viewerGrain) viewerGrain.classList.remove("active");
+    if (viewerBack)  { viewerBack.style.color = ""; viewerBack.style.borderColor = ""; }
+    if (viewerFrame) viewerFrame.src = "goals.html";
   }
 
   function openBlog() {
@@ -403,6 +371,8 @@
 
   subtabs.forEach(tab => {
     tab.addEventListener("click", () => {
+      // GOALS is a high-level project overview page (not per-sector content)
+      if (tab.dataset.tab === "goals") { openGoals(); return; }
       activeTab = tab.dataset.tab;
       subtabs.forEach(t => t.classList.toggle("active", t === tab));
       updateNavCounts(activeTab);

@@ -30,7 +30,11 @@ body{width:100%;background:var(--bg);font-family:'Exo 2',sans-serif;color:var(--
   animation:vs-pulse 2.4s ease-in-out infinite;}
 @keyframes vs-pulse{0%,100%{opacity:1}50%{opacity:.4}}
 .view-content{position:relative;min-width:0;min-height:0;display:flex;align-items:center;justify-content:center;overflow:hidden;}
-.view-content::before{content:'';position:absolute;inset:0;z-index:0;pointer-events:none;
+/* preview screenshot sits at the very back; the CRT overlay (z-5) dims it so
+   "UNDER CONSTRUCTION" reads on top while the build teaser shows through */
+.nova-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;
+  z-index:0;opacity:.5;filter:saturate(1.05) contrast(1.02);pointer-events:none;}
+.view-content::before{content:'';position:absolute;inset:0;z-index:1;pointer-events:none;
   background-image:linear-gradient(rgba(0,229,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,.03) 1px,transparent 1px);
   background-size:48px 48px;mask-image:radial-gradient(circle at 50% 50%,#000 0%,transparent 80%);
   -webkit-mask-image:radial-gradient(circle at 50% 50%,#000 0%,transparent 80%);}
@@ -139,6 +143,8 @@ html.is-embedded .view-logo-box{visibility:hidden;}
 
   <!-- ════ CONTENT — radial array stage ════ -->
   <main class="view-content">
+    <!-- build-preview screenshot behind the radial stage + UNDER CONSTRUCTION overlay -->
+    <img class="nova-bg" src="../assets/img/HELIX_NOVA_FILE_Preview.png" alt="" aria-hidden="true">
     <!-- ╔══════════════════════════════════════════════════════════════╗
          ║  IMPORT ZONE — _INFO_698_A_/nav.html RADIAL ARRAY             ║
          ║  Drop the ported radial-array markup + its data structure     ║
