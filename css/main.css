@@ -472,6 +472,29 @@
   line-height:1.6; margin-top:2px;
 }
 
+/* ── REFERENCE CARD (external paper/book) ── */
+.article-card-ref { position:relative; }
+.article-card-ref::after {
+  content:''; position:absolute; top:0; left:0; bottom:0;
+  width:2px; background:var(--sector-color, var(--cyan));
+  box-shadow:0 0 10px var(--sector-glow, var(--glow-c));
+  opacity:0.55; pointer-events:none;
+}
+.card-venue {
+  font-family:'Share Tech Mono',monospace;
+  font-size:11.5px; letter-spacing:0.12em;
+  color:var(--sector-color, var(--cyan)); opacity:0.65;
+  margin-top:-1px;
+}
+.card-status.ref {
+  font-family:'Share Tech Mono',monospace;
+  font-size:11px; letter-spacing:0.18em;
+  padding:1px 8px; border:1px solid var(--sector-color, var(--cyan));
+  color:var(--sector-color, var(--cyan));
+  background:var(--sector-ghost, transparent);
+  border-radius:1px;
+}
+
 /* ── NOTE CARD ── */
 .note-card {
   position:relative;

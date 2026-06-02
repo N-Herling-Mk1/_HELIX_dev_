@@ -109,33 +109,61 @@
     show(articleList);
   }
 
+  function esc(str) {
+    return String(str == null ? "" : str)
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+  }
+
   function renderArticles(s) {
     showContent();
     const items = s.articles || [];
     if (!items.length) { articleList.innerHTML = `<div class="panel-empty" style="opacity:1;flex:1"><div class="empty-label">NO ARTICLES YET</div></div>`; return; }
     items.forEach((art, i) => {
+      const isRef = !!(art.url || art.pdf);   // reference = external paper/book (has links)
       const card = document.createElement("div");
-      card.className = "article-card";
+      card.className = "article-card" + (isRef ? " article-card-ref" : "");
       card.style.animationDelay = `${i * 0.06}s`;
-      const status = art.status === "draft"
-        ? `<span style="color:var(--text-faint);font-size:12px;letter-spacing:.15em">DRAFT</span>`
-        : `<span style="color:var(--green-dim);font-size:12px">PUBLISHED</span>`;
-      const tags = (art.tags||[]).map(t=>`<span class="tag">${t}</span>`).join("");
+
+      let status;
+      if (isRef)                       status = `<span class="card-status ref">REFERENCE&nbsp;↗</span>`;
+      else if (art.status === "draft") status = `<span style="color:var(--text-faint);font-size:12px;letter-spacing:.15em">DRAFT</span>`;
+      else                             status = `<span style="color:var(--green-dim);font-size:12px">PUBLISHED</span>`;
+
+      const tags  = (art.tags||[]).map(t=>`<span class="tag">${esc(t)}</span>`).join("");
+      const venue = art.venue ? `<div class="card-venue">${esc(art.venue)}</div>` : "";
+
+      // VIEW: reference → open landing URL in a new tab. draft → open local file in viewer.
+      // DOWNLOAD: reference → fetch pdf into viewer (+ browser download). draft → direct local download.
+      const actions = isRef
+        ? `<button class="btn-view"><span>◉</span> VIEW</button>
+           <button class="btn-dl btn-dl-ref"><span>↓</span> DOWNLOAD</button>`
+        : `<button class="btn-view"><span>◉</span> VIEW</button>
+           <a class="btn-dl" href="${esc(art.file)}" download="${esc(art.title)}.pdf"><span>↓</span> DOWNLOAD</a>`;
+
       card.innerHTML = `
         <div class="card-index">[${String(i+1).padStart(2,"0")}]</div>
         <div class="card-body">
-          <div class="card-title">${art.title}</div>
-          <div class="card-meta"><span>${art.authors}</span><span>${art.year}</span>${status}</div>
+          <div class="card-title">${esc(art.title)}</div>
+          ${venue}
+          <div class="card-meta"><span>${esc(art.authors)}</span><span>${esc(art.year)}</span>${status}</div>
           <div class="card-meta" style="margin-top:4px">${tags}</div>
-          <div class="card-abstract">${art.abstract}</div>
+          <div class="card-abstract">${esc(art.abstract)}</div>
         </div>
-        <div class="card-actions">
-          <button class="btn-view" data-file="${art.file}" data-title="${art.title}"><span>◉</span> VIEW</button>
-          <a class="btn-dl" href="${art.file}" download="${art.title}.pdf"><span>↓</span> DOWNLOAD</a>
-        </div>`;
-      card.querySelector(".btn-view").addEventListener("click", e => {
-        openViewer(e.currentTarget.dataset.file, e.currentTarget.dataset.title, s);
-      });
+        <div class="card-actions">${actions}</div>`;
+
+      const viewBtn = card.querySelector(".btn-view");
+      if (isRef) {
+        viewBtn.addEventListener("click", () => {
+          const target = art.url || art.pdf;
+          window.open(target, "_blank", "noopener");
+        });
+        card.querySelector(".btn-dl-ref").addEventListener("click", () => {
+          downloadAndView(art, s);
+        });
+      } else {
+        viewBtn.addEventListener("click", () => openViewer(art.file, art.title, s));
+      }
       articleList.appendChild(card);
     });
   }
@@ -200,34 +228,120 @@
   }
 
   /* ── VIEWER ── */
-  function openViewer(file, title, s) {
+  let currentBlobUrl = null;          // object URL for the fetched PDF (revoked on close/replace)
+
+  function sanitizeName(t) {
+    return String(t || "document").replace(/[^\w\-]+/g, "_").slice(0, 80);
+  }
+
+  function revokeBlob() {
+    if (currentBlobUrl) { try { URL.revokeObjectURL(currentBlobUrl); } catch (e) {} currentBlobUrl = null; }
+  }
+
+  // Set the grain overlay's three text rows (loading / error states).
+  function setGrain(code, label, sub) {
+    if (!viewerGrain) return;
+    const c = viewerGrain.querySelector(".viewer-error-code");
+    const l = viewerGrain.querySelector(".viewer-error-label");
+    const s = viewerGrain.querySelector(".viewer-error-sub");
+    if (c) c.textContent = code;
+    if (l) l.textContent = label;
+    if (s) s.innerHTML   = sub;
+  }
+
+  function frameShell(s) {
     hide(articleList);
     show(viewerPanel);
-    if (viewerTitle) viewerTitle.textContent = title;
-    if (viewerDl)    { viewerDl.href = file; viewerDl.download = title + ".pdf"; }
-    if (viewerGrain) viewerGrain.classList.remove("active");
-    if (viewerFrame) {
-      viewerFrame.src = file;
-      viewerFrame.onload = () => {
-        try {
-          const body = viewerFrame.contentDocument?.body?.innerText || "";
-          if (body.includes("Cannot GET") || body.includes("404")) {
-            if (viewerGrain) viewerGrain.classList.add("active");
-          }
-        } catch(e) {}
-      };
-    }
     if (viewerBack) {
-      viewerBack.style.color       = s.color;
-      viewerBack.style.borderColor = s.color;
+      viewerBack.style.color       = s ? s.color : "";
+      viewerBack.style.borderColor = s ? s.color : "";
+    }
+  }
+
+  // Point the iframe at a source. localCheck=true scans same-origin body for 404/Cannot GET.
+  function loadIntoFrame(src, localCheck) {
+    if (!viewerFrame) return;
+    if (viewerGrain) viewerGrain.classList.remove("active");
+    viewerFrame.src = src;
+    viewerFrame.onload = () => {
+      if (!localCheck) return;        // cross-origin / blob — can't (and needn't) introspect
+      try {
+        const body = viewerFrame.contentDocument?.body?.innerText || "";
+        if (body.includes("Cannot GET") || body.includes("404")) {
+          setGrain("404", "FILE NOT FOUND", "PDF has not been uploaded yet");
+          if (viewerGrain) viewerGrain.classList.add("active");
+        }
+      } catch (e) { /* cross-origin: assume rendered */ }
+    };
+  }
+
+  // DRAFT articles — local file straight into the viewer.
+  function openViewer(file, title, s) {
+    revokeBlob();
+    frameShell(s);
+    if (viewerTitle) viewerTitle.textContent = title;
+    if (viewerDl) {
+      viewerDl.style.display = "";
+      viewerDl.href = file; viewerDl.download = title + ".pdf";
+      viewerDl.target = ""; viewerDl.removeAttribute("rel");
+      viewerDl.textContent = "↓ DOWNLOAD";
+    }
+    loadIntoFrame(file, true);
+  }
+
+  // REFERENCE articles — fetch the external PDF, show it in the viewer, offer a browser download.
+  async function downloadAndView(art, s) {
+    revokeBlob();
+    frameShell(s);
+    if (viewerTitle) viewerTitle.textContent = art.title;
+    if (viewerFrame) viewerFrame.src = "about:blank";
+
+    // Download button is wired immediately to the direct link, so it works even if fetch is blocked.
+    if (viewerDl) {
+      viewerDl.style.display = "";
+      viewerDl.href = art.pdf || art.url;
+      viewerDl.download = sanitizeName(art.title) + ".pdf";
+      viewerDl.target = "_blank"; viewerDl.rel = "noopener";
+      viewerDl.textContent = "↓ DOWNLOAD";
+    }
+
+    // Loading state
+    setGrain("···", "FETCHING PDF", "retrieving the external document");
+    if (viewerGrain) viewerGrain.classList.add("active");
+
+    try {
+      const resp = await fetch(art.pdf, { mode: "cors" });
+      if (!resp.ok) throw new Error("HTTP " + resp.status);
+      const blob = await resp.blob();
+      currentBlobUrl = URL.createObjectURL(blob);
+      loadIntoFrame(currentBlobUrl, false);                 // inline view from memory
+      if (viewerDl) {                                       // browser download from the same blob
+        viewerDl.href = currentBlobUrl;
+        viewerDl.download = sanitizeName(art.title) + ".pdf";
+        viewerDl.target = ""; viewerDl.removeAttribute("rel");
+      }
+    } catch (err) {
+      // CORS / network block — best-effort inline embed of the remote PDF, with a clear escape hatch.
+      loadIntoFrame(art.pdf, false);
+      setGrain("↗", "OPEN EXTERNALLY",
+        `Inline embedding may be blocked by the source.<br>` +
+        `Use <b>↓ DOWNLOAD</b> (top-right) or ` +
+        `<a href="${art.pdf}" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline">open the PDF&nbsp;↗</a>`);
+      // give the embed a moment; if it paints, the user sees it under a dismissible note
+      setTimeout(() => { if (viewerGrain) viewerGrain.classList.remove("active"); }, 1400);
     }
   }
 
   function closeViewer() {
     hide(viewerPanel);
+    revokeBlob();
     if (viewerFrame) viewerFrame.src = "";
     if (viewerGrain) viewerGrain.classList.remove("active");
-    if (viewerDl)    viewerDl.style.display = "";   // restore download button
+    if (viewerDl)    {                              // restore download button to default
+      viewerDl.style.display = "";
+      viewerDl.target = ""; viewerDl.removeAttribute("rel");
+      viewerDl.textContent = "↓ DOWNLOAD";
+    }
     if (navAbout)    navAbout.classList.remove("active");
     pageMode = false;
     // restore correct content area

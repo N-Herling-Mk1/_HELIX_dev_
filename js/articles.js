@@ -1,6 +1,19 @@
 /* ════════════════════════════════════════════
    HELIX — CONTENT REGISTRY
    articles.js · articles, notes, goals per sector
+
+   ACRONYM (updated):
+     H · HEP                — High Energy Physics
+     E · EPISTEMIC          — Epistemic Learning / uncertainty
+     L · LEARNING           — Machine Learning
+     I · INFORMATION THEORY — entropy · partition functions · variational inference   ← (was "Intelligent AI")
+     X · EXPLORATION        — detector topology · autonomous discovery · frontier
+
+   Article kinds:
+     • status:"draft"      → internal write-up. file: local PDF path. VIEW opens it in the in-page viewer.
+     • status:"reference"  → external published paper/book. Has url (landing page) + pdf (direct file).
+                             VIEW  → opens url in a NEW TAB.
+                             DOWNLOAD → fetches pdf, shows it in the viewer, offers a browser download.
 ════════════════════════════════════════════ */
 
 const HELIX_SECTORS = [
@@ -41,6 +54,66 @@ const HELIX_SECTORS = [
         abstract: "Technical documentation of the 40 GeV HTmiss threshold in CutflowRunnerOneVertex, its suppression via --channel 1VtxRoIVR flag, and absence in CutflowRunnerPunchThrough.",
         file:     "docs/hep/htmiss_architecture.pdf",
         status:   "draft"
+      },
+      {
+        id:       "h-r-01",
+        title:    "Search for Events with One Displaced Vertex from Long-Lived Neutral Particles in the ATLAS Muon Spectrometer (√s = 13 TeV)",
+        authors:  "ATLAS Collaboration",
+        venue:    "Phys. Rev. D (2025) · arXiv:2503.20445",
+        year:     "2025",
+        tags:     ["ATLAS", "MSVtx", "LLP"],
+        abstract: "The ATLAS Collaboration searches the full Run 2 dataset (140 fb⁻¹, 13 TeV) for events with a single displaced vertex from neutral long-lived particles decaying to hadronic jets in the muon spectrometer, 3–14 m from the interaction point. A dedicated vertex-reconstruction algorithm infers the LLP decay point; observed yields are consistent with background and limits are set on benchmark signals. This is the direct published precursor to the single-vertex MSVtx framework.",
+        url:      "https://journals.aps.org/prd/abstract/10.1103/cmql-s9sq",
+        pdf:      "https://journals.aps.org/prd/pdf/10.1103/cmql-s9sq",
+        status:   "reference"
+      },
+      {
+        id:       "h-r-02",
+        title:    "Search for Neutral Long-Lived Particles Decaying into Displaced Hadronic Jets in the ATLAS Calorimeter",
+        authors:  "ATLAS Collaboration",
+        venue:    "arXiv:2203.01009 [hep-ex]",
+        year:     "2022",
+        tags:     ["ATLAS", "LLP", "DISPLACED JETS"],
+        abstract: "A search for pair-produced neutral LLPs decaying hadronically in the ATLAS hadronic calorimeter using 139 fb⁻¹ of 13 TeV data, with dedicated displaced-jet reconstruction and two kinematic search regions. Observed yields match the expected background, excluding Higgs branching ratios above 10% for cτ between 20 mm and 10 m. Cross-section limits are set for scalar masses from 60 GeV up to 1 TeV.",
+        url:      "https://arxiv.org/abs/2203.01009",
+        pdf:      "https://arxiv.org/pdf/2203.01009",
+        status:   "reference"
+      },
+      {
+        id:       "h-r-03",
+        title:    "Searches for Unusual Signatures from Dark Sectors with the ATLAS Experiment",
+        authors:  "ATLAS Collaboration (conference contribution)",
+        venue:    "arXiv:2601.13033 [hep-ex]",
+        year:     "2026",
+        tags:     ["ATLAS", "DARK SECTOR", "LLP"],
+        abstract: "A survey of recent ATLAS searches for unusual experimental signatures motivated by dark-sector models, including new long-lived particles that decay far from the collision point. These signatures are difficult to reconstruct and face atypical, challenging backgrounds. The contribution gathers recent pp-collision results across the dark-sector LLP program.",
+        url:      "https://arxiv.org/abs/2601.13033",
+        pdf:      "https://arxiv.org/pdf/2601.13033",
+        status:   "reference"
+      },
+      {
+        id:       "h-r-04",
+        title:    "Background Estimation in the Search for Single Production of Vector-Like Quarks (Wb) with a Data-Driven Method",
+        authors:  "M. R. Rahman",
+        venue:    "arXiv:2106.03961 [hep-ex]",
+        year:     "2021",
+        tags:     ["ABCD", "QCD", "ATLAS"],
+        abstract: "A thesis presenting a data-driven ABCD background estimate for the hadronic T/Y → Wb channel at 13 TeV (139 fb⁻¹) with ATLAS. Because the QCD multijet background is mismodelled in simulation, the ABCD method estimates it directly from the control regions. A worked example of ABCD applied to a messy hadronic final state.",
+        url:      "https://arxiv.org/abs/2106.03961",
+        pdf:      "https://arxiv.org/pdf/2106.03961",
+        status:   "reference"
+      },
+      {
+        id:       "h-r-05",
+        title:    "Background Estimation with the ABCD Method (Featuring the TRooFit Toolkit)",
+        authors:  "W. Buttinger et al. — CERN",
+        venue:    "CERN Indico · ABCD Guide (draft, 18 Oct)",
+        year:     "2018",
+        tags:     ["ABCD", "TROOFIT", "CLOSURE"],
+        abstract: "A practical guide to the ABCD data-driven background estimation method built around the TRooFit toolkit. It explains the requirement that the two ABCD-plane observables be uncorrelated for background, how to handle signal contamination via a likelihood-based fit, and how to propagate statistical uncertainties. A hands-on reference for setting up an ABCD closure test.",
+        url:      "https://indico.cern.ch/event/1122790/contributions/4713580/attachments/2381493/4270369/ABCDGuide_draft18Oct18.pdf",
+        pdf:      "https://indico.cern.ch/event/1122790/contributions/4713580/attachments/2381493/4270369/ABCDGuide_draft18Oct18.pdf",
+        status:   "reference"
       }
     ],
     notes: [
@@ -116,6 +189,18 @@ const HELIX_SECTORS = [
         abstract: "Root-first parameterization r₁=a+b, r₂=a−b, r₃=−2a combined with the Quadratic Fence Bound establishes outer fence inequalities without circularity. Absorption substitution u=t−p/(3t) transforms the polynomial itself.",
         file:     "docs/epistemic/cubic_fence_method.pdf",
         status:   "draft"
+      },
+      {
+        id:       "e-r-01",
+        title:    "Aleatoric and Epistemic Uncertainty in Machine Learning: An Introduction to Concepts and Methods",
+        authors:  "E. Hüllermeier, W. Waegeman",
+        venue:    "Machine Learning (2021) · arXiv:1910.09457",
+        year:     "2021",
+        tags:     ["UNCERTAINTY", "EPISTEMIC", "ALEATORIC"],
+        abstract: "An introduction to uncertainty in machine learning that distinguishes aleatoric (irreducible, data-inherent) from epistemic (reducible, knowledge/model) uncertainty. The authors review formal approaches to representing and quantifying each, motivated by the rise of safety-critical ML applications. The aleatoric/epistemic split underpins the HELIX Bayesian-HMC interpretation of σ.",
+        url:      "https://arxiv.org/abs/1910.09457",
+        pdf:      "https://arxiv.org/pdf/1910.09457",
+        status:   "reference"
       }
     ],
     notes: [
@@ -191,6 +276,18 @@ const HELIX_SECTORS = [
         abstract: "v = [1−AUC, σ_overall/σ_max, σ_boundary/H(p_k), D_KL/D_max]. MaxEnt floor values computed once from MSVtxCutflow CSV snapshots serve as static references.",
         file:     "docs/learning/rrm_penalty_vector.pdf",
         status:   "draft"
+      },
+      {
+        id:       "l-r-01",
+        title:    "Visualizing the Loss Landscape of Neural Nets",
+        authors:  "H. Li, Z. Xu, G. Taylor, C. Studer, T. Goldstein",
+        venue:    "NeurIPS 2018 · arXiv:1712.09913",
+        year:     "2018",
+        tags:     ["LOSS LANDSCAPE", "GENERALIZATION", "VISUALIZATION"],
+        abstract: "Introduces a 'filter-normalization' scheme that makes neural-network loss surfaces comparable across architectures, enabling meaningful side-by-side visual comparisons. Using these visualizations the authors connect landscape geometry — sharpness, flatness, convexity — to trainability and generalization, explaining why choices like skip connections help. A foundational reference for interpreting optimization geometry.",
+        url:      "https://arxiv.org/abs/1712.09913",
+        pdf:      "https://arxiv.org/pdf/1712.09913",
+        status:   "reference"
       }
     ],
     notes: [
@@ -231,53 +328,81 @@ const HELIX_SECTORS = [
   },
   {
     letter: "I",
-    word:   "INTELLIGENT AI",
-    full:   "AI Agents",
+    word:   "INFORMATION THEORY",
+    full:   "Information Theory",
     color:  "#b044ff",
     glow:   "rgba(176,68,255,0.5)",
     ghost:  "rgba(176,68,255,0.05)",
     articles: [
       {
-        id:       "i-01",
-        title:    "HELIX as an Autonomous HEP Analysis Agent: Architecture and Deployment",
-        authors:  "N. Herling — UA ATLAS / HELIX",
-        year:     "2025",
-        tags:     ["AGENT", "AUTOMATION", "HEP"],
-        abstract: "System design for autonomous execution of MSVtx cutflow pipelines, Bayesian HMC inference, and adaptive hyperparameter tuning. Agent loop integrates Evt2Vec representations with real-time posterior feedback.",
-        file:     "docs/intelligent/helix_agent_architecture.pdf",
-        status:   "draft"
+        id:       "i-r-01",
+        title:    "Information Theory and Statistical Mechanics",
+        authors:  "E. T. Jaynes",
+        venue:    "Phys. Rev. 106, 620 (1957)",
+        year:     "1957",
+        tags:     ["MAXENT", "ENTROPY", "FOUNDATIONS"],
+        abstract: "Jaynes' landmark paper recasts statistical mechanics as a problem of statistical inference, showing the maximum-entropy distribution is the least-biased assignment consistent with the given constraints. The familiar computational machinery — beginning with the partition function — then follows directly from the maximum-entropy principle. This is the foundational MaxEnt text underpinning the InfoNCE-as-Boltzmann argument in HELIX.",
+        url:      "https://files.batistalab.com/teaching/attachments/chem584/Jaynes.pdf",
+        pdf:      "https://files.batistalab.com/teaching/attachments/chem584/Jaynes.pdf",
+        status:   "reference"
       },
       {
-        id:       "i-02",
-        title:    "Pelagic Voice Interface: Wake-Word, Whisper ASR, and Piper TTS Pipeline",
-        authors:  "N. Herling — Independent",
-        year:     "2025",
-        tags:     ["VOICE", "ASR", "TTS"],
-        abstract: "Local voice assistant pipeline using openWakeWord for detection, Whisper for transcription, and Piper for synthesis. WAV generation confirmed operational; interactive TTS playback and full pipeline merge architecture.",
-        file:     "docs/intelligent/pelagic_voice_pipeline.pdf",
-        status:   "draft"
+        id:       "i-r-02",
+        title:    "Partition Function Approach to Non-Gaussian Likelihoods: Information Theory and State Variables for Bayesian Inference",
+        authors:  "R. M. Kuntz, H. von Campe, T. Röspel, M. P. Herzog, B. M. Schäfer",
+        venue:    "arXiv:2411.13625 [cond-mat.stat-mech]",
+        year:     "2024",
+        tags:     ["PARTITION FN", "BAYESIAN", "THERMODYNAMICS"],
+        abstract: "Develops a partition-function formalism for Bayesian inference with non-Gaussian likelihoods, treating a Bayes update as a transition between thermodynamic ensembles. Building on Jaynes (1957), it imports the vocabulary of energy, work and heat into inference and derives an information-theoretic reading of Jarzynski's equality. This is the peer-reviewed scaffolding for the Boltzmann–InfoNCE equivalence.",
+        url:      "https://arxiv.org/abs/2411.13625",
+        pdf:      "https://arxiv.org/pdf/2411.13625",
+        status:   "reference"
+      },
+      {
+        id:       "i-r-03",
+        title:    "Graphical Models, Exponential Families, and Variational Inference",
+        authors:  "M. J. Wainwright, M. I. Jordan",
+        venue:    "Found. Trends Mach. Learn. 1(1–2), 1–305 (2008)",
+        year:     "2008",
+        tags:     ["VARIATIONAL", "EXPONENTIAL FAMILY", "ENTROPY"],
+        abstract: "A monograph developing variational representations for inference in graphical models by exploiting the conjugate duality between an exponential family's cumulant (log-partition) function and its entropy. From this single duality it derives sum-product, mean-field, expectation-propagation and other algorithms as exact or approximate variational methods. The reference text tying entropy, partition functions and inference together.",
+        url:      "https://people.eecs.berkeley.edu/~jordan/papers/wainwright-jordan-fnt.pdf",
+        pdf:      "https://people.eecs.berkeley.edu/~jordan/papers/wainwright-jordan-fnt.pdf",
+        status:   "reference"
+      },
+      {
+        id:       "i-r-04",
+        title:    "Information Theory: A Tutorial Introduction",
+        authors:  "J. V. Stone",
+        venue:    "arXiv:1802.05968 [cs.IT]",
+        year:     "2018",
+        tags:     ["SHANNON", "ENTROPY", "TUTORIAL"],
+        abstract: "An informal but rigorous introduction to Shannon's theory of information, defining the fundamental limits on communication between the components of any man-made or biological system. It builds up entropy, channel capacity and coding from first principles, with an annotated reading list for going deeper. A clean on-ramp to the information-theoretic vocabulary used throughout HELIX.",
+        url:      "https://arxiv.org/abs/1802.05968",
+        pdf:      "https://arxiv.org/pdf/1802.05968",
+        status:   "reference"
       }
     ],
     notes: [
       {
         id:    "i-n-01",
-        date:  "2025-03-01",
-        text:  "Pelagic pipeline: openWakeWord → Whisper → Piper TTS. Wake word hey_jarvis as prototype. Custom Pelagic instantiate wake word planned via Google Colab training. WAV generation confirmed operational."
+        date:  "2025-03-15",
+        text:  "Sector re-anchored from 'Intelligent AI' to 'Information Theory'. Core thread: Jaynes MaxEnt → partition function Z → InfoNCE softmax denominator. Kuntz et al. (2024) and Wainwright–Jordan (2008) supply the peer-reviewed bridge between entropy, Z, and Bayesian/variational inference."
       }
     ],
     goals: [
       {
         id:       "i-g-01",
-        title:    "Merge Pelagic interactive TTS + full pipeline",
-        desc:     "Combine WAV playback with complete wake→transcribe→respond loop.",
-        priority: "MED",
+        title:    "Formalize InfoNCE = Boltzmann Z mapping with citations",
+        desc:     "Tie e-01 MaxEnt SSL write-up to Jaynes (i-r-01) and Kuntz (i-r-02).",
+        priority: "HIGH",
         done:     false
       },
       {
         id:       "i-g-02",
-        title:    "Train custom Pelagic wake word",
-        desc:     "Use Google Colab openWakeWord training pipeline.",
-        priority: "LOW",
+        title:    "Extract entropy/cumulant duality from Wainwright–Jordan",
+        desc:     "Map conjugate duality (i-r-03) onto the per-cut-stage entropy floor.",
+        priority: "MED",
         done:     false
       }
     ]
@@ -285,7 +410,7 @@ const HELIX_SECTORS = [
   {
     letter: "X",
     word:   "EXPLORATION",
-    full:   "Detector Topology & Exploration",
+    full:   "Detector Topology · Autonomous Discovery",
     color:  "#ff6a00",
     glow:   "rgba(255,106,0,0.5)",
     ghost:  "rgba(255,106,0,0.06)",
@@ -319,6 +444,50 @@ const HELIX_SECTORS = [
         abstract: "Phase I proposal for DE-FOA-0003612 Topic 14C. HELIX framework positioned as infrastructure for petabyte-scale LLP signal extraction via Evt2Vec/CutFormer with MaxEnt stopping criteria.",
         file:     "docs/exploration/doe_genesis_14c.pdf",
         status:   "draft"
+      },
+      {
+        id:       "x-04",
+        title:    "HELIX as an Autonomous HEP Analysis Agent: Architecture and Deployment",
+        authors:  "N. Herling — UA ATLAS / HELIX",
+        year:     "2025",
+        tags:     ["AGENT", "AUTOMATION", "HEP"],
+        abstract: "System design for autonomous execution of MSVtx cutflow pipelines, Bayesian HMC inference, and adaptive hyperparameter tuning. Agent loop integrates Evt2Vec representations with real-time posterior feedback. (Relocated here from the former 'Intelligent AI' sector.)",
+        file:     "docs/exploration/helix_agent_architecture.pdf",
+        status:   "draft"
+      },
+      {
+        id:       "x-05",
+        title:    "Pelagic Voice Interface: Wake-Word, Whisper ASR, and Piper TTS Pipeline",
+        authors:  "N. Herling — Independent",
+        year:     "2025",
+        tags:     ["VOICE", "ASR", "TTS"],
+        abstract: "Local voice assistant pipeline using openWakeWord for detection, Whisper for transcription, and Piper for synthesis. WAV generation confirmed operational; interactive TTS playback and full pipeline merge architecture. (Relocated here from the former 'Intelligent AI' sector.)",
+        file:     "docs/exploration/pelagic_voice_pipeline.pdf",
+        status:   "draft"
+      },
+      {
+        id:       "x-r-01",
+        title:    "Building an AI-Native Research Ecosystem for Experimental Particle Physics: A Community Vision",
+        authors:  "AI-Native HEP Community",
+        venue:    "arXiv:2602.17582",
+        year:     "2026",
+        tags:     ["AI-NATIVE", "HL-LHC", "VISION"],
+        abstract: "A community whitepaper laying out a vision for an AI-native research ecosystem in experimental particle physics and the grand challenges where AI could accelerate discovery. It argues that facilities under construction — HL-LHC, DUNE, EIC — can both use and stress-test the vision, with FCC-ee, IceCube-Gen2 and a muon collider as longer-term proving grounds. Frames where an agent framework like HELIX fits the field-wide roadmap.",
+        url:      "https://arxiv.org/abs/2602.17582",
+        pdf:      "https://arxiv.org/pdf/2602.17582",
+        status:   "reference"
+      },
+      {
+        id:       "x-r-02",
+        title:    "AI Agents Can Already Autonomously Perform Experimental High Energy Physics",
+        authors:  "E. A. Moreno, S. Bright-Thonney, A. Novak, D. Garcia, P. Harris",
+        venue:    "arXiv:2603.20179 [hep-ex]",
+        year:     "2026",
+        tags:     ["AGENT", "LLM", "AUTONOMY"],
+        abstract: "Shows that LLM-based coding agents (Claude Code) can already autonomously execute most stages of a HEP analysis — event selection, background estimation, uncertainty quantification, inference, and paper drafting — given a dataset, an execution framework, and prior literature. The authors argue the field underestimates current agent capability and that most proposed workflows are too narrowly scaffolded. Their 'Just Furnish Context' (JFC) framework is a direct analogue of the HELIX autonomous-analysis vision.",
+        url:      "https://arxiv.org/abs/2603.20179",
+        pdf:      "https://arxiv.org/pdf/2603.20179",
+        status:   "reference"
       }
     ],
     notes: [
