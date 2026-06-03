@@ -1,21 +1,10 @@
 /* ════════════════════════════════════════════
-   HELIX — CONTENT REGISTRY
-   articles.js · per-sector reference collection
-
-   ACRONYM:
-     H · HEP                — High Energy Physics
-     E · EPISTEMIC          — Epistemic Learning / uncertainty
-     L · LEARNING           — Machine Learning
-     I · INFORMATION THEORY — entropy · partition functions · variational inference
-     X · EXPLORATION        — detector topology · autonomous discovery · frontier
-
-   ARTICLES = external references only (published papers / textbooks).
-     Each has: url (article home page) + pdf (direct file).
-       VIEW     → opens the home page (url) in a new tab.
-       DOWNLOAD → opens the PDF (pdf) in a new tab (browser viewer can save it).
-     Cross-origin fetch is intentionally NOT attempted: a static origin
-     (GitHub Pages) cannot fetch arXiv/APS/CERN PDFs (no CORS header),
-     so opening at the source is the reliable, error-free path.
+   HELIX — CONTENT REGISTRY  ·  articles.js
+   Per-sector reference collection (external papers / textbooks).
+   Each reference: url (home page) + pdf (direct file) + status:"reference".
+   docKey links an entry to its content/references.json id (documentation
+   bibliography). INVARIANT: every references.json id appears here as a docKey,
+   so the HELIX database is a superset of the documentation references.
 ════════════════════════════════════════════ */
 
 const HELIX_SECTORS = [
@@ -106,6 +95,57 @@ const HELIX_SECTORS = [
         "url": "https://indico.cern.ch/event/1122790/contributions/4713580/",
         "pdf": "https://indico.cern.ch/event/1122790/contributions/4713580/attachments/2381493/4270369/ABCDGuide_draft18Oct18.pdf",
         "status": "reference"
+      },
+      {
+        "status": "reference",
+        "id": "h-r-06",
+        "docKey": "gn2_2026",
+        "title": "Transforming Jet Flavour Tagging at ATLAS (GN2)",
+        "authors": "ATLAS Collaboration",
+        "year": 2026,
+        "tags": [
+          "GN2",
+          "FLAVOUR TAGGING",
+          "ATLAS"
+        ],
+        "venue": "Nature Commun. 17, 541 · arXiv:2505.19689",
+        "abstract": "Presents GN2, ATLASs transformer-based flavour-tagging algorithm and the current state of the art for b/c-jet identification at the LHC. HELIX positions against GN2 — differentiating not on raw tagging power but on quantified epistemic error.",
+        "url": "https://doi.org/10.1038/s41467-025-65059-6",
+        "pdf": "https://arxiv.org/pdf/2505.19689"
+      },
+      {
+        "status": "reference",
+        "id": "h-r-07",
+        "docKey": "abcddisco2021",
+        "title": "ABCDisCo: Automating the ABCD Method with Machine Learning",
+        "authors": "G. Kasieczka, B. Nachman, M. D. Schwartz & D. Shih",
+        "year": 2021,
+        "tags": [
+          "ABCD",
+          "DISCO",
+          "BACKGROUND"
+        ],
+        "venue": "Phys. Rev. D 103, 035021 · arXiv:2007.14400",
+        "abstract": "Automates the data-driven ABCD background-estimation method by training two discriminators decorrelated with a distance-correlation (DisCo) penalty. It shows the methods accuracy hinges on low signal contamination in the control regions, underpinning HELIXs ABCD-orthogonality checks.",
+        "url": "https://doi.org/10.1103/PhysRevD.103.035021",
+        "pdf": "https://arxiv.org/pdf/2007.14400"
+      },
+      {
+        "status": "reference",
+        "id": "h-r-08",
+        "docKey": "cwola2017",
+        "title": "Classification Without Labels: Learning from Mixed Samples in High Energy Physics (CWoLa)",
+        "authors": "E. M. Metodiev, B. Nachman & J. Thaler",
+        "year": 2017,
+        "tags": [
+          "CWOLA",
+          "WEAK SUPERVISION",
+          "HEP-ML"
+        ],
+        "venue": "JHEP 10, 174 · arXiv:1708.02949",
+        "abstract": "CWoLa trains classifiers to separate two mixed samples of unknown signal/background proportion, requiring no per-event labels. It enables training on real data and avoids learning simulation artifacts — exactly the concern HELIXs MaxEnt and WEAT cross-checks are built to address.",
+        "url": "https://doi.org/10.1007/JHEP10(2017)174",
+        "pdf": "https://arxiv.org/pdf/1708.02949"
       }
     ],
     "notes": [
@@ -167,6 +207,40 @@ const HELIX_SECTORS = [
         "url": "https://arxiv.org/abs/1910.09457",
         "pdf": "https://arxiv.org/pdf/1910.09457",
         "status": "reference"
+      },
+      {
+        "status": "reference",
+        "id": "e-r-02",
+        "docKey": "gal2016",
+        "title": "Dropout as a Bayesian Approximation: Representing Model Uncertainty in Deep Learning",
+        "authors": "Y. Gal & Z. Ghahramani",
+        "year": 2016,
+        "tags": [
+          "MC-DROPOUT",
+          "BAYESIAN",
+          "EPISTEMIC"
+        ],
+        "venue": "ICML · PMLR 48, 1050 · arXiv:1506.02142",
+        "abstract": "Shows that dropout training approximates Bayesian inference in deep Gaussian processes, so epistemic uncertainty can be extracted cheaply from networks already in use (MC-dropout). It legitimized practical Bayesian deep learning and sits in the lineage behind HELIXs Bayesian last layer.",
+        "url": "https://arxiv.org/abs/1506.02142",
+        "pdf": "https://arxiv.org/pdf/1506.02142"
+      },
+      {
+        "status": "reference",
+        "id": "e-r-03",
+        "docKey": "caliskan2017",
+        "title": "Semantics Derived Automatically from Language Corpora Contain Human-like Biases",
+        "authors": "A. Caliskan, J. J. Bryson & A. Narayanan",
+        "year": 2017,
+        "tags": [
+          "WEAT",
+          "BIAS",
+          "EMBEDDINGS"
+        ],
+        "venue": "Science 356(6334), 183 · arXiv:1608.07187",
+        "abstract": "Introduces the Word-Embedding Association Test (WEAT), showing that embeddings trained on ordinary text reproduce documented human biases. It establishes that a training corpuss statistical regularities — biases included — are necessarily absorbed by learned representations; HELIX adapts WEAT/WEFAT to probe whether a discriminant has learned simulation artifacts rather than physics.",
+        "url": "https://doi.org/10.1126/science.aal4230",
+        "pdf": "https://arxiv.org/pdf/1608.07187"
       }
     ],
     "notes": [
@@ -228,6 +302,74 @@ const HELIX_SECTORS = [
         "url": "https://arxiv.org/abs/1712.09913",
         "pdf": "https://arxiv.org/pdf/1712.09913",
         "status": "reference"
+      },
+      {
+        "status": "reference",
+        "id": "l-r-02",
+        "docKey": "mikolov2013",
+        "title": "Efficient Estimation of Word Representations in Vector Space",
+        "authors": "T. Mikolov, K. Chen, G. Corrado & J. Dean",
+        "year": 2013,
+        "tags": [
+          "WORD2VEC",
+          "SKIP-GRAM",
+          "EMBEDDINGS"
+        ],
+        "venue": "ICLR Workshop · arXiv:1301.3781",
+        "abstract": "Introduces the skip-gram and CBOW architectures (word2vec) for learning dense word vectors cheaply from large corpora via the distributional hypothesis. The resulting embeddings capture syntactic and semantic regularities through co-occurrence alone; HELIXs Evt2Vec is the word2vec analogue for detector events.",
+        "url": "https://arxiv.org/abs/1301.3781",
+        "pdf": "https://arxiv.org/pdf/1301.3781"
+      },
+      {
+        "status": "reference",
+        "id": "l-r-03",
+        "docKey": "oord2018",
+        "title": "Representation Learning with Contrastive Predictive Coding",
+        "authors": "A. van den Oord, Y. Li & O. Vinyals",
+        "year": 2018,
+        "tags": [
+          "CPC",
+          "INFONCE",
+          "CONTRASTIVE"
+        ],
+        "venue": "arXiv:1807.03748 [cs.LG]",
+        "abstract": "Introduces Contrastive Predictive Coding and the InfoNCE loss, learning representations by predicting future latents in a shared embedding space with a contrastive objective. The InfoNCE softmax is precisely the object HELIX reads as a Boltzmann partition function — its denominator is Z and the temperature τ plays the role of 1/β.",
+        "url": "https://arxiv.org/abs/1807.03748",
+        "pdf": "https://arxiv.org/pdf/1807.03748"
+      },
+      {
+        "status": "reference",
+        "id": "l-r-04",
+        "docKey": "simclr2020",
+        "title": "A Simple Framework for Contrastive Learning of Visual Representations (SimCLR)",
+        "authors": "T. Chen, S. Kornblith, M. Norouzi & G. Hinton",
+        "year": 2020,
+        "tags": [
+          "SIMCLR",
+          "NT-XENT",
+          "SSL"
+        ],
+        "venue": "ICML · PMLR 119, 1597 · arXiv:2002.05709",
+        "abstract": "A simple contrastive framework for visual representation learning using heavy augmentation, a projection head, and the temperature-scaled NT-Xent (InfoNCE) loss with large negative batches. Established contrastive self-supervision as competitive with supervised pretraining and sharpened the temperature/negatives recipe HELIX inherits.",
+        "url": "https://arxiv.org/abs/2002.05709",
+        "pdf": "https://arxiv.org/pdf/2002.05709"
+      },
+      {
+        "status": "reference",
+        "id": "l-r-05",
+        "docKey": "jetclr2022",
+        "title": "Symmetries, Safety, and Self-Supervision (JetCLR)",
+        "authors": "B. M. Dillon, G. Kasieczka, H. Olischläger, T. Plehn, P. Sorrenson & L. Vogel",
+        "year": 2022,
+        "tags": [
+          "JETCLR",
+          "CONTRASTIVE",
+          "HEP-ML"
+        ],
+        "venue": "SciPost Phys. 12, 188 · arXiv:2108.04253",
+        "abstract": "Applies contrastive self-supervision to jet physics, learning permutation-invariant representations of jet constituents with a transformer and physically-motivated augmentations, evaluated by linear probe. It is the existence proof that event-level contrastive representations transfer to detector data, setting the yardstick for HELIXs Evt2Vec → CutFormer.",
+        "url": "https://doi.org/10.21468/SciPostPhys.12.6.188",
+        "pdf": "https://arxiv.org/pdf/2108.04253"
       }
     ],
     "notes": [
@@ -288,7 +430,8 @@ const HELIX_SECTORS = [
         "venue": "Phys. Rev. 106, 620 (1957)",
         "url": "https://doi.org/10.1103/PhysRev.106.620",
         "pdf": "https://files.batistalab.com/teaching/attachments/chem584/Jaynes.pdf",
-        "status": "reference"
+        "status": "reference",
+        "docKey": "jaynes1957"
       },
       {
         "id": "i-r-02",
@@ -304,7 +447,8 @@ const HELIX_SECTORS = [
         "venue": "arXiv:2411.13625 [cond-mat.stat-mech]",
         "url": "https://arxiv.org/abs/2411.13625",
         "pdf": "https://arxiv.org/pdf/2411.13625",
-        "status": "reference"
+        "status": "reference",
+        "docKey": "kuntz2024"
       },
       {
         "id": "i-r-03",
@@ -336,7 +480,25 @@ const HELIX_SECTORS = [
         "venue": "arXiv:1802.05968 [cs.IT]",
         "url": "https://arxiv.org/abs/1802.05968",
         "pdf": "https://arxiv.org/pdf/1802.05968",
-        "status": "reference"
+        "status": "reference",
+        "docKey": "stone2019"
+      },
+      {
+        "status": "reference",
+        "id": "i-r-05",
+        "docKey": "rospel2025",
+        "title": "Approximating Non-Gaussian Bayesian Partitions with Normalising Flows",
+        "authors": "T. Röspel, A. Schlosser & B. M. Schäfer",
+        "year": 2025,
+        "tags": [
+          "NORMALIZING FLOWS",
+          "PARTITION FN",
+          "INFERENCE"
+        ],
+        "venue": "arXiv:2501.04791 [astro-ph.CO]",
+        "abstract": "Extends the partition-function view of Bayesian inference by using normalising flows to approximate non-Gaussian Bayesian partitions, giving a sampler-free route to the information entropy and related state variables. Demonstrated on cosmological inference, it is the convergence-proof fallback to HMC for HELIXs epistemic-bound program — Röspel cross-validating Kuntz.",
+        "url": "https://arxiv.org/abs/2501.04791",
+        "pdf": "https://arxiv.org/pdf/2501.04791"
       }
     ],
     "notes": [

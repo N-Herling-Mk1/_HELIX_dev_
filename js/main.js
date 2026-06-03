@@ -19,12 +19,16 @@
       const m = await r.json();
       mergeManifestIntoSectors(m.components || []);
       manifestLoaded = true;
+      // manifest added articles → rebuild the search index on next search
+      searchIndex = null;
       // re-render if a sector/tab was selected before manifest arrived
       if (activeSector && activeTab) {
         const s = HELIX_SECTORS.find(x => x.letter === activeSector);
         if (s) renderContent(s, activeTab);
         updateNavCounts(activeTab);
       }
+      // if the search panel is open, refresh results with the new data
+      if (searchPanel && searchPanel.style.display !== "none") runSearch();
     } catch (e) { /* silent — manifest optional */ }
   }
   function mergeManifestIntoSectors(components) {
@@ -67,15 +71,27 @@
   const navAbout      = document.getElementById("navbtn-about");
   const navBlog       = document.getElementById("navbtn-blog");
 
+  /* search panel elements */
+  const searchPanel    = document.getElementById("search-panel");
+  const searchInput     = document.getElementById("search-input");
+  const searchClear     = document.getElementById("search-clear");
+  const searchCategory  = document.getElementById("search-category");
+  const searchField     = document.getElementById("search-field");
+  const searchResults   = document.getElementById("search-results");
+  const searchMeta      = document.getElementById("search-meta");
+  const subtabSearch    = document.getElementById("subtab-search");
+
   let activeSector = null;
   let activeTab    = null;
   let pageMode     = false;   // true when viewer is showing a static page (about/etc)
+  let viewerOrigin = null;    // 'search' when the viewer was opened from a search result
 
   /* ── EMPTY STATE SWITCHING ── */
   function showEmptyState(state) {
     if (panelEmpty) panelEmpty.style.display = "flex";
     hide(articleList);
     hide(viewerPanel);
+    hide(searchPanel);
     if (emptyMsg1) emptyMsg1.classList.toggle("hidden", state !== 1);
     if (emptyMsg2) emptyMsg2.classList.toggle("hidden", state !== 2);
   }
@@ -105,6 +121,8 @@
   function showContent() {
     hide(panelEmpty);
     hide(viewerPanel);
+    hide(searchPanel);
+    if (subtabSearch) subtabSearch.classList.remove("active");
     articleList.innerHTML = "";
     show(articleList);
   }
@@ -219,6 +237,9 @@
       activeTab = "articles";
       subtabs.forEach(t => t.classList.toggle("active", t.dataset.tab === "articles"));
       updateNavCounts("articles");
+    } else {
+      // re-light the correct tab (e.g. when coming back from SEARCH)
+      subtabs.forEach(t => t.classList.toggle("active", t.dataset.tab === activeTab));
     }
 
     renderContent(s, activeTab);
@@ -248,6 +269,7 @@
 
   function frameShell(s) {
     hide(articleList);
+    hide(searchPanel);
     show(viewerPanel);
     if (viewerBack) {
       viewerBack.style.color       = s ? s.color : "";
@@ -298,6 +320,9 @@
     }
     if (navAbout)    navAbout.classList.remove("active");
     pageMode = false;
+    // returned from a search result → restore the search panel
+    if (viewerOrigin === "search") { viewerOrigin = null; openSearch(); return; }
+    viewerOrigin = null;
     // restore correct content area
     if (activeSector) {
       show(articleList);
@@ -309,10 +334,12 @@
   /* ── PAGE NAVIGATION ── */
   function openAbout() {
     pageMode = true;
+    viewerOrigin = null;
     subtabs.forEach(t => t.classList.remove("active"));
     if (navAbout) navAbout.classList.add("active");
     hide(panelEmpty);
     hide(articleList);
+    hide(searchPanel);
     show(viewerPanel);
     if (viewerTitle) viewerTitle.textContent = "ABOUT — H·E·L·I·X";
     if (viewerDl)    viewerDl.style.display = "none";
@@ -323,10 +350,12 @@
 
   function openGoals() {
     pageMode = true;
+    viewerOrigin = null;
     subtabs.forEach(t => t.classList.toggle("active", t.dataset.tab === "goals"));
     if (navAbout) navAbout.classList.remove("active");
     hide(panelEmpty);
     hide(articleList);
+    hide(searchPanel);
     show(viewerPanel);
     if (viewerTitle) viewerTitle.textContent = "PROJECT GOALS — H·E·L·I·X";
     if (viewerDl)    viewerDl.style.display = "none";
@@ -339,11 +368,141 @@
     window.open("blog.html", "_blank");
   }
 
+  /* ── SEARCH ── */
+  // Flat, de-duplicated index across all sectors. The same article object can
+  // live in several sectors (manifest merge pushes by reference), so we collect
+  // every sector letter an article belongs to.
+  let searchIndex = null;
+  const SECTOR_COLOR = {};
+  const SECTOR_GLOW  = {};
+  HELIX_SECTORS.forEach(s => { SECTOR_COLOR[s.letter] = s.color; SECTOR_GLOW[s.letter] = s.glow; });
+
+  function buildSearchIndex() {
+    const byKey = new Map();
+    HELIX_SECTORS.forEach(s => {
+      (s.articles || []).forEach(a => {
+        const key = a.id || a.title;
+        let rec = byKey.get(key);
+        if (!rec) { rec = { art: a, sectors: [] }; byKey.set(key, rec); }
+        if (!rec.sectors.includes(s.letter)) rec.sectors.push(s.letter);
+      });
+    });
+    return [...byKey.values()];
+  }
+
+  // Does a record match the query under the chosen field scope?
+  function matchesQuery(rec, q, field) {
+    if (!q) return true;
+    const a = rec.art;
+    let hay;
+    if (field === "author")       hay = [a.authors];
+    else if (field === "subject") hay = [a.title, (a.tags || []).join(" ")];
+    else                          hay = [a.title, a.authors, a.year, (a.tags || []).join(" "), a.abstract, a.venue];
+    return hay.filter(Boolean).join(" \u0001 ").toLowerCase().includes(q);
+  }
+
+  function runSearch() {
+    if (!searchResults) return;
+    if (!searchIndex) searchIndex = buildSearchIndex();
+
+    const q     = (searchInput && searchInput.value || "").trim().toLowerCase();
+    const cat   = (searchCategory && searchCategory.value) || "ALL";
+    const field = (searchField && searchField.value) || "all";
+
+    if (searchClear) searchClear.classList.toggle("show", !!q);
+
+    let rows = searchIndex;
+    if (cat !== "ALL") rows = rows.filter(r => r.sectors.includes(cat));
+    rows = rows.filter(r => matchesQuery(r, q, field));
+
+    // status line
+    if (searchMeta) {
+      const fieldLabel = { all: "ALL TEXT", subject: "SUBJECT", author: "AUTHOR" }[field];
+      const scope = cat === "ALL" ? "ALL SECTORS" : (cat + " · " + (HELIX_SECTORS.find(s => s.letter === cat) || {}).word);
+      searchMeta.innerHTML =
+        `<span class="sm-count">${rows.length}</span> RESULT${rows.length !== 1 ? "S" : ""}` +
+        ` · ${scope} · ${fieldLabel}`;
+    }
+
+    searchResults.innerHTML = "";
+    if (!rows.length) {
+      searchResults.innerHTML = `<div class="search-empty">NO MATCHES — ADJUST QUERY OR FILTERS</div>`;
+      return;
+    }
+
+    rows.forEach((rec, i) => {
+      const a     = rec.art;
+      const isRef = !!(a.url || a.pdf);   // reference = external (links); else local file
+      const sec   = HELIX_SECTORS.find(s => s.letter === rec.sectors[0]) || null;
+
+      const row = document.createElement("div");
+      row.className = "search-result-row";
+      row.style.animationDelay = `${Math.min(i * 0.04, 0.4)}s`;
+
+      // [Article]
+      const titleHtml =
+        `<div class="sr-title" role="button" tabindex="0">${esc(a.title)}` +
+        (a.authors ? `<span class="sr-authors">${esc(a.authors)}${a.year ? " · " + esc(a.year) : ""}</span>` : "") +
+        `</div>`;
+
+      // [Category] — one badge per sector the article lives in
+      const badges = rec.sectors.map(letter => {
+        const c = SECTOR_COLOR[letter] || "var(--cyan)";
+        return `<span class="sr-cat-badge" style="color:${c};border-color:${c};box-shadow:0 0 8px ${c}55;">${letter}</span>`;
+      }).join("");
+
+      row.innerHTML =
+        titleHtml +
+        `<div class="sr-cat" title="${esc(rec.sectors.join(" · "))}">${badges}</div>` +
+        `<div class="sr-links">` +
+          `<a class="sr-link sr-link-view" data-act="view"><span>◉</span> VIEW</a>` +
+          `<a class="sr-link sr-link-dl" data-act="dl"><span>↓</span> DOWNLOAD</a>` +
+        `</div>`;
+
+      const titleEl = row.querySelector(".sr-title");
+      const viewEl  = row.querySelector('[data-act="view"]');
+      const dlEl    = row.querySelector('[data-act="dl"]');
+
+      if (isRef) {
+        // external: View → landing page, Download → direct PDF (both new tab)
+        viewEl.href = a.url || a.pdf; viewEl.target = "_blank"; viewEl.rel = "noopener";
+        dlEl.href   = a.pdf || a.url; dlEl.target   = "_blank"; dlEl.rel   = "noopener";
+        const openHome = () => window.open(a.url || a.pdf, "_blank", "noopener");
+        titleEl.addEventListener("click", openHome);
+        titleEl.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openHome(); } });
+      } else {
+        // local file: View → in-app viewer (return to search on BACK); Download → direct
+        const openLocal = () => { viewerOrigin = "search"; openViewer(a.file, a.title, sec); };
+        viewEl.addEventListener("click", e => { e.preventDefault(); openLocal(); });
+        titleEl.addEventListener("click", openLocal);
+        titleEl.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openLocal(); } });
+        dlEl.href = a.file || "#";
+        dlEl.setAttribute("download", sanitizeName(a.title) + ".pdf");
+      }
+
+      searchResults.appendChild(row);
+    });
+  }
+
+  function openSearch() {
+    pageMode = false;
+    viewerOrigin = null;
+    subtabs.forEach(t => t.classList.toggle("active", t.dataset.tab === "search"));
+    if (navAbout) navAbout.classList.remove("active");
+    hide(panelEmpty);
+    hide(articleList);
+    hide(viewerPanel);
+    if (searchPanel) searchPanel.style.display = "flex";
+    runSearch();
+    if (searchInput) { try { searchInput.focus(); } catch (e) {} }
+  }
+
   /* ── EVENTS ── */
   if (viewerBack) {
     viewerBack.addEventListener("click", () => {
+      const fromSearch = (viewerOrigin === "search");
       closeViewer();
-      if (!pageMode && activeSector) {
+      if (!fromSearch && !pageMode && activeSector) {
         const s = HELIX_SECTORS.find(x => x.letter === activeSector);
         if (s) renderContent(s, activeTab);
       }
@@ -353,6 +512,18 @@
   /* ── NAV BUTTON EVENTS ── */
   if (navAbout) navAbout.addEventListener("click", openAbout);
   if (navBlog)  navBlog.addEventListener("click",  openBlog);
+
+  /* ── SEARCH PANEL EVENTS ── */
+  if (searchInput)    searchInput.addEventListener("input", runSearch);
+  if (searchCategory) searchCategory.addEventListener("change", runSearch);
+  if (searchField)    searchField.addEventListener("change", runSearch);
+  if (searchClear)    searchClear.addEventListener("click", () => {
+    if (searchInput) { searchInput.value = ""; searchInput.focus(); }
+    runSearch();
+  });
+  if (searchInput) searchInput.addEventListener("keydown", e => {
+    if (e.key === "Escape") { searchInput.value = ""; runSearch(); }
+  });
 
   sectorBtns.forEach(btn => {
     btn.addEventListener("click", () => {
@@ -371,6 +542,8 @@
 
   subtabs.forEach(tab => {
     tab.addEventListener("click", () => {
+      // SEARCH is a cross-sector tool page (not per-sector content)
+      if (tab.dataset.tab === "search") { openSearch(); return; }
       // GOALS is a high-level project overview page (not per-sector content)
       if (tab.dataset.tab === "goals") { openGoals(); return; }
       activeTab = tab.dataset.tab;

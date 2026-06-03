@@ -1,0 +1,149 @@
+{
+  "version": "1.0",
+  "agent": {
+    "name": "PELAGIC",
+    "role": "HELIX guide assistant",
+    "boot": [
+      "PELAGIC online.",
+      "I'm your guide to the HELIX system. Pick a topic below and I'll walk you through it."
+    ],
+    "audio": "pelagic_01_online.wav"
+  },
+  "topics": [
+    {
+      "id": "getting-started",
+      "label": "Getting Started",
+      "icon": "◇",
+      "terminal": [
+        "$ helix --about",
+        "HELIX ................ TWO SYSTEMS, ONE SPINE",
+        "  [1] ML / AI paper repository  (this website)",
+        "  [2] NLP + information theory on detector data",
+        "nav: View Toggle | Documentation | Help",
+        "status ............... ONLINE"
+      ],
+      "agent": [
+        "Welcome to HELIX. Think of it as two things sharing one backbone.",
+        "First, it's a curated machine-learning and AI paper library — the site you're in now.",
+        "Second, it's a research program applying NLP and information theory to ATLAS detector data.",
+        "Use the View Toggle up top to switch research views, and the buttons along the bottom here to ask me about any part of it."
+      ],
+      "audio": "pelagic_04_getstarted.wav"
+    },
+    {
+      "id": "sectors",
+      "label": "The H·E·L·I·X Sectors",
+      "icon": "⬡",
+      "terminal": [
+        "$ helix --sectors",
+        "H .. HEP ............. High Energy Physics",
+        "E .. EPISTEMIC ....... Epistemic Learning",
+        "L .. LEARNING ........ Machine Learning",
+        "I .. INFO THEORY ..... Entropy / Partition fn",
+        "X .. EXPLORATION ..... Detector topology"
+      ],
+      "agent": [
+        "The library is organized into five sectors, spelling H-E-L-I-X.",
+        "H is High Energy Physics, E is Epistemic learning, L is Machine Learning.",
+        "I is Information Theory — the connective spine — and X is Exploration.",
+        "Each sector carries its own articles, working notes, and goals. Pick one from the left rail to dive in."
+      ],
+      "audio": "pelagic_05_sectors.wav"
+    },
+    {
+      "id": "search",
+      "label": "Searching",
+      "icon": "⌕",
+      "terminal": [
+        "$ helix search --help",
+        "SEARCH MODULE ........ ONLINE",
+        "  scope ..... ALL | H | E | L | I | X",
+        "  field ..... all-text | subject | author",
+        "result ...... [article] [category] [view] [download]",
+        "index ....... cross-sector, de-duplicated"
+      ],
+      "agent": [
+        "Open the SEARCH tab in the research view and I'll bring up the registry search.",
+        "You can narrow by sector, or search the full text, a subject, or an author.",
+        "Every match shows the article, its category, and links to view or download it."
+      ],
+      "audio": "pelagic_03_beta.wav"
+    },
+    {
+      "id": "viewer",
+      "label": "View & Download",
+      "icon": "▤",
+      "terminal": [
+        "$ helix viewer --help",
+        "VIEWER ............... in-app PDF frame",
+        "  references ........ open source page / PDF (new tab)",
+        "  local drafts ...... render inline, BACK to return",
+        "download ............ direct link per entry"
+      ],
+      "agent": [
+        "Every article has VIEW and DOWNLOAD actions.",
+        "For external references, VIEW opens the source page and DOWNLOAD grabs the PDF.",
+        "For local drafts, VIEW renders the document right here in the viewer — just hit BACK to return to your list."
+      ],
+      "audio": "pelagic_03_beta.wav"
+    },
+    {
+      "id": "docs",
+      "label": "Documentation",
+      "icon": "❒",
+      "terminal": [
+        "$ helix docs --help",
+        "DOCUMENTATION ........ panel router",
+        "  home / overview / motivation / timeline",
+        "  gantt / proposal / references / glossary",
+        "deep-link ............ #glossary opens directly"
+      ],
+      "agent": [
+        "The Documentation button up top opens the full project docs.",
+        "There's an overview, the motivation and genealogy, the timeline and Gantt chart, references, and a glossary.",
+        "The About page has direct links straight to the docs and to the glossary if you want to jump there."
+      ],
+      "audio": "pelagic_03_beta.wav"
+    },
+    {
+      "id": "agent",
+      "label": "About Me",
+      "icon": "◉",
+      "terminal": [
+        "$ helix agent --info",
+        "AGENT ................ PELAGIC (prototype)",
+        "  render ............ 3D etched cube (CSS 3D)",
+        "  edges ............. react to delta-RMS",
+        "  speech ............ typed envelope",
+        "  audio ............. plugin bus (pluggable)",
+        "voice files .......... pending / future"
+      ],
+      "agent": [
+        "I'm PELAGIC, the HELIX guide — a front-end prototype for now.",
+        "My face is a slowly rotating etched cube. Its edges flare with audio dynamics — delta-RMS, the change from a running baseline, so transients pop and steady tones fade.",
+        "Right now those edges ride a synthetic envelope as I type. There's an audio plugin bus underneath, so real voice can drive the very same edges later."
+      ],
+      "audio": "pelagic_03_beta.wav"
+    },
+    {
+      "id": "audio",
+      "label": "Voice & Audio",
+      "icon": "♪",
+      "terminal": [
+        "$ helix audio --status",
+        "AUDIO BUS ............ READY",
+        "  plugins ........... silent (default)",
+        "  optional .......... blip SFX",
+        "  level source ...... synthetic | plugin RMS",
+        "  edge effect ....... delta-RMS (dynamics)",
+        "tts / voice files .... FUTURE"
+      ],
+      "agent": [
+        "Voice is on the roadmap. The plumbing is already here.",
+        "Tap the speaker icon by my name to switch on the blip synth — you'll hear me as I type, and the same signal drives the cube's edges.",
+        "When voice files or a TTS engine arrive, they register as a plugin and feed delta-RMS to the very same reactive edges."
+      ],
+      "audio": "pelagic_03_beta.wav"
+    }
+  ]
+}

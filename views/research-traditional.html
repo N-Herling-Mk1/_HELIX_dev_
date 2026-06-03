@@ -96,6 +96,7 @@
         <button class="subtab" data-tab="articles">ARTICLES</button>
         <button class="subtab" data-tab="notes">NOTES</button>
         <button class="subtab" data-tab="goals">GOALS</button>
+        <button class="subtab subtab-search" data-tab="search" id="subtab-search">SEARCH</button>
         <div class="subtab-divider"></div>
         <button class="navbtn navbtn-about" id="navbtn-about">ABOUT</button>
         <button class="navbtn navbtn-blog is-disabled" id="navbtn-blog" disabled title="Coming soon">BLOG</button>
@@ -123,7 +124,8 @@
       <div class="empty-msg" id="empty-msg-1">
         SELECT&nbsp;<span class="empty-tab-hint">[ARTICLES]</span>&nbsp;
         <span class="empty-tab-hint">[NOTES]</span>&nbsp;
-        <span class="empty-tab-hint">[GOALS]</span>&nbsp;TO GET STARTED
+        <span class="empty-tab-hint">[GOALS]</span>&nbsp;
+        <span class="empty-tab-hint">[SEARCH]</span>&nbsp;TO GET STARTED
       </div>
       <div class="empty-msg hidden" id="empty-msg-2">
         <div class="empty-sector-prompt">SELECT A SECTOR FROM THE LEFT PANEL</div>
@@ -138,6 +140,42 @@
     </div>
 
     <div class="article-list" id="article-list" style="display:none;"></div>
+
+    <!-- SEARCH PANEL — cross-sector registry search -->
+    <div class="search-panel" id="search-panel" style="display:none;">
+      <div class="search-controls">
+        <div class="search-field">
+          <span class="search-icon">⌕</span>
+          <input type="text" id="search-input" class="search-input"
+                 placeholder="SEARCH THE HELIX REGISTRY…"
+                 autocomplete="off" spellcheck="false">
+          <button class="search-clear" id="search-clear" title="Clear" aria-label="Clear">×</button>
+        </div>
+        <div class="search-selects">
+          <label class="search-sel-wrap">
+            <span class="search-sel-label">CATEGORY</span>
+            <select id="search-category" class="search-select">
+              <option value="ALL">ALL · H E L I X</option>
+              <option value="H">H · HEP</option>
+              <option value="E">E · EPISTEMIC</option>
+              <option value="L">L · LEARNING</option>
+              <option value="I">I · INFO THEORY</option>
+              <option value="X">X · EXPLORATION</option>
+            </select>
+          </label>
+          <label class="search-sel-wrap">
+            <span class="search-sel-label">FIELD</span>
+            <select id="search-field" class="search-select">
+              <option value="all">ALL TEXT</option>
+              <option value="subject">SUBJECT</option>
+              <option value="author">AUTHOR</option>
+            </select>
+          </label>
+        </div>
+      </div>
+      <div class="search-meta" id="search-meta"></div>
+      <div class="search-results" id="search-results"></div>
+    </div>
 
     <div class="viewer-panel" id="viewer-panel">
       <div class="viewer-topbar">

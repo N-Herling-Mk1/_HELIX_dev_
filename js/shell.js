@@ -51,7 +51,9 @@
     if (location.hash.replace(/^#/,'') !== h) location.hash = h;
   }
   function srcFor(s){
-    return (s.view === 'research' ? VIEWS.research.modes[s.mode].src : VIEWS.docs.src) + '?embed=1';
+    var base = (s.view === 'research' ? VIEWS.research.modes[s.mode].src : VIEWS.docs.src) + '?embed=1';
+    if (s.view === 'docs' && s.sec) base += '#' + s.sec;   // deep-link a doc panel (e.g. #glossary)
+    return base;
   }
   function labelFor(s){
     return s.view === 'research' ? VIEWS.research.modes[s.mode].label : VIEWS.docs.label;
@@ -75,7 +77,7 @@
   function apply(next, opts){
     opts = opts || {};
     const push = opts.push !== false;
-    if (state.view===next.view && state.mode===next.mode) return;
+    if (state.view===next.view && state.mode===next.mode && (state.sec||null)===(next.sec||null)) return;
     const prevSrc = state.view ? srcFor(state) : null;
     const nextSrc = srcFor(next);
     state = next;
@@ -105,13 +107,21 @@
     if(e.key==='t' && state.view==='research'){ apply({view:'research', mode:'traditional'}); e.preventDefault(); }
     if(e.key==='n' && state.view==='research'){ apply({view:'research', mode:'nova'}); e.preventDefault(); }
   });
-  window.addEventListener('hashchange', function(){ apply(parseHash(), {push:false}); });
+  window.addEventListener('hashchange', function(){
+    var p = parseHash();
+    // Doc sub-sections (e.g. #glossary) live INSIDE the docs iframe, not in the
+    // shell hash. A hashchange that leaves the top-level view/mode unchanged
+    // (such as writeHash setting '#docs' on a deep-link) must not re-apply and
+    // reload the iframe — that would wipe the section we just navigated to.
+    if (p.view === state.view && p.mode === state.mode) return;
+    apply(p, {push:false});
+  });
 
   /* ── postMessage bus (shell ⇄ view) ── */
   window.addEventListener('message', function(ev){
     const m = ev.data; if(!m || m.helix!==true) return;
     if(m.type==='navigate' && VIEWS[m.view])
-      apply(m.view==='research' ? {view:'research', mode:m.mode||VIEWS.research.defaultMode} : {view:'docs', mode:null});
+      apply(m.view==='research' ? {view:'research', mode:m.mode||VIEWS.research.defaultMode} : {view:'docs', mode:null, sec:m.sec||null});
     // research labels are owned by the router; only the docs view may post a
     // sub-section title (so a view can never clobber "RESEARCH · HELIX NOVA")
     if(m.type==='title' && m.text && state.view==='docs') statusEl.textContent = String(m.text).toUpperCase();

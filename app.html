@@ -20,6 +20,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Exo+2:wght@200;300;400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/core.css">
 <link rel="stylesheet" href="css/shell.css">
+<link rel="stylesheet" href="help/css/help.css">
 </head>
 <body>
 <div class="grid-bg"></div>
@@ -65,6 +66,11 @@
     <span class="docbtn-txt">Documentation</span>
   </button>
   <span class="ctl-div" aria-hidden="true"></span>
+  <button class="docbtn helpbtn" id="help-btn" aria-label="Help and assistant" aria-selected="false">
+    <span class="docbtn-glyph" aria-hidden="true">?</span>
+    <span class="docbtn-txt">Help</span>
+  </button>
+  <span class="ctl-div" aria-hidden="true"></span>
   <div class="status">
     <span class="sv-box"><b id="status-view">—</b></span>
     <span class="led" title="shell online"></span>
@@ -108,5 +114,14 @@
 <!-- glitch engine first (defines window.HELIX_GLITCH), then the shell router boots it -->
 <script src="js/glitch.js"></script>
 <script src="js/shell.js"></script>
+
+<!-- HELP module (self-contained): audio bus → plugins → terminal → agent → modal -->
+<script src="help/js/audio-bus.js"></script>
+<script src="help/plugins/audio/silent-plugin.js"></script>
+<script src="help/plugins/audio/beep-plugin.js"></script>
+<script src="help/plugins/audio/voice-plugin.js"></script>
+<script src="help/js/terminal.js"></script>
+<script src="help/js/agent.js"></script>
+<script src="help/js/help-modal.js"></script>
 </body>
 </html>
